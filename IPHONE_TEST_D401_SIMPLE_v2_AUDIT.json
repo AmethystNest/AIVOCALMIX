@@ -1,0 +1,27 @@
+{
+  "build": "2026-retsu-vocalmix-iPhone-TEST-D401-SIMPLE-v2",
+  "base": "v80-D401-STABLE",
+  "purpose": "iPhone Safari/PWA動作確認用簡易版",
+  "ui_changes": [
+    "通常のVocalプリセットは維持",
+    "Vocalの詳細な追加補正UIは非表示",
+    "FXタブ/FX導線は非表示",
+    "FX実装コードは内部互換のため削除せず保持"
+  ],
+  "unchanged": [
+    "Upload",
+    "Analysis",
+    "Vocal presets",
+    "Harmony presets/Auto",
+    "Mix DSP",
+    "Preview",
+    "Export",
+    "Fire Lit Premaster"
+  ],
+  "checks": {
+    "duplicate_ids": 0,
+    "manifest_present": true,
+    "service_worker_present": true,
+    "html_size_bytes": 3709555
+  }
+}
