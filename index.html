@@ -3386,7 +3386,7 @@ a[data-target="fx"],
     <span class="sub" id="clock"></span>
   </header>
   <div class="build-banner" style="background:#A77FE0; color:#14101F; font-family:'JetBrains Mono',monospace; font-size:12px; font-weight:700; text-align:center; padding:6px; border-radius:3px; margin-bottom:14px;">
-    BUILD 2026-retsu-vocalmix-iPhone-TEST-D418-UPLOAD-FIX
+    BUILD 2026-retsu-vocalmix-iPhone-TEST-D419-UPLOAD-FIX
     (このバナーが見えない場合は古いファイルを開いています。最新のダウンロードカードを開き直してください)
   </div>
 
@@ -3425,21 +3425,21 @@ a[data-target="fx"],
       <div class="upload-grid">
         <div>
           <div class="drop" id="dropVocal">
-            <input type="file" id="fileVocal" accept="audio/*" />
+            <input type="file" id="fileVocal" />
             <div id="dropVocalLabel">ボーカル音源(WAV推奨)を選択</div>
           </div>
           <canvas class="wave" id="waveVocal"></canvas>
         </div>
         <div>
           <div class="drop" id="dropInst">
-            <input type="file" id="fileInst" accept="audio/*" />
+            <input type="file" id="fileInst" />
             <div id="dropInstLabel">伴奏(オケ)音源を選択</div>
           </div>
           <canvas class="wave" id="waveInst"></canvas>
         </div>
         <div>
           <div class="drop" id="dropHarmony">
-            <input type="file" id="fileHarmony" accept="audio/*" />
+            <input type="file" id="fileHarmony" />
             <div id="dropHarmonyLabel">(任意) ハモリステムを選択</div>
           </div>
           <canvas class="wave" id="waveHarmony"></canvas>
@@ -4015,7 +4015,7 @@ a[data-target="fx"],
       <b>全体の帯域バランス</b>と<b>ボーカルと伴奏の音量バランス</b>を数値で比較します。
       補正EQを自動生成して近づけることもできます(適用量は下のスライダーで調整)。</p>
       <div class="drop" id="dropReference">
-        <input type="file" id="fileReference" accept="audio/*" />
+        <input type="file" id="fileReference" />
         <div id="dropReferenceLabel">リファレンス音源(お手本にしたい曲)を選択</div>
       </div>
       <canvas class="wave" id="waveReference"></canvas>
@@ -10545,6 +10545,17 @@ function setupDrop(dropId, inputId, labelId, waveId, onLoaded, sourceKind, needs
 
   async function loadSelectedFile(file) {
     if (!file || input.disabled) return;
+    // D419: iOS Files can mark valid WAV files unselectable when accept="audio/*".
+    // Leave the native picker unrestricted, then validate the selected filename here.
+    const supportedAudioExtension = /\.(?:wav|wave|mp3|m4a|aac|aif|aiff|flac|ogg|opus|caf)$/i;
+    if (!supportedAudioExtension.test(file.name || '')) {
+      const message = '対応する音声ファイル（WAV / MP3 / M4Aなど）を選択してください';
+      label.textContent = message;
+      const uploadStatus = document.getElementById('uploadStatus');
+      if (uploadStatus) { uploadStatus.textContent = message; uploadStatus.className = 'status-line error'; }
+      try { input.value = ''; } catch (_) {}
+      return;
+    }
     const kind = sourceKind || inputId;
     const generation = (state.inputLoadGeneration[kind] || 0) + 1;
     state.inputLoadGeneration[kind] = generation;

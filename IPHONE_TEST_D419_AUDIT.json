@@ -1,0 +1,7 @@
+{
+  "build": "iPhone-TEST-D419",
+  "base": "iPhone-TEST-D418",
+  "fix": "Remove accept=audio/* from all 4 file pickers to prevent iOS Files from disabling valid WAV files; validate extensions after selection",
+  "unchanged": "Audio decoding, DSP, preview and export logic",
+  "ios_real_device": "not tested"
+}

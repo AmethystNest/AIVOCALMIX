@@ -1,6 +1,6 @@
 'use strict';
 const CACHE_PREFIX = 'aivocalmix-iphone-test-';
-const CACHE_NAME = `${CACHE_PREFIX}d418-upload-fix-shell`;
+const CACHE_NAME = `${CACHE_PREFIX}d419-file-picker-fix-shell`;
 const LEGACY_MAIN_CACHE_RE = /^aivocalmix-iphone-test-d401-simple-v2-shell$/i;
 const APP_SHELL = [
   './',
