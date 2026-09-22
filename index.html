@@ -259,7 +259,10 @@
   }
   .drop:hover { border-color: var(--teal); color: var(--teal); }
   .drop.loaded { border-style: solid; border-color: var(--teal); color: var(--parchment); }
-  .drop input { display: none; }
+  /* D418: iOS Safari uses a native, directly tapped file input over the card. */
+  .drop { position: relative; }
+  .drop input[type="file"] { position:absolute; inset:0; width:100%; height:100%; opacity:0; display:block; cursor:pointer; z-index:2; font-size:16px; }
+  .drop:focus-within { outline:2px solid var(--teal); outline-offset:2px; }
   .upload-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
   @media (max-width: 860px) { .upload-grid { grid-template-columns: 1fr; } }
   canvas.wave { width: 100%; height: 56px; display: block; margin-top: 8px; background: #171325; border-radius: 3px; }
@@ -3383,7 +3386,7 @@ a[data-target="fx"],
     <span class="sub" id="clock"></span>
   </header>
   <div class="build-banner" style="background:#A77FE0; color:#14101F; font-family:'JetBrains Mono',monospace; font-size:12px; font-weight:700; text-align:center; padding:6px; border-radius:3px; margin-bottom:14px;">
-    BUILD 2026-retsu-vocalmix-iPhone-TEST-D401-SIMPLE-v2
+    BUILD 2026-retsu-vocalmix-iPhone-TEST-D418-UPLOAD-FIX
     (このバナーが見えない場合は古いファイルを開いています。最新のダウンロードカードを開き直してください)
   </div>
 
@@ -10507,7 +10510,7 @@ function vmDecodeAudioDataReliable(arrayBuf, timeoutMs = 120000) {
       // ファイル選択change後にresume()をawaitすると、モバイルブラウザでは
       // ユーザージェスチャー扱いが切れてPromiseが返らないことがあるため、
       // Upload時はresumeを待たない。
-      const copy = arrayBuf.slice ? arrayBuf.slice(0) : arrayBuf;
+      const copy = arrayBuf; // D418: decodeAudioData consumes this buffer; avoid full-size clone.
       const maybePromise = audioCtx.decodeAudioData(
         copy,
         (buffer) => finish(resolve, buffer),
@@ -10571,7 +10574,7 @@ function setupDrop(dropId, inputId, labelId, waveId, onLoaded, sourceKind, needs
       // D116: 解析用mono配列が本当に必要な入力だけ生成する。
       // Harmony/ReferenceはAudioBuffer自体から波形・後段解析ができるため、
       // 読み込み直後に曲全体monoコピーを常駐させない。
-      const mono = needsMono ? monoFromAudioBuffer(audioBuf) : null;
+      const mono = (needsMono && !(VM_PLATFORM && VM_PLATFORM.isiOS)) ? monoFromAudioBuffer(audioBuf) : null; // D418: iOS lazy mono
       if (state.inputLoadGeneration[kind] !== generation) return;
 
       drop.classList.add('loaded');
@@ -10596,7 +10599,7 @@ function setupDrop(dropId, inputId, labelId, waveId, onLoaded, sourceKind, needs
       label.textContent = `読み込み失敗: ${e.message}`;
       const us = document.getElementById('uploadStatus');
       if (us) {
-        us.textContent = `エラー: ${file.name} をデコードできませんでした`;
+        us.textContent = `エラー: ${file.name}: ${e && e.message ? e.message : "読み込みに失敗しました"}`;
         us.className = 'status-line error';
       }
     } finally {
@@ -10609,8 +10612,12 @@ function setupDrop(dropId, inputId, labelId, waveId, onLoaded, sourceKind, needs
     }
   }
 
-  drop.addEventListener('click', () => {
-    if (!input.disabled) input.click();
+  // D418: native input is overlaid on the card. Never re-open the picker
+  // when its click bubbles to the parent (iOS Safari double picker issue).
+  input.addEventListener('click', (event) => event.stopPropagation());
+  drop.addEventListener('click', (event) => {
+    if (event.target === input || input.disabled) return;
+    input.click();
   });
 
   drop.addEventListener('keydown', (event) => {
@@ -10758,7 +10765,10 @@ document.getElementById('btnAnalyze').addEventListener('click', async () => {
   let analysisCommitted = false;
   try {
   const sr = await runVMStage('Analyze', '入力確認', async () => {
-    if (!state.vocalBuffer || !state.vocalSamples || !state.instSamples) throw new Error('VocalとInstrumentalを先に読み込んでください');
+    if (!state.vocalBuffer || !state.instBuffer) throw new Error('VocalとInstrumentalを先に読み込んでください');
+    // D418: create exactly the same mono arrays at Analyze instead of at Upload.
+    if (!state.vocalSamples) state.vocalSamples = monoFromAudioBuffer(state.vocalBuffer);
+    if (!state.instSamples) state.instSamples = monoFromAudioBuffer(state.instBuffer);
     return state.vocalBuffer.sampleRate;
   });
   state.vocalAnalysis = await runVMStage('Analyze', 'Vocal解析', () => analyze(state.vocalSamples, sr, (frac) => {
@@ -17007,13 +17017,13 @@ setInterval(() => {
         // D104: 非表示タブのcanvasは再描画しない。
         // visualViewport/keyboard/resizeで頻繁に呼ばれても、現在見えている画面だけ更新する。
         if (active === 'upload' && window.state) {
-          if (state.vocalSamples) {
+          if (state.vocalSamples || state.vocalBuffer) {
             const c = document.getElementById('waveVocal');
-            if (c && typeof drawWave === 'function') drawWave(c, state.vocalSamples);
+            if (c) { if (state.vocalSamples && typeof drawWave === 'function') drawWave(c, state.vocalSamples); else if (typeof drawAudioBufferWave === 'function') drawAudioBufferWave(c, state.vocalBuffer); }
           }
-          if (state.instSamples) {
+          if (state.instSamples || state.instBuffer) {
             const c = document.getElementById('waveInst');
-            if (c && typeof drawWave === 'function') drawWave(c, state.instSamples);
+            if (c) { if (state.instSamples && typeof drawWave === 'function') drawWave(c, state.instSamples); else if (typeof drawAudioBufferWave === 'function') drawAudioBufferWave(c, state.instBuffer); }
           }
           if (state.harmonyBuffer) {
             const c = document.getElementById('waveHarmony');

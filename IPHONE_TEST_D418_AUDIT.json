@@ -1,0 +1,14 @@
+{
+  "build": "D418 iPhone test",
+  "base": "GitHub D401 Simple v2",
+  "changes": [
+    "native file picker overlay",
+    "click propagation guard",
+    "remove decode ArrayBuffer clone",
+    "lazy mono at Analyze",
+    "waveform fallback",
+    "error detail",
+    "isolated atomic SW"
+  ],
+  "real_iphone_test": "unverified"
+}
