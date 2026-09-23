@@ -1,0 +1,26 @@
+{
+  "id": "./index.html",
+  "name": "AIVOCALMIX",
+  "short_name": "AIVOCALMIX",
+  "description": "スマホ完結型 AIVOCALMIX PWA",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#14101F",
+  "theme_color": "#14101F",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "./icon-192-aivocalmix-v441.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "./icon-512-aivocalmix-v441.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
