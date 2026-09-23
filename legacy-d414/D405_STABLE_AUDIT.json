@@ -1,0 +1,39 @@
+{
+  "build": "2026-retsu-vocalmix-v80-D405-STABLE",
+  "purpose": "iPhone解析後のfull-rate mono解析配列常駐を削減",
+  "change": [
+    "iPhoneのみAnalyze終了後にvocalSamples/instSamples参照を解放",
+    "再Analyze時は元AudioBufferから同一mono式で再構築",
+    "Vocal最終音量判定はInstrumental AudioBufferを直接走査",
+    "Harmony表示/判定は既存低レートanalysisProxy cacheを優先利用",
+    "Upload波形再描画はAudioBuffer fallbackを追加",
+    "DSP/解析式/Harmony処理/Export方式は変更なし"
+  ],
+  "checks": {
+    "javascript_syntax": true,
+    "javascript_blocks_checked": 9,
+    "service_worker_syntax": true,
+    "manifest_json": true,
+    "duplicate_ids": 0,
+    "screens": [
+      "analysis",
+      "export",
+      "fx",
+      "home",
+      "mix",
+      "preview",
+      "upload"
+    ],
+    "screen_count": 7,
+    "ios_analysis_release": true,
+    "reanalyze_rebuild": true,
+    "inst_direct_rms": true,
+    "harmony_cache_ready": true,
+    "d402_lazy_before_retained": true,
+    "d403_direct_decode_retained": true,
+    "d404_preview_cleanup_retained": true,
+    "harmony_retained": true,
+    "upload_guards_retained": true,
+    "fire_lit_retained": true
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "build": "v80-D397-STABLE",
+  "purpose": "Differentiate Vocal presets by reducing Tight/Rock overlap without changing the other preset DSP",
+  "changes": [
+    "Tight: HPF 130Hz -> 100Hz",
+    "Tight: compressor ratios/attack/release relaxed for clean controlled articulation",
+    "Tight: very short room and short delay reduced",
+    "Tight UI description updated to clarify clean/dry role",
+    "Rock/Ballad/Wide/Natural DSP unchanged"
+  ],
+  "checks": {
+    "javascript_syntax": "PASS",
+    "service_worker_syntax": "PASS",
+    "duplicate_ids": 0,
+    "screens": ["home", "upload", "analysis", "mix", "fx", "preview", "export"],
+    "screen_count": 7,
+    "fire_lit_minus_4_dbtp_guard": "PASS",
+    "premaster_no_final_limiter_guard": "PASS",
+    "D141_upload_guard": "PRESENT",
+    "D142_harmony_display": "PRESENT",
+    "D212_analysis_commit": "PRESENT",
+    "D213_harmony_guard": "PRESENT"
+  }
+}

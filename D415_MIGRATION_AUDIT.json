@@ -1,0 +1,22 @@
+{
+  "baseline_d414_preserved": true,
+  "inline_js_syntax": true,
+  "inline_blocks_checked": 8,
+  "external_navigation_guard_syntax": true,
+  "service_worker_syntax": true,
+  "duplicate_ids": 0,
+  "screen_count": 7,
+  "screens": [
+    "analysis",
+    "export",
+    "fx",
+    "home",
+    "mix",
+    "preview",
+    "upload"
+  ],
+  "navigation_guard_externalized": true,
+  "d414_audio_path_retained": true,
+  "harmony_retained": true,
+  "fire_lit_retained": true
+}

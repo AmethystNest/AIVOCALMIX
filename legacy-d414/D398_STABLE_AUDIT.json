@@ -1,0 +1,31 @@
+{
+  "build": "v80-D398-STABLE",
+  "purpose": "Harmony preset set is harmony-only; remove Double preset and replace with Back Support",
+  "base": "v80-D397-STABLE",
+  "checks": {
+    "javascript_syntax": "PASS",
+    "service_worker_syntax": "PASS",
+    "manifest_json": "PASS",
+    "duplicate_ids": 0,
+    "screens": [
+      "home",
+      "upload",
+      "analysis",
+      "mix",
+      "fx",
+      "preview",
+      "export"
+    ],
+    "screen_count": 7,
+    "harmony_double_visible_option_removed": "PASS",
+    "harmony_double_preset_removed": "PASS",
+    "harmony_backing_preset_added": "PASS",
+    "legacy_double_pref_migrates_to_natural": "PASS",
+    "fire_lit_minus_4_dbtp_guard_present": "PASS",
+    "premaster_no_final_limiter_path_present": "PASS",
+    "D141_upload_marker_present": "PASS",
+    "D142_harmony_marker_present": "PASS",
+    "D212_analysis_marker_present": "PASS",
+    "D397_to_D398_scope": "Harmony preset UI/definition/pref migration only; SW cache version bump"
+  }
+}

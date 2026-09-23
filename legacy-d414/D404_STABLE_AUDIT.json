@@ -1,0 +1,33 @@
+{
+  "build": "2026-retsu-vocalmix-v80-D404-STABLE",
+  "purpose": "iPhoneでPreview離脱時にBefore比較AudioBufferを解放して常駐メモリを削減",
+  "change": [
+    "iPhoneのみ、Preview画面を離れる時にstate.beforeBufferを解放",
+    "previewModeをAfterへ戻す",
+    "Previewへ戻った後のBeforeはD402の既存ensureBeforeBuffer()で必要時に再生成",
+    "mixedSongBuffer / Mix DSP / Analysis / Export結果は変更なし"
+  ],
+  "checks": {
+    "javascript_syntax": true,
+    "javascript_blocks_checked": 9,
+    "service_worker_syntax": true,
+    "manifest_json": true,
+    "duplicate_ids": 0,
+    "screens": [
+      "analysis",
+      "export",
+      "fx",
+      "home",
+      "mix",
+      "preview",
+      "upload"
+    ],
+    "screen_count": 7,
+    "ios_preview_cleanup": true,
+    "d402_lazy_before_retained": true,
+    "d403_direct_decode_retained": true,
+    "harmony_retained": true,
+    "upload_guards_retained": true,
+    "fire_lit_retained": true
+  }
+}

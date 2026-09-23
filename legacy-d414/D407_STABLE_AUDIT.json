@@ -1,0 +1,39 @@
+{
+  "build": "2026-retsu-vocalmix-v80-D407-STABLE",
+  "purpose": "PWA更新時に旧HTMLがブラウザHTTPキャッシュから残る可能性を低減",
+  "change": [
+    "Service Worker install時のApp Shell取得を cache:'reload' に変更",
+    "navigation取得を network-first + cache:'no-store' に変更",
+    "ネットワーク失敗時は従来どおりCache Storageへフォールバック",
+    "HTML/DSP/解析/MIX/Harmony/Export処理は変更なし"
+  ],
+  "checks": {
+    "javascript_syntax": true,
+    "javascript_blocks_checked": 9,
+    "service_worker_syntax": true,
+    "service_worker_error": "",
+    "manifest_json": true,
+    "duplicate_ids": 0,
+    "screens": [
+      "analysis",
+      "export",
+      "fx",
+      "home",
+      "mix",
+      "preview",
+      "upload"
+    ],
+    "screen_count": 7,
+    "sw_install_reload": true,
+    "navigation_no_store": true,
+    "offline_fallback_retained": true,
+    "d406_scoped_cache_cleanup_retained": true,
+    "d402_lazy_before_retained": true,
+    "d403_direct_decode_retained": true,
+    "d404_preview_cleanup_retained": true,
+    "d405_ios_analysis_release_retained": true,
+    "harmony_retained": true,
+    "upload_guards_retained": true,
+    "fire_lit_retained": true
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "build": "v80-D413-STABLE",
+  "purpose": "iPhone True Peak長尺処理のUI応答性改善",
+  "checks": {
+    "javascript_syntax": true,
+    "javascript_blocks_checked": 9,
+    "service_worker_syntax": true,
+    "manifest_json": true,
+    "duplicate_ids": 0,
+    "screen_count": 7,
+    "screens": [
+      "analysis",
+      "export",
+      "fx",
+      "home",
+      "mix",
+      "preview",
+      "upload"
+    ],
+    "ios_truepeak_wasm_chunk_16384": true,
+    "truepeak_wasm_retained": true,
+    "truepeak_js_fallback_retained": true,
+    "d412_lufs_float32_retained": true,
+    "d411_upload_mono_deferred": true,
+    "d410_audio_recovery_retained": true,
+    "harmony_retained": true,
+    "fire_lit_retained": true
+  }
+}

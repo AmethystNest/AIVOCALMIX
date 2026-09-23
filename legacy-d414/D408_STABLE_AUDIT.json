@@ -1,0 +1,40 @@
+{
+  "build": "2026-retsu-vocalmix-v80-D408-STABLE",
+  "purpose": "Service Worker更新時の部分キャッシュ残留を防止",
+  "change": [
+    "App Shell全件取得成功後にのみ新キャッシュへ反映",
+    "取得途中で失敗した場合はD408新キャッシュを削除",
+    "旧安定版キャッシュはactivate前まで維持",
+    "HTML/DSP/解析/MIX/Harmony/Exportは変更なし"
+  ],
+  "checks": {
+    "javascript_syntax": true,
+    "javascript_blocks_checked": 9,
+    "service_worker_syntax": true,
+    "service_worker_error": "",
+    "manifest_json": true,
+    "duplicate_ids": 0,
+    "screens": [
+      "analysis",
+      "export",
+      "fx",
+      "home",
+      "mix",
+      "preview",
+      "upload"
+    ],
+    "screen_count": 7,
+    "atomic_shell_fetch": true,
+    "failed_cache_cleanup": true,
+    "d407_reload_fetch_retained": true,
+    "d407_nav_no_store_retained": true,
+    "d406_scoped_cache_cleanup_retained": true,
+    "d402_lazy_before_retained": true,
+    "d403_direct_decode_retained": true,
+    "d404_preview_cleanup_retained": true,
+    "d405_ios_analysis_release_retained": true,
+    "harmony_retained": true,
+    "upload_guards_retained": true,
+    "fire_lit_retained": true
+  }
+}

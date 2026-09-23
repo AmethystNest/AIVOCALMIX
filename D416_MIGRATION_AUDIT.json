@@ -1,0 +1,22 @@
+{
+  "inline_js_syntax": true,
+  "inline_blocks_checked": 1,
+  "external_js": {
+    "src/navigation-guard.js": true,
+    "src/ui/hard-reset.js": true,
+    "src/pwa/lifecycle.js": true,
+    "src/audio/context-lifecycle.js": true,
+    "src/ui/page-lifecycle.js": true,
+    "src/ui/viewport-keyboard.js": true,
+    "src/pwa/mobile-resilience.js": true,
+    "src/audio/export-memory-preflight.js": true
+  },
+  "service_worker_syntax": true,
+  "duplicate_ids": 0,
+  "screen_count": 7,
+  "main_app_script_still_intact": true,
+  "d414_rollback_retained": true,
+  "audio_path_retained": true,
+  "harmony_retained": true,
+  "fire_lit_retained": true
+}

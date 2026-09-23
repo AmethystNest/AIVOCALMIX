@@ -1,0 +1,18 @@
+{
+  "main_app_syntax": true,
+  "wav_codec_syntax": true,
+  "wav_functions_externalized": [
+    "encodeWav",
+    "encodeWavAsync",
+    "createFastTpdfDitherGenerator",
+    "buildWavHeader",
+    "encodeWavBlobAsync"
+  ],
+  "main_app_bytes_before": 524916,
+  "main_app_bytes_after": 516646,
+  "duplicate_ids": 0,
+  "d414_rollback_retained": true,
+  "audio_path_retained": true,
+  "harmony_retained": true,
+  "fire_lit_retained": true
+}

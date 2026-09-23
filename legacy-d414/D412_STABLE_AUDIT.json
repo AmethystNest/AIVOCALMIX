@@ -1,0 +1,28 @@
+{
+  "build": "v80-D412-STABLE",
+  "checks": {
+    "javascript_syntax": true,
+    "javascript_blocks_checked": 9,
+    "service_worker_syntax": true,
+    "manifest_json": true,
+    "duplicate_ids": 0,
+    "screen_count": 7,
+    "screens": [
+      "analysis",
+      "export",
+      "fx",
+      "home",
+      "mix",
+      "preview",
+      "upload"
+    ],
+    "lufs_block_storage_float32": true,
+    "lufs_test_abs_difference_lu": 1.5678232045956975e-09,
+    "lufs_test_under_0_00001_lu": true,
+    "ios_pending_blob_pagehide_cleanup": true,
+    "d411_ios_upload_mono_deferred": true,
+    "d410_audio_recovery_retained": true,
+    "harmony_retained": true,
+    "fire_lit_retained": true
+  }
+}

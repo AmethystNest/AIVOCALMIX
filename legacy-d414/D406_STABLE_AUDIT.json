@@ -1,0 +1,38 @@
+{
+  "build": "2026-retsu-vocalmix-v80-D406-STABLE",
+  "purpose": "本体PWAとiPhoneテスト版など別PWAのService Workerキャッシュ干渉を防止",
+  "change": [
+    "本体キャッシュprefixを aivocalmix-main- に分離",
+    "activate時の削除対象を本体prefix + 旧本体Dxxxキャッシュだけに限定",
+    "aivocalmix-iphone-test-* 等の別PWAキャッシュを削除しない",
+    "HTML/DSP/解析/MIX/Harmony/Export処理は変更なし"
+  ],
+  "checks": {
+    "javascript_syntax": true,
+    "javascript_blocks_checked": 9,
+    "service_worker_syntax": true,
+    "service_worker_error": "",
+    "manifest_json": true,
+    "duplicate_ids": 0,
+    "screens": [
+      "analysis",
+      "export",
+      "fx",
+      "home",
+      "mix",
+      "preview",
+      "upload"
+    ],
+    "screen_count": 7,
+    "main_cache_prefix": true,
+    "broad_cache_delete_removed": true,
+    "legacy_main_cleanup_scoped": true,
+    "d402_lazy_before_retained": true,
+    "d403_direct_decode_retained": true,
+    "d404_preview_cleanup_retained": true,
+    "d405_ios_analysis_release_retained": true,
+    "harmony_retained": true,
+    "upload_guards_retained": true,
+    "fire_lit_retained": true
+  }
+}

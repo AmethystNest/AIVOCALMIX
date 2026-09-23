@@ -1,0 +1,10 @@
+{
+  "build": "2026-retsu-vocalmix-v80-D402-STABLE",
+  "purpose": "iPhone/guarded modeのMix完了時メモリピーク低減",
+  "change": [
+    "iPhone/guarded modeではPreview Before音源をMix中に事前生成しない",
+    "PreviewでBeforeを押した時だけ既存ensureBeforeBuffer()を実行",
+    "DSP式・Before合成内容・After Mix内容は変更なし",
+    "通常メモリ環境では従来どおりBeforeをMix中に事前生成"
+  ]
+}

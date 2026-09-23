@@ -1,0 +1,37 @@
+{
+  "build": "2026-retsu-vocalmix-v80-D400-STABLE",
+  "purpose": "レベル責務の整理: Vocalプリセット固有の自動Gain上限差を廃止し、Harmony基準音量不足を改善",
+  "changes": {
+    "vocal_presets": [
+      "Rock固有 maxGainBoostDb 9dB overrideを削除。全Vocalプリセットで自動MIX共通の既定上限を使用",
+      "プリセット詳細から『音量ブースト上限』表示を削除",
+      "EQ/Comp/Reverb/Delay/Exciter/Saturation/Stereo Width等の音色DSPは変更なし"
+    ],
+    "harmony_level": {
+      "Natural": "-4.0dB -> -2.5dB",
+      "Tight": "-3.0dB -> -1.5dB",
+      "Surround": "-5.0dB -> -3.0dB",
+      "Back Support": "-6.0dB -> -4.0dB"
+    },
+    "unchanged": [
+      "Harmony EQ/Comp/Reverb/Width DSP",
+      "Harmony adaptive blend logic",
+      "Vocal automatic MIX level calculation",
+      "Fire Lit Premaster",
+      "Upload/Analysis/FX/Preview/Export flow"
+    ]
+  },
+  "checks": {
+    "javascript_syntax": "PASS (9 inline script blocks)",
+    "service_worker_syntax": "PASS",
+    "manifest": "PASS",
+    "duplicate_ids": "PASS (0)",
+    "screens": "PASS (7)",
+    "upload_guard": "PASS",
+    "analysis_guard": "PASS",
+    "harmony_render": "PASS",
+    "fire_lit_premaster": "PASS (-4.0 dBTP path retained)",
+    "vocal_auto_mix_gain": "PASS (default maxGainBoostDb 6dB remains; only Rock-specific 9dB override removed)",
+    "dsp_scope": "PASS (Vocal tonal DSP unchanged; Harmony level targets only)"
+  }
+}
