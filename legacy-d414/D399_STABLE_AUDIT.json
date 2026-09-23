@@ -1,0 +1,22 @@
+{
+  "build": "2026-retsu-vocalmix-v80-D399-STABLE",
+  "purpose": "Harmony専用Autoプリセット: 既存解析値からNatural/Tight/Back Support/Surroundを保守的に自動選択",
+  "scope": [
+    "Harmony preset UIにAuto追加",
+    "既存Harmony解析値だけを使う選択ロジック追加",
+    "既存4プリセット/DSP自体は変更なし",
+    "D43既定値natural維持"
+  ],
+  "checks": {
+    "javascript_syntax": "PASS (9 inline script blocks)",
+    "service_worker_syntax": "PASS",
+    "duplicate_ids": "PASS (0)",
+    "screens": "PASS (7: Home / Upload / Analysis / Mix / FX / Preview / Export)",
+    "d43_default_harmony": "PASS (natural remains default)",
+    "upload_guard": "PASS",
+    "harmony_guard": "PASS (meterIsStale remains scoped to manual meter; no Harmony contamination)",
+    "analysis_commit_guard": "PASS",
+    "fire_lit_guard": "PASS (-4.0 dBTP / no final limiter path retained)",
+    "preset_scope": "PASS (existing Natural/Tight/Back Support/Surround DSP values unchanged)"
+  }
+}

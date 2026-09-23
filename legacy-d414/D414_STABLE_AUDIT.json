@@ -1,0 +1,29 @@
+{
+  "build": "v80-D414-STABLE",
+  "checks": {
+    "javascript_syntax": true,
+    "javascript_blocks_checked": 9,
+    "service_worker_syntax": true,
+    "manifest_json": true,
+    "duplicate_ids": 0,
+    "screen_count": 7,
+    "screens": [
+      "analysis",
+      "export",
+      "fx",
+      "home",
+      "mix",
+      "preview",
+      "upload"
+    ],
+    "ios_gated_rms_chunk_65536": true,
+    "ios_frame_yield_16": true,
+    "gated_rms_formula_retained": true,
+    "d413_truepeak_retained": true,
+    "d412_lufs_retained": true,
+    "d411_upload_mono_deferred": true,
+    "d410_audio_recovery_retained": true,
+    "harmony_retained": true,
+    "fire_lit_retained": true
+  }
+}

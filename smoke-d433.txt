@@ -1,0 +1,25 @@
+initial Retsu AI VocalMIX screens 7
+navigation upload home
+navigation analysis analysis
+navigation mix mix
+navigation preview preview
+navigation fx fx
+navigation export export
+navigation home home
+upload ready
+analyzed
+mix rendered
+preview clicked
+export vocal_mix_final_16bit_48000hz.wav
+wav bytes 960044 pcm peak 14587
+full-song preview/export waveform channel 0 gain 1.0000 normalized error 0.00009
+full-song preview/export waveform channel 1 gain 1.0000 normalized error 0.00009
+44.1 kHz resample 220500 frames, peak 0.4452
+FX Preview/Export 0 gain 1.0000 error 0.00010
+FX Preview/Export 1 gain 1.0000 error 0.00010
+YouTube FX 44.1 kHz export peak 0.32446
+YouTube FX 44.1 kHz decoded true peak -9.774 dBTP
+Fire Lit FX 44.1 kHz decoded true peak -6.295 dBTP
+errors []
+offline Retsu AI VocalMIX function
+offline errors []

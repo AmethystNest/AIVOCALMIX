@@ -1,25 +1,15 @@
 {
-  "name": "AI VocalMIX iPhone Test",
-  "short_name": "VocalMIX Test",
-  "description": "AI VocalMIX iPhone 動作確認用簡易版",
+  "name": "AI VocalMIX",
+  "short_name": "VocalMIX",
+  "description": "スマホ完結型 AI VocalMIX PWA",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#070710",
-  "theme_color": "#070710",
+  "background_color": "#14101F",
+  "theme_color": "#14101F",
   "orientation": "portrait-primary",
   "icons": [
-    {
-      "src": "./icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "./icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any"
-    }
+    {"src":"./icon-192.png","sizes":"192x192","type":"image/png","purpose":"any maskable"},
+    {"src":"./icon-512.png","sizes":"512x512","type":"image/png","purpose":"any maskable"}
   ]
 }

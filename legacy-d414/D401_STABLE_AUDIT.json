@@ -1,0 +1,37 @@
+{
+  "build": "2026-retsu-vocalmix-v80-D401-STABLE",
+  "purpose": "HarmonyのSurround / Back Supportだけを+0.5dB前へ",
+  "changes": {
+    "Surround": "-3.0dB -> -2.5dB",
+    "Back Support": "-4.0dB -> -3.5dB",
+    "unchanged": [
+      "Natural",
+      "Tight",
+      "Harmony EQ/Comp/Reverb/Width",
+      "Harmony Auto判定",
+      "Vocal自動MIX",
+      "Fire Lit Premaster",
+      "Upload/Analysis/FX/Preview/Export"
+    ]
+  },
+  "checks": {
+    "duplicate_ids": 0,
+    "screens": [
+      "analysis",
+      "export",
+      "fx",
+      "home",
+      "mix",
+      "preview",
+      "upload"
+    ],
+    "screen_count": 7,
+    "surround_level_present": true,
+    "back_level_present": true,
+    "fire_lit_guard": true,
+    "harmony_render_guard": true,
+    "upload_guard": true,
+    "javascript_syntax": "PASS",
+    "service_worker_syntax": "PASS"
+  }
+}

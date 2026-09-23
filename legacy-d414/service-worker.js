@@ -1,22 +1,11 @@
 'use strict';
 const CACHE_PREFIX = 'aivocalmix-main-';
-const CACHE_NAME = `${CACHE_PREFIX}v80-d438-ios-wav-preflight`;
+const CACHE_NAME = `${CACHE_PREFIX}v80-d414-shell`;
 const LEGACY_MAIN_CACHE_RE = /^aivocalmix-v80-d\d+-shell$/i;
 const APP_SHELL = [
   './',
   './index.html',
   './manifest.webmanifest',
-  './src/navigation-guard.js',
-  './src/audio/wav-codec.js',
-  './src/audio/render-memory-preflight.js',
-  './src/audio/upload-decode.js',
-  './src/audio/context-lifecycle.js',
-  './src/audio/export-memory-preflight.js',
-  './src/ui/hard-reset.js',
-  './src/ui/page-lifecycle.js',
-  './src/ui/viewport-keyboard.js',
-  './src/pwa/lifecycle.js',
-  './src/pwa/mobile-resilience.js',
   './icon-180.png',
   './icon-192.png',
   './icon-512.png'

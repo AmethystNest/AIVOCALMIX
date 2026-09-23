@@ -1,0 +1,29 @@
+{
+  "build": "v80-D410-STABLE",
+  "checks": {
+    "javascript_syntax": true,
+    "javascript_blocks_checked": 9,
+    "service_worker_syntax": true,
+    "manifest_json": true,
+    "duplicate_ids": 0,
+    "screens": [
+      "analysis",
+      "export",
+      "fx",
+      "home",
+      "mix",
+      "preview",
+      "upload"
+    ],
+    "screen_count": 7,
+    "ios_resume_timeout": true,
+    "ios_stalled_clock_check": true,
+    "background_health_mark": true,
+    "no_worker_added": true,
+    "d409_startup_update_retained": true,
+    "d408_atomic_cache_retained": true,
+    "d405_ios_analysis_release_retained": true,
+    "harmony_retained": true,
+    "fire_lit_retained": true
+  }
+}

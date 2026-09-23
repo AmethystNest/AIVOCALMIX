@@ -1,0 +1,33 @@
+{
+  "build": "2026-retsu-vocalmix-v80-D403-STABLE",
+  "purpose": "Upload時の不要な全ファイルArrayBuffer複製を廃止し、iPhoneのメモリピークを低減",
+  "change": [
+    "decodeAudioData()直前の arrayBuf.slice(0) を削除",
+    "vmReadFileArrayBuffer()で取得したArrayBufferをdecodeAudioData()へ直接渡す",
+    "ArrayBufferはデコード後に再利用しないため機能上の依存なし",
+    "AudioBuffer/DSP/解析/Mix/Exportロジックは変更なし"
+  ],
+  "checks": {
+    "javascript_syntax": true,
+    "javascript_blocks_checked": 9,
+    "service_worker_syntax": true,
+    "manifest_json": true,
+    "duplicate_ids": 0,
+    "screens": [
+      "analysis",
+      "export",
+      "fx",
+      "home",
+      "mix",
+      "preview",
+      "upload"
+    ],
+    "screen_count": 7,
+    "decode_copy_removed": true,
+    "decode_direct": true,
+    "d402_lazy_before_retained": true,
+    "harmony_retained": true,
+    "upload_guards_retained": true,
+    "fire_lit_retained": true
+  }
+}

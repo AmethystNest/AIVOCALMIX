@@ -1,0 +1,30 @@
+{
+  "build": "v80-D409-STABLE",
+  "purpose": "PWA起動時のSW更新検出を強化",
+  "checks": {
+    "javascript_syntax": true,
+    "javascript_blocks_checked": 9,
+    "service_worker_syntax": true,
+    "manifest_json": true,
+    "duplicate_ids": 0,
+    "screen_count": 8,
+    "screens": [
+      "${name}",
+      "analysis",
+      "export",
+      "fx",
+      "home",
+      "mix",
+      "preview",
+      "upload"
+    ],
+    "startup_update_check": true,
+    "processing_safe_update_retained": true,
+    "d408_atomic_cache_retained": true,
+    "d407_fresh_navigation_retained": true,
+    "d406_cache_scope_retained": true,
+    "d405_ios_analysis_release_retained": true,
+    "harmony_retained": true,
+    "fire_lit_retained": true
+  }
+}

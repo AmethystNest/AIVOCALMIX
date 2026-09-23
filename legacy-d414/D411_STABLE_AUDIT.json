@@ -1,0 +1,28 @@
+{
+  "build": "v80-D411-STABLE",
+  "checks": {
+    "javascript_syntax": true,
+    "javascript_blocks_checked": 9,
+    "service_worker_syntax": true,
+    "manifest_json": true,
+    "duplicate_ids": 0,
+    "screen_count": 7,
+    "screens": [
+      "analysis",
+      "export",
+      "fx",
+      "home",
+      "mix",
+      "preview",
+      "upload"
+    ],
+    "ios_upload_mono_deferred": true,
+    "analyze_lazy_rebuild_vocal": true,
+    "analyze_lazy_rebuild_inst": true,
+    "upload_wave_audio_buffer_fallback": true,
+    "d410_audio_recovery_retained": true,
+    "d405_post_analysis_release_retained": true,
+    "harmony_retained": true,
+    "fire_lit_retained": true
+  }
+}
