@@ -1,7 +1,7 @@
 {
   "name": "AIVOCALMIX",
   "short_name": "AIVOCALMIX",
-  "description": "\\u30b9\\u30de\\u30db\\u5b8c\\u7d50\\u578b AIVOCALMIX PWA",
+  "description": "スマホ完結型 AIVOCALMIX PWA",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",

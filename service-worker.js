@@ -1,12 +1,15 @@
 'use strict';
 const CACHE_PREFIX = 'aivocalmix-main-';
-const CACHE_NAME = `${CACHE_PREFIX}v80-d439-public-brand-refresh`;
+const CACHE_NAME = `${CACHE_PREFIX}v80-d440-public-icon-refresh`;
 const LEGACY_MAIN_CACHE_RE = /^aivocalmix-v80-d\d+-shell$/i;
 const APP_SHELL = [
   './',
   './index.html',
   './manifest.webmanifest',
-  './assets/premaster-mascot.jpg',
+  './assets/premaster-mascot.png',
+  './favicon-32-aivocalmix.png',
+  './favicon-48-aivocalmix.png',
+  './assets/premaster-mascot.png',
   './src/navigation-guard.js',
   './src/audio/wav-codec.js',
   './src/audio/render-memory-preflight.js',
