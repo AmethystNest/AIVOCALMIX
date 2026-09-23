@@ -1,7 +1,7 @@
 {
-  "name": "AI VocalMIX",
-  "short_name": "VocalMIX",
-  "description": "スマホ完結型 AI VocalMIX PWA",
+  "name": "AIVOCALMIX",
+  "short_name": "AIVOCALMIX",
+  "description": "\\u30b9\\u30de\\u30db\\u5b8c\\u7d50\\u578b AIVOCALMIX PWA",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
@@ -9,7 +9,17 @@
   "theme_color": "#14101F",
   "orientation": "portrait-primary",
   "icons": [
-    {"src":"./icon-192.png","sizes":"192x192","type":"image/png","purpose":"any maskable"},
-    {"src":"./icon-512.png","sizes":"512x512","type":"image/png","purpose":"any maskable"}
+    {
+      "src": "./icon-192-aivocalmix.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "./icon-512-aivocalmix.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
   ]
 }
