@@ -100,4 +100,4 @@ Verified in Chromium: after installing one release and serving a changed `src/` 
 
 ## M6 (reference matching v2, off by default)
 
-新方式(試験的) in the reference-matching panel switches to `src/reference/reference-match-v2.js` (loudest sections, Mid/Side, smoothed curve, linear-phase FIR). Off, the existing method is unchanged. Also fixed: loading a reference no longer marks the Mix result as stale. Evaluation and an open export issue: `docs/M6_REFERENCE_MATCH_V2.md`. Cache `v80-d451-reference-match-v2`.
+新方式(試験的) in the reference-matching panel switches to `src/reference/reference-match-v2.js` (loudest sections, Mid/Side, smoothed curve, linear-phase FIR). Off, the existing method is unchanged. Also fixed: loading a reference no longer marks the Mix result as stale, and an applied correction now reaches Preview and all exports. Details: `docs/M6_REFERENCE_MATCH_V2.md`.

@@ -29,6 +29,13 @@ Not evaluated: listening tests and real reference tracks (no ground truth), iPho
 
 Loading a reference track ran the same invalidation as replacing the vocal, so the Mix result became stale and 違いを分析 always answered 先にMixタブでレンダリングしてください unless the Mix was rendered again after loading the reference. The state contract in `index.html` (v80-D5) says a reference change discards only the reference-match results; `invalidateForSourceChange('reference')` now does nothing (the reference state is already reset by its own revision counters).
 
-## Open issue (not changed)
+## Fixed: the correction now reaches Preview and Export
 
-The corrected audio does not reach Export: normal and YouTube export rebuild the song from the stems (`assembleFullSong`), which ignores a whole-song correction. It reaches Preview only if the FX tab was rendered before (`getLatestSongBuffer()` uses `fxSongBuffer` only when the FX revision is current). Making export include the correction changes exported audio, so it needs a decision.
+Previously the corrected audio reached Preview only if the FX tab had been rendered, and never reached Export, which rebuilds the song from the stems. Now:
+
+- 補正を適用 stores the correction (method, amount, analysis) together with the uncorrected song it was computed from, and registers the result as the current song, so Preview plays it without an FX render.
+- Normal and YouTube export apply the same correction to the rebuilt song, then the final limiter at their ceiling (-0.3 / -1.5 dBTP). The Fire Lit premaster applies only the correction and leaves headroom to its existing gain step (it has no limiter).
+- Analysing or applying again works on the uncorrected song, so corrections do not stack (Export applies the latest one once).
+- The correction stops applying, as other derived results do, when FX settings change or FX is re-rendered, a source or the reference is replaced.
+
+`tests/reference-ui-regression.cjs` checks for both methods: Preview uses the corrected audio; the normal export matches it (residual 0.00008 after a gain fit, vs 1.15 against the uncorrected song); YouTube (0.04 vs 1.00) and premaster (0.55 vs 0.63, different processing path) are closer to the corrected than to the uncorrected song; an FX setting change drops the correction. The v1 correction itself is bit-identical to before. Extra memory: while a correction is active after an FX render, the uncorrected FX song stays in memory.

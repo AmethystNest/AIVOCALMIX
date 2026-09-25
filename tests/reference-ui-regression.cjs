@@ -85,30 +85,60 @@ async function run(browser, useV2, rerenderMix = false) {
     return { bytes: Array.from(bytes), latestIsMatched: getLatestSongBuffer() === b, hasV2: !!state.referenceMatch.v2,
       applyStatus: document.getElementById('referenceStatus').textContent, length: b.length, channels: b.numberOfChannels };
   });
-  const matched = await page.evaluate(() => Array.from({ length: state.referenceMatchedBuffer.numberOfChannels },
-    (_, ch) => Array.from(state.referenceMatchedBuffer.getChannelData(ch))));
-  await page.locator('.tab-btn[data-screen="export"]').click();
-  await page.locator('#exportSampleRate').selectOption('44100');
-  const download = page.waitForEvent('download', { timeout: 120000 });
-  await page.locator('#btnExport').click();
-  const file = await download;
-  // The exported WAV must be the corrected audio (up to the export gain /
-  // true-peak ceiling), compared as in smoke.cjs.
-  const wav = require('fs').readFileSync(await file.path());
-  let exportError = Infinity;
-  {
-    const frames = (wav.length - 44) / 4;
+  const grab = expr => page.evaluate(e => { const b = eval(e); return Array.from({ length: b.numberOfChannels }, (_, ch) => Array.from(b.getChannelData(ch))); }, expr);
+  const matched = await grab('state.referenceMatchedBuffer');
+  const base = await grab('state.referenceCorrection ? state.referenceCorrection.baseBuffer : state.mixedSongBuffer');
+  // Normalised residual after fitting one gain (as in smoke.cjs).
+  const fitError = (wav, x) => {
+    let offset = 12, data;
+    while (offset + 8 <= wav.length) {
+      const id = wav.toString('ascii', offset, offset + 4), len = wav.readUInt32LE(offset + 4);
+      if (id === 'data') data = wav.subarray(offset + 8, offset + 8 + len);
+      offset += 8 + len + (len % 2);
+    }
+    const frames = Math.min(data.length / 4, x[0].length);
     let dot = 0, energy = 0, residual = 0;
-    const x = matched, y = (i, ch) => wav.readInt16LE(44 + i * 4 + ch * 2) / 32768;
+    const y = (i, ch) => data.readInt16LE(i * 4 + ch * 2) / 32768;
     for (let ch = 0; ch < 2; ch++) for (let i = 0; i < frames; i++) { dot += x[ch][i] * y(i, ch); energy += x[ch][i] ** 2; }
     const gain = dot / energy;
     for (let ch = 0; ch < 2; ch++) for (let i = 0; i < frames; i++) residual += (y(i, ch) - gain * x[ch][i]) ** 2;
-    exportError = Math.sqrt(residual / energy);
+    return +Math.sqrt(residual / energy).toFixed(5);
+  };
+  const exports = {};
+  for (const [mode, button] of [['normal', '#btnExport'], ['youtube', '#btnExport'], ['premaster', '#btnExportMaster']]) {
+    await page.locator('.tab-btn[data-screen="export"]').click();
+    await page.locator('#exportSampleRate').selectOption('44100');
+    await page.locator('#exportBitDepth').selectOption('16');
+    if (mode !== 'premaster') await page.locator('#exportFinishMode').selectOption(mode);
+    const download = page.waitForEvent('download', { timeout: 180000 });
+    await page.locator(button).click();
+    const file = await download;
+    const wav = require('fs').readFileSync(await file.path());
+    exports[mode] = { file: file.suggestedFilename(), vsCorrected: fitError(wav, matched), vsUncorrected: fitError(wav, base) };
   }
+  // Changing an FX setting makes the corrected song stale: Preview and Export
+  // fall back to the uncorrected Mix until FX/correction are applied again.
+  await page.locator('.tab-btn[data-screen="fx"]').click();
+  await page.evaluate(() => { const el = document.getElementById('fxReverbMix'); el.value = '0.3'; el.dispatchEvent(new Event('input', { bubbles: true })); el.dispatchEvent(new Event('change', { bubbles: true })); });
+  const invalidated = await page.evaluate(() => getActiveReferenceCorrection() === null && getLatestSongBuffer() !== state.referenceMatchedBuffer);
+  const file = { suggestedFilename: () => exports.normal.file };
+  const exportError = exports.normal.vsCorrected;
   await context.close();
   const sha = crypto.createHash('sha256').update(Buffer.from(result.bytes)).digest('hex');
   return { sha, status, applyStatus: result.applyStatus, latestIsMatched: result.latestIsMatched, hasV2: result.hasV2,
-    exported: file.suggestedFilename(), exportError: +exportError.toFixed(5), length: result.length, channels: result.channels, errors };
+    exported: file.suggestedFilename(), exportError, exports, invalidated, length: result.length, channels: result.channels, errors };
+}
+
+// The corrected audio must be what Preview plays and what every export
+// contains: each export is closer to the corrected song than to the
+// uncorrected one, and the normal export matches the Preview buffer.
+function checkReachesOutput(label, r) {
+  assert.ok(r.latestIsMatched, `${label}: Preview does not use the corrected audio`);
+  assert.ok(r.invalidated, `${label}: the correction stayed active after an FX setting changed`);
+  assert.ok(r.exports.normal.vsCorrected < 0.05, `${label}: normal export differs from the corrected audio (${r.exports.normal.vsCorrected})`);
+  for (const [mode, e] of Object.entries(r.exports)) {
+    assert.ok(e.vsCorrected < e.vsUncorrected, `${label}: ${mode} export is not the corrected audio (${JSON.stringify(e)})`);
+  }
 }
 
 (async () => {
@@ -122,10 +152,7 @@ async function run(browser, useV2, rerenderMix = false) {
     console.log('v1 sha256', v1.sha);
     assert.deepEqual(v1.errors, []);
     assert.ok(!v1.hasV2 && /バンド/.test(v1.applyStatus), 'v1 path not used by default');
-    // Known issue (docs/M6_REFERENCE_MATCH_V2.md): the corrected audio reaches
-    // Preview only after an FX render and never reaches Export, which rebuilds
-    // the song from the stems. Reported, not asserted, until that is decided.
-    console.log('known issue: corrected audio in Preview', v1.latestIsMatched, '/ export matches corrected audio', v1.exportError < 0.01);
+    checkReachesOutput('v1', v1);
     // v2 only exists in the new code.
     const hasV2Ui = await (async () => {
       const c = await browser.newContext({ serviceWorkers: 'block' }); const p = await c.newPage();
@@ -136,6 +163,7 @@ async function run(browser, useV2, rerenderMix = false) {
       console.log('v2', JSON.stringify({ ...v2, sha: v2.sha.slice(0, 16) }));
       assert.deepEqual(v2.errors, []);
       assert.ok(v2.hasV2 && /新方式/.test(v2.applyStatus), 'v2 path not used');
+      checkReachesOutput('v2', v2);
 
       assert.notEqual(v2.sha, v1.sha, 'v2 produced the same output as v1');
     }

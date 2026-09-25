@@ -28,7 +28,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="./styles/app.css?v=v80-d452-css-media-fix">
+<link rel="stylesheet" href="./styles/app.css?v=v80-d453-reference-export">
 
 
 <!-- v80-D5 STATE STABILITY CONTRACT
@@ -44,13 +44,13 @@
   Rejected outer leaf/vine ornament must not be reintroduced.
   UI-only revisions must not alter DSP code paths.
 -->
-<link rel="stylesheet" href="./styles/patches-d4-d42.css?v=v80-d452-css-media-fix">
+<link rel="stylesheet" href="./styles/patches-d4-d42.css?v=v80-d453-reference-export">
 
 
-<script src="./src/ui/hard-reset.js?v=v80-d452-css-media-fix"></script>
+<script src="./src/ui/hard-reset.js?v=v80-d453-reference-export"></script>
 
 
-<link rel="stylesheet" href="./styles/patches-d46-d439.css?v=v80-d452-css-media-fix">
+<link rel="stylesheet" href="./styles/patches-d46-d439.css?v=v80-d453-reference-export">
 <meta property="og:type" content="website">
 <meta property="og:title" content="AIVOCALMIX">
 <meta property="og:url" content="https://AmethystNest.github.io/AIVOCALMIX/">
@@ -816,25 +816,26 @@
 </div>
 </div>
 
-<script src="./src/navigation-guard.js?v=v80-d452-css-media-fix"></script>
-<script src="./src/audio/wav-codec.js?v=v80-d452-css-media-fix"></script>
-<script src="./src/audio/render-memory-preflight.js?v=v80-d452-css-media-fix"></script>
-<script src="./src/analysis/spectrum-core.js?v=v80-d452-css-media-fix"></script>
-<script src="./src/analysis/vocal-analysis.js?v=v80-d452-css-media-fix"></script>
-<script src="./src/dsp/sample-dsp.js?v=v80-d452-css-media-fix"></script>
-<script src="./src/audio/loudness.js?v=v80-d452-css-media-fix"></script>
-<script src="./src/audio/sample-peak.js?v=v80-d452-css-media-fix"></script>
-<script src="./src/audio/hq-resampler.js?v=v80-d452-css-media-fix"></script>
-<script src="./src/audio/true-peak.js?v=v80-d452-css-media-fix"></script>
-<script src="./src/dsp/cooperative-dsp.js?v=v80-d452-css-media-fix"></script>
-<script src="./src/harmony/harmony-analysis.js?v=v80-d452-css-media-fix"></script>
-<script src="./src/render/vocal-render.js?v=v80-d452-css-media-fix"></script>
-<script src="./src/render/harmony-render.js?v=v80-d452-css-media-fix"></script>
-<script src="./src/export/youtube-master.js?v=v80-d452-css-media-fix"></script>
-<script src="./src/export/premaster.js?v=v80-d452-css-media-fix"></script>
-<script src="./src/decision/mix-decision.js?v=v80-d452-css-media-fix"></script>
-<script src="./src/reference/reference-match-v2.js?v=v80-d452-css-media-fix"></script>
-<script src="./src/audio/upload-decode.js?v=v80-d452-css-media-fix"></script>
+<script src="./src/navigation-guard.js?v=v80-d453-reference-export"></script>
+<script src="./src/audio/wav-codec.js?v=v80-d453-reference-export"></script>
+<script src="./src/audio/render-memory-preflight.js?v=v80-d453-reference-export"></script>
+<script src="./src/analysis/spectrum-core.js?v=v80-d453-reference-export"></script>
+<script src="./src/analysis/vocal-analysis.js?v=v80-d453-reference-export"></script>
+<script src="./src/dsp/sample-dsp.js?v=v80-d453-reference-export"></script>
+<script src="./src/audio/loudness.js?v=v80-d453-reference-export"></script>
+<script src="./src/audio/sample-peak.js?v=v80-d453-reference-export"></script>
+<script src="./src/audio/hq-resampler.js?v=v80-d453-reference-export"></script>
+<script src="./src/audio/true-peak.js?v=v80-d453-reference-export"></script>
+<script src="./src/dsp/cooperative-dsp.js?v=v80-d453-reference-export"></script>
+<script src="./src/harmony/harmony-analysis.js?v=v80-d453-reference-export"></script>
+<script src="./src/render/vocal-render.js?v=v80-d453-reference-export"></script>
+<script src="./src/render/harmony-render.js?v=v80-d453-reference-export"></script>
+<script src="./src/export/youtube-master.js?v=v80-d453-reference-export"></script>
+<script src="./src/export/premaster.js?v=v80-d453-reference-export"></script>
+<script src="./src/decision/mix-decision.js?v=v80-d453-reference-export"></script>
+<script src="./src/reference/reference-match-v2.js?v=v80-d453-reference-export"></script>
+<script src="./src/reference/reference-correction.js?v=v80-d453-reference-export"></script>
+<script src="./src/audio/upload-decode.js?v=v80-d453-reference-export"></script>
 <script id="app-script">
 /* BUILD 2026-retsu-vocalmix-v80-D6-error-boundary */
 /* =========================================================
@@ -917,6 +918,7 @@ const state = {
   referenceBuffer: null,        // リファレンス音源(お手本にしたいミックス済み曲)
   referenceMatch: null,         // 分析結果(帯域差・変動指標)
   referenceMatchedBuffer: null, // 補正EQ適用後の音源
+  referenceCorrection: null,    // 適用中の補正内容(Exportで再合成後にかけ直す)
   referenceRevision: 0,         // D97: リファレンス差し替え世代
   referenceAnalysisGeneration: 0, // D97: 古い分析完了の上書き防止
   referenceApplyGeneration: 0,    // D97: 古い補正レンダーの上書き防止
@@ -1041,7 +1043,7 @@ const VM_DERIVED_KEYS = [
   'vocalAnalysis','rel','chain','chainRules','mixedBuffer','mixedBufferPreTrim',
   'finalBuffer','finalBufferPreTrim','harmonyOnlyBuffer','harmonyOnlyFxBuffer',
   'harmonyProcessedPreTrim','mixedSongBuffer','fxSongBuffer','beforeBuffer',
-  'referenceMatch','referenceMatchedBuffer','stemReviewCurrentBuffer','stemReviewCurrentLabel',
+  'referenceMatch','referenceMatchedBuffer','referenceCorrection','stemReviewCurrentBuffer','stemReviewCurrentLabel',
   'harmonyDiagCurrentBuffer','harmonyDiagCurrentLabel','renderHistory','_harmonyComputed'
 ];
 function snapshotDerivedState() {
@@ -1121,6 +1123,7 @@ function releaseDerivedAudioRefs({ keepVocalMix = false } = {}) {
   state.fxSongBuffer = null;
   state.beforeBuffer = null;
   state.referenceMatchedBuffer = null;
+  state.referenceCorrection = null;
   state.stemReviewCurrentBuffer = null;
   state.harmonyDiagCurrentBuffer = null;
 }
@@ -1452,6 +1455,7 @@ function invalidateFxOutputsOnly() {
   state.harmonyOnlyFxBuffer = null;
   state.fxSongBuffer = null;
   state.referenceMatchedBuffer = null;
+  state.referenceCorrection = null;
   state.fxRenderedRevision = -1;
   const dlFx = document.getElementById('btnDownloadFx');
   if (dlFx) dlFx.disabled = true;
@@ -3845,6 +3849,7 @@ function setupDrop(dropId, inputId, labelId, waveId, onLoaded, sourceKind, needs
       state.referenceApplyGeneration++;
       state.referenceMatch = null;
       state.referenceMatchedBuffer = null;
+      state.referenceCorrection = null;
       state.referenceBuffer = null;
       state.referenceSamples = null;
       const referenceStatus = document.getElementById('referenceStatus');
@@ -4949,6 +4954,29 @@ for (const id of VM_FX_INVALIDATE_IDS) {
 }
 
 /* --- リファレンスマッチング --- */
+// 現在有効なリファレンス補正。補正結果がPreview/Exportの対象曲である間だけ有効で、
+// FX設定変更・FX再レンダリング・音源/リファレンス差し替えで自動的に無効になる。
+function getActiveReferenceCorrection() {
+  const c = state.referenceCorrection;
+  if (!c || !state.referenceMatchedBuffer) return null;
+  if (c.referenceRevision !== state.referenceRevision) return null;
+  if (state.fxSongBuffer !== state.referenceMatchedBuffer) return null;
+  if (getLatestSongBuffer() !== state.referenceMatchedBuffer) return null;
+  return c;
+}
+// Exportはステムから曲を再合成するため、有効なリファレンス補正をかけ直す。
+// ceilingDbを渡すとPreviewと同様に補正後の最終リミッターを通す(Premasterは渡さない)。
+async function applyReferenceCorrectionForExport(buffer, correction, ceilingDb) {
+  validateReferenceCorrectionMemory(buffer, correction);
+  const { rendered } = await applyReferenceCorrection(buffer, correction);
+  return ceilingDb == null ? rendered : applyFinalLookaheadLimiterToBuffer(rendered, ceilingDb, true);
+}
+// 分析・補正の基準曲。補正中は補正前の曲を使い、補正を重ねがけしない
+// (Exportは再合成した曲に最新の補正を1回だけかけるため、それと一致させる)。
+function getReferenceSourceSong() {
+  const c = getActiveReferenceCorrection();
+  return c ? c.baseBuffer : getLatestSongBuffer();
+}
 setupDrop('dropReference', 'fileReference', 'dropReferenceLabel', 'waveReference', async (buf) => {
   state.referenceBuffer = buf;
   const statusEl = document.getElementById('referenceStatus');
@@ -4959,7 +4987,7 @@ setupDrop('dropReference', 'fileReference', 'dropReferenceLabel', 'waveReference
 document.getElementById('btnAnalyzeReference').addEventListener('click', async () => {
   const statusEl = document.getElementById('referenceStatus');
   const btnAnalyzeRef = document.getElementById('btnAnalyzeReference');
-  const current = getLatestSongBuffer();
+  const current = getReferenceSourceSong();
 
   if (btnAnalyzeRef.dataset.busy === '1' || state.referenceBusy ||
       state.isRendering || state.isAnalyzing || state.isExporting || state.meterBusy || state.activeLoads > 0) return;
@@ -4981,7 +5009,7 @@ document.getElementById('btnAnalyzeReference').addEventListener('click', async (
     sourceRevisionAtStart !== state.sourceRevision ||
     renderConfigRevisionAtStart !== state.renderConfigRevision ||
     fxConfigRevisionAtStart !== state.fxConfigRevision ||
-    currentBufferAtStart !== getLatestSongBuffer();
+    currentBufferAtStart !== getReferenceSourceSong();
 
   prepareForHeavyOperation();
   state.referenceBusy = true;
@@ -5086,7 +5114,7 @@ document.getElementById('btnApplyReference').addEventListener('click', async () 
       state.isRendering || state.isAnalyzing || state.isExporting || state.meterBusy || state.activeLoads > 0) return;
 
   const match = state.referenceMatch;
-  const source = getLatestSongBuffer();
+  const source = getReferenceSourceSong();
   if (!match || !source) { statusEl.textContent = '先に「違いを分析」を実行してください'; statusEl.className = 'status-line error'; return; }
 
   const generation = ++state.referenceApplyGeneration;
@@ -5115,47 +5143,15 @@ document.getElementById('btnApplyReference').addEventListener('click', async () 
   await yieldToBrowser();
   try {
     await ensureAudioContextReady();
-    const sr = source.sampleRate;
 
     // D96: 参照EQ適用時の一時メモリを事前確認。
     // OfflineAudioContextの出力分を見込み、危険な場合はレンダリング前に止める。
-    const sourceBytes = source.length * source.numberOfChannels * 4;
-    // v2はFIR遅延分を含むレンダリング結果から切り出すため、1本分多く見込む。
-    const referenceWorkingBytes = sourceBytes * (useV2 ? 3 : 2);
-    const referenceLimit = getWavExportMemoryLimit();
-    if (referenceWorkingBytes > referenceLimit) {
-      throw new Error(
-        `リファレンス補正時の一時メモリが安全上限を超える見込みです ` +
-        `(推定${formatBytes(referenceWorkingBytes)} / 上限${formatBytes(referenceLimit)})。`
-      );
-    }
+    const correction = useV2
+      ? { version: 2, match: match.v2, amount }
+      : { version: 1, diffs: match.diffs, amount };
+    validateReferenceCorrectionMemory(source, correction);
 
-    let rendered, applied = 0;
-    if (useV2) {
-      rendered = await applyReferenceMatchV2(source, match.v2, amount);
-    } else {
-    const offlineCtx = new OfflineAudioContext(source.numberOfChannels, source.length, sr);
-
-    // 以前はsource全体を別AudioBufferへcopyToChannelしていたため、
-    // 長尺曲では入力PCMを丸ごと1コピー余分に保持していた。
-    // AudioBufferはBufferSourceへ直接渡せるためコピーを廃止する。
-    const src = offlineCtx.createBufferSource();
-    src.buffer = source;
-
-    let node = src;
-    for (const d of match.diffs) {
-      // 極端な補正で破綻しないよう、1バンドあたり±6dBまでに制限する
-      const gainDb = Math.max(-6, Math.min(6, d.diffDb * amount));
-      if (Math.abs(gainDb) < 0.2) continue; // 誤差程度なら触らない
-      const f = offlineCtx.createBiquadFilter();
-      f.type = 'peaking'; f.frequency.value = d.centerHz; f.Q.value = 1.0; f.gain.value = gainDb;
-      node.connect(f); node = f;
-      applied++;
-    }
-    node.connect(offlineCtx.destination);
-    src.start();
-    rendered = await offlineCtx.startRendering();
-    }
+    const { rendered, applied } = await applyReferenceCorrection(source, correction);
     // 補正で音量が変わるため、最終段のリミッターを通し直す
     const limited = await applyFinalLookaheadLimiterToBuffer(rendered, -0.3, false);
 
@@ -5166,7 +5162,7 @@ document.getElementById('btnApplyReference').addEventListener('click', async () 
       fxConfigRevisionAtStart !== state.fxConfigRevision ||
       referenceRevisionAtStart !== state.referenceRevision ||
       matchAtStart !== state.referenceMatch ||
-      sourceAtStart !== getLatestSongBuffer();
+      sourceAtStart !== getReferenceSourceSong();
 
     if (stale) {
       statusEl.textContent = '音源または設定が変更されたため、古い補正結果を破棄しました';
@@ -5176,6 +5172,11 @@ document.getElementById('btnApplyReference').addEventListener('click', async () 
 
     state.referenceMatchedBuffer = limited;
     state.fxSongBuffer = state.referenceMatchedBuffer; // Preview/Exportから参照される
+    // 補正内容を保持し、Exportでステムから再合成した曲にも同じ補正をかける。
+    state.referenceCorrection = { ...correction, referenceRevision: state.referenceRevision, baseBuffer: sourceAtStart };
+    // getLatestSongBuffer()はFX世代が一致する時だけfxSongBufferを使うため、
+    // FX未レンダリングでも補正結果がPreview/Exportの対象になるよう現在の結果として登録する。
+    state.fxRenderedRevision = state.fxConfigRevision;
     pushRenderHistory(`リファレンス補正${useV2 ? '(新方式)' : ''}(適用量${Math.round(amount * 100)}%)`, state.referenceMatchedBuffer);
     refreshPreviewWave();
     statusEl.textContent = useV2
@@ -7179,6 +7180,7 @@ document.getElementById('btnExport').addEventListener('click', () => withExportG
   const fxConfigRevisionAtStart = state.fxConfigRevision;
   const mixedSongAtStart = state.mixedSongBuffer;
   const fxSongAtStart = state.fxSongBuffer;
+  const referenceCorrectionAtStart = getActiveReferenceCorrection();
   const vmTimingStartedAt = Date.now();
 
   const exportStale = () =>
@@ -7187,6 +7189,7 @@ document.getElementById('btnExport').addEventListener('click', () => withExportG
     fxConfigRevisionAtStart !== state.fxConfigRevision ||
     mixedSongAtStart !== state.mixedSongBuffer ||
     fxSongAtStart !== state.fxSongBuffer ||
+    referenceCorrectionAtStart !== getActiveReferenceCorrection() ||
     finishMode !== (document.getElementById('exportFinishMode')?.value || 'normal') ||
     bitDepthAtStart !== parseInt(document.getElementById('exportBitDepth').value, 10) ||
     targetSrAtStart !== parseInt(document.getElementById('exportSampleRate').value, 10);
@@ -7208,17 +7211,28 @@ document.getElementById('btnExport').addEventListener('click', () => withExportG
     if (finishMode === 'youtube') {
       // YouTube用ではまず-1.5dBTP天井でフルMIXを作り、
       // その後Integrated -14 LUFSを目安に最終ラウドネスを整える。
-      const base = state.mixedBuffer || state.finalBuffer
+      const reassembled = !!(state.mixedBuffer || state.finalBuffer);
+      let base = reassembled
         ? await runVMStage('Export YouTube', 'フルMIX再合成', () => assembleFullSong(-1.5, true))
         : getLatestSongBuffer();
       if (!base) throw new VMStageError('Export YouTube', '入力確認', new Error('書き出せる音源がありません'));
+      if (reassembled && referenceCorrectionAtStart) {
+        base = await runVMStage('Export YouTube', 'リファレンス補正', () =>
+          applyReferenceCorrectionForExport(base, referenceCorrectionAtStart, -1.5));
+      }
       src = await runVMStage('Export YouTube', 'YouTubeマスタリング', () => masterForYouTube(base, statusEl, exportStale));
       suffix = 'youtube_master';
     } else {
-      src = state.mixedBuffer || state.finalBuffer
+      const reassembled = !!(state.mixedBuffer || state.finalBuffer);
+      src = reassembled
         ? await runVMStage('Export', 'True Peak再合成', () => assembleFullSong(-0.3, true))
         : getLatestSongBuffer();
       if (!src) throw new VMStageError('Export', '入力確認', new Error('書き出せる音源がありません'));
+      if (reassembled && referenceCorrectionAtStart) {
+        const assembled = src;
+        src = await runVMStage('Export', 'リファレンス補正', () =>
+          applyReferenceCorrectionForExport(assembled, referenceCorrectionAtStart, -0.3));
+      }
     }
 
     const exportOperation = finishMode === 'youtube' ? 'Export YouTube' : 'Export';
@@ -7253,6 +7267,7 @@ document.getElementById('btnExportMaster').addEventListener('click', () => withE
   const fxConfigRevisionAtStart = state.fxConfigRevision;
   const mixedSongAtStart = state.mixedSongBuffer;
   const fxSongAtStart = state.fxSongBuffer;
+  const premasterCorrection = getActiveReferenceCorrection();
   const vmTimingStartedAt = Date.now();
 
   const exportStale = () =>
@@ -7261,6 +7276,7 @@ document.getElementById('btnExportMaster').addEventListener('click', () => withE
     fxConfigRevisionAtStart !== state.fxConfigRevision ||
     mixedSongAtStart !== state.mixedSongBuffer ||
     fxSongAtStart !== state.fxSongBuffer ||
+    premasterCorrection !== getActiveReferenceCorrection() ||
     bitDepthAtStart !== parseInt(document.getElementById('exportBitDepth').value, 10) ||
     targetSrAtStart !== parseInt(document.getElementById('exportSampleRate').value, 10);
 
@@ -7286,6 +7302,12 @@ document.getElementById('btnExportMaster').addEventListener('click', () => withE
     // True Peakが-4.0dBTPを超える時だけ「曲全体を同じ量」下げる。
     // これによりピークだけを潰さず、Fire Litへ渡すダイナミクスを維持する。
     let rawPremaster = await runVMStage('Export Premaster', 'Premaster再合成', () => assembleFullSongUnmastered());
+    // Premasterは最終リミッターを使わないため、補正のみかけてヘッドルーム調整に任せる。
+    if (premasterCorrection) {
+      const unmastered = rawPremaster;
+      rawPremaster = await runVMStage('Export Premaster', 'リファレンス補正', () =>
+        applyReferenceCorrectionForExport(unmastered, premasterCorrection, null));
+    }
 
     // D164: サンプルレート変換でもTrue Peakは僅かに変わり得るため、
     // Fire Lit用ヘッドルーム調整は「最終WAVのSample Rateへ変換した後」に行う。
@@ -7551,22 +7573,22 @@ setInterval(() => {
 }, 1000);
 </script>
 
-<script src="./src/pwa/lifecycle.js?v=v80-d452-css-media-fix"></script>
+<script src="./src/pwa/lifecycle.js?v=v80-d453-reference-export"></script>
 
 
 
-<script src="./src/audio/context-lifecycle.js?v=v80-d452-css-media-fix"></script>
+<script src="./src/audio/context-lifecycle.js?v=v80-d453-reference-export"></script>
 
 
 
-<script src="./src/ui/page-lifecycle.js?v=v80-d452-css-media-fix"></script>
+<script src="./src/ui/page-lifecycle.js?v=v80-d453-reference-export"></script>
 
-<script src="./src/ui/viewport-keyboard.js?v=v80-d452-css-media-fix"></script>
+<script src="./src/ui/viewport-keyboard.js?v=v80-d453-reference-export"></script>
 
-<script src="./src/pwa/mobile-resilience.js?v=v80-d452-css-media-fix"></script>
+<script src="./src/pwa/mobile-resilience.js?v=v80-d453-reference-export"></script>
 
 
-<script src="./src/audio/export-memory-preflight.js?v=v80-d452-css-media-fix"></script>
+<script src="./src/audio/export-memory-preflight.js?v=v80-d453-reference-export"></script>
 
 </body>
 </html>
