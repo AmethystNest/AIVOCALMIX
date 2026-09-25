@@ -97,3 +97,7 @@ The inline `<style>` blocks moved verbatim into `styles/app.css`, `styles/patche
 3. `node tests/app-shell-consistency.cjs` checks that every loaded asset is stamped and listed in `APP_SHELL`, every `APP_SHELL` file exists and no script in `src/` is unreferenced.
 
 Verified in Chromium: after installing one release and serving a changed `src/` file with a new cache name, the page runs the new file when the URLs are re-stamped and the old cached file when they are not.
+
+## M6 (reference matching v2, off by default)
+
+新方式(試験的) in the reference-matching panel switches to `src/reference/reference-match-v2.js` (loudest sections, Mid/Side, smoothed curve, linear-phase FIR). Off, the existing method is unchanged. Also fixed: loading a reference no longer marks the Mix result as stale. Evaluation and an open export issue: `docs/M6_REFERENCE_MATCH_V2.md`. Cache `v80-d451-reference-match-v2`.

@@ -28,7 +28,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="./styles/app.css?v=v80-d450-versioned-assets">
+<link rel="stylesheet" href="./styles/app.css?v=v80-d451-reference-match-v2">
 
 
 <!-- v80-D5 STATE STABILITY CONTRACT
@@ -44,13 +44,13 @@
   Rejected outer leaf/vine ornament must not be reintroduced.
   UI-only revisions must not alter DSP code paths.
 -->
-<link rel="stylesheet" href="./styles/patches-d4-d42.css?v=v80-d450-versioned-assets">
+<link rel="stylesheet" href="./styles/patches-d4-d42.css?v=v80-d451-reference-match-v2">
 
 
-<script src="./src/ui/hard-reset.js?v=v80-d450-versioned-assets"></script>
+<script src="./src/ui/hard-reset.js?v=v80-d451-reference-match-v2"></script>
 
 
-<link rel="stylesheet" href="./styles/patches-d46-d439.css?v=v80-d450-versioned-assets">
+<link rel="stylesheet" href="./styles/patches-d46-d439.css?v=v80-d451-reference-match-v2">
 <meta property="og:type" content="website">
 <meta property="og:title" content="AIVOCALMIX">
 <meta property="og:url" content="https://AmethystNest.github.io/AIVOCALMIX/">
@@ -718,6 +718,9 @@
       </div>
       <p class="lead" style="margin-top:-8px; font-size:12px;">100%にすると完全にリファレンスの帯域バランスへ揃えますが、
       元の個性が失われるため50%前後を推奨します。</p>
+      <div class="fx-row"><label>新方式(試験的)</label><input type="checkbox" id="refMatchV2"></div>
+      <p class="lead" style="margin-top:-8px; font-size:12px;">ONにすると、曲の大きい区間だけを比較し、Mid/Sideを別々に、
+      滑らかな補正カーブ(直線位相)で合わせます。適用量どおりの割合で近づきます。切り替えた後は「違いを分析」からやり直してください。</p>
       <div class="toggle-row">
         <button class="secondary" id="btnAnalyzeReference">違いを分析</button>
         <button class="secondary" id="btnApplyReference" disabled>補正を適用してレンダリング</button>
@@ -813,24 +816,25 @@
 </div>
 </div>
 
-<script src="./src/navigation-guard.js?v=v80-d450-versioned-assets"></script>
-<script src="./src/audio/wav-codec.js?v=v80-d450-versioned-assets"></script>
-<script src="./src/audio/render-memory-preflight.js?v=v80-d450-versioned-assets"></script>
-<script src="./src/analysis/spectrum-core.js?v=v80-d450-versioned-assets"></script>
-<script src="./src/analysis/vocal-analysis.js?v=v80-d450-versioned-assets"></script>
-<script src="./src/dsp/sample-dsp.js?v=v80-d450-versioned-assets"></script>
-<script src="./src/audio/loudness.js?v=v80-d450-versioned-assets"></script>
-<script src="./src/audio/sample-peak.js?v=v80-d450-versioned-assets"></script>
-<script src="./src/audio/hq-resampler.js?v=v80-d450-versioned-assets"></script>
-<script src="./src/audio/true-peak.js?v=v80-d450-versioned-assets"></script>
-<script src="./src/dsp/cooperative-dsp.js?v=v80-d450-versioned-assets"></script>
-<script src="./src/harmony/harmony-analysis.js?v=v80-d450-versioned-assets"></script>
-<script src="./src/render/vocal-render.js?v=v80-d450-versioned-assets"></script>
-<script src="./src/render/harmony-render.js?v=v80-d450-versioned-assets"></script>
-<script src="./src/export/youtube-master.js?v=v80-d450-versioned-assets"></script>
-<script src="./src/export/premaster.js?v=v80-d450-versioned-assets"></script>
-<script src="./src/decision/mix-decision.js?v=v80-d450-versioned-assets"></script>
-<script src="./src/audio/upload-decode.js?v=v80-d450-versioned-assets"></script>
+<script src="./src/navigation-guard.js?v=v80-d451-reference-match-v2"></script>
+<script src="./src/audio/wav-codec.js?v=v80-d451-reference-match-v2"></script>
+<script src="./src/audio/render-memory-preflight.js?v=v80-d451-reference-match-v2"></script>
+<script src="./src/analysis/spectrum-core.js?v=v80-d451-reference-match-v2"></script>
+<script src="./src/analysis/vocal-analysis.js?v=v80-d451-reference-match-v2"></script>
+<script src="./src/dsp/sample-dsp.js?v=v80-d451-reference-match-v2"></script>
+<script src="./src/audio/loudness.js?v=v80-d451-reference-match-v2"></script>
+<script src="./src/audio/sample-peak.js?v=v80-d451-reference-match-v2"></script>
+<script src="./src/audio/hq-resampler.js?v=v80-d451-reference-match-v2"></script>
+<script src="./src/audio/true-peak.js?v=v80-d451-reference-match-v2"></script>
+<script src="./src/dsp/cooperative-dsp.js?v=v80-d451-reference-match-v2"></script>
+<script src="./src/harmony/harmony-analysis.js?v=v80-d451-reference-match-v2"></script>
+<script src="./src/render/vocal-render.js?v=v80-d451-reference-match-v2"></script>
+<script src="./src/render/harmony-render.js?v=v80-d451-reference-match-v2"></script>
+<script src="./src/export/youtube-master.js?v=v80-d451-reference-match-v2"></script>
+<script src="./src/export/premaster.js?v=v80-d451-reference-match-v2"></script>
+<script src="./src/decision/mix-decision.js?v=v80-d451-reference-match-v2"></script>
+<script src="./src/reference/reference-match-v2.js?v=v80-d451-reference-match-v2"></script>
+<script src="./src/audio/upload-decode.js?v=v80-d451-reference-match-v2"></script>
 <script id="app-script">
 /* BUILD 2026-retsu-vocalmix-v80-D6-error-boundary */
 /* =========================================================
@@ -1136,6 +1140,10 @@ function clearRenderedOutputs({ keepVocalMix = false } = {}) {
   if (typeof renderLatestProcessSummary === 'function') renderLatestProcessSummary();
 }
 function invalidateForSourceChange(kind) {
+  // v80-D5契約: Reference差し替えで破棄するのはReference Match結果のみ(setupDrop側で
+  // referenceRevision等を更新済み)。Mix/FX結果まで古い扱いにすると、Mix後にリファレンスを
+  // 読み込んだだけで「先にMixタブでレンダリングしてください」となり分析できなかった。
+  if (kind === 'reference') return;
   if (typeof vmSpectrumGeneration !== 'undefined') vmSpectrumGeneration++;
   if (typeof vmInstReviewGeneration !== 'undefined') vmInstReviewGeneration++;
   state.sourceRevision++;
@@ -5002,6 +5010,12 @@ document.getElementById('btnAnalyzeReference').addEventListener('click', async (
     statusEl.textContent = '分析中(音量変動を計算しています)...';
     const refDyn = await computeDynamicsIndexFromBuffer(refBufferAtStart, referenceAnalysisCancelled);
     const curDyn = await computeDynamicsIndexFromBuffer(currentBufferAtStart, referenceAnalysisCancelled);
+    // M6: 新方式(試験的)がONの時だけ、v2用の補正カーブも分析しておく。
+    let v2 = null;
+    if (document.getElementById('refMatchV2')?.checked) {
+      statusEl.textContent = '分析中(新方式: 大きい区間のMid/Sideを比較しています)...';
+      v2 = await analyzeReferenceMatchV2(refBufferAtStart, currentBufferAtStart, referenceAnalysisCancelled);
+    }
     const stale = referenceAnalysisCancelled();
 
     if (stale) {
@@ -5010,7 +5024,7 @@ document.getElementById('btnAnalyzeReference').addEventListener('click', async (
       return;
     }
 
-    state.referenceMatch = { diffs, refDyn, curDyn };
+    state.referenceMatch = { diffs, refDyn, curDyn, v2 };
 
     // ボーカル/伴奏バランスの判定。実測では音量比1dBあたり
     // 概ね0.5〜0.7dBほど変動指標が動くため、その比率で逆算する。
@@ -5084,6 +5098,12 @@ document.getElementById('btnApplyReference').addEventListener('click', async () 
   const sourceAtStart = source;
 
   const amount = parseFloat(document.getElementById('refMatchAmount').value);
+  const useV2 = !!document.getElementById('refMatchV2')?.checked;
+  if (useV2 && !match.v2) {
+    statusEl.textContent = '新方式がONです。「違いを分析」をもう一度実行してください';
+    statusEl.className = 'status-line error';
+    return;
+  }
   prepareForHeavyOperation();
   state.referenceBusy = true;
   syncVMProcessingClass();
@@ -5100,7 +5120,8 @@ document.getElementById('btnApplyReference').addEventListener('click', async () 
     // D96: 参照EQ適用時の一時メモリを事前確認。
     // OfflineAudioContextの出力分を見込み、危険な場合はレンダリング前に止める。
     const sourceBytes = source.length * source.numberOfChannels * 4;
-    const referenceWorkingBytes = sourceBytes * 2;
+    // v2はFIR遅延分を含むレンダリング結果から切り出すため、1本分多く見込む。
+    const referenceWorkingBytes = sourceBytes * (useV2 ? 3 : 2);
     const referenceLimit = getWavExportMemoryLimit();
     if (referenceWorkingBytes > referenceLimit) {
       throw new Error(
@@ -5109,6 +5130,10 @@ document.getElementById('btnApplyReference').addEventListener('click', async () 
       );
     }
 
+    let rendered, applied = 0;
+    if (useV2) {
+      rendered = await applyReferenceMatchV2(source, match.v2, amount);
+    } else {
     const offlineCtx = new OfflineAudioContext(source.numberOfChannels, source.length, sr);
 
     // 以前はsource全体を別AudioBufferへcopyToChannelしていたため、
@@ -5118,7 +5143,6 @@ document.getElementById('btnApplyReference').addEventListener('click', async () 
     src.buffer = source;
 
     let node = src;
-    let applied = 0;
     for (const d of match.diffs) {
       // 極端な補正で破綻しないよう、1バンドあたり±6dBまでに制限する
       const gainDb = Math.max(-6, Math.min(6, d.diffDb * amount));
@@ -5130,7 +5154,8 @@ document.getElementById('btnApplyReference').addEventListener('click', async () 
     }
     node.connect(offlineCtx.destination);
     src.start();
-    const rendered = await offlineCtx.startRendering();
+    rendered = await offlineCtx.startRendering();
+    }
     // 補正で音量が変わるため、最終段のリミッターを通し直す
     const limited = await applyFinalLookaheadLimiterToBuffer(rendered, -0.3, false);
 
@@ -5151,9 +5176,11 @@ document.getElementById('btnApplyReference').addEventListener('click', async () 
 
     state.referenceMatchedBuffer = limited;
     state.fxSongBuffer = state.referenceMatchedBuffer; // Preview/Exportから参照される
-    pushRenderHistory(`リファレンス補正(適用量${Math.round(amount * 100)}%)`, state.referenceMatchedBuffer);
+    pushRenderHistory(`リファレンス補正${useV2 ? '(新方式)' : ''}(適用量${Math.round(amount * 100)}%)`, state.referenceMatchedBuffer);
     refreshPreviewWave();
-    statusEl.textContent = `補正を適用しました(${applied}バンド、適用量${Math.round(amount * 100)}%)。Previewで聴き比べてください`;
+    statusEl.textContent = useV2
+      ? `補正を適用しました(新方式、適用量${Math.round(amount * 100)}%)。Previewで聴き比べてください`
+      : `補正を適用しました(${applied}バンド、適用量${Math.round(amount * 100)}%)。Previewで聴き比べてください`;
     statusEl.className = 'status-line';
   } catch (e) {
     console.error('[Reference apply error]', e);
@@ -7524,22 +7551,22 @@ setInterval(() => {
 }, 1000);
 </script>
 
-<script src="./src/pwa/lifecycle.js?v=v80-d450-versioned-assets"></script>
+<script src="./src/pwa/lifecycle.js?v=v80-d451-reference-match-v2"></script>
 
 
 
-<script src="./src/audio/context-lifecycle.js?v=v80-d450-versioned-assets"></script>
+<script src="./src/audio/context-lifecycle.js?v=v80-d451-reference-match-v2"></script>
 
 
 
-<script src="./src/ui/page-lifecycle.js?v=v80-d450-versioned-assets"></script>
+<script src="./src/ui/page-lifecycle.js?v=v80-d451-reference-match-v2"></script>
 
-<script src="./src/ui/viewport-keyboard.js?v=v80-d450-versioned-assets"></script>
+<script src="./src/ui/viewport-keyboard.js?v=v80-d451-reference-match-v2"></script>
 
-<script src="./src/pwa/mobile-resilience.js?v=v80-d450-versioned-assets"></script>
+<script src="./src/pwa/mobile-resilience.js?v=v80-d451-reference-match-v2"></script>
 
 
-<script src="./src/audio/export-memory-preflight.js?v=v80-d450-versioned-assets"></script>
+<script src="./src/audio/export-memory-preflight.js?v=v80-d451-reference-match-v2"></script>
 
 </body>
 </html>
