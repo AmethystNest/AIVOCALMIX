@@ -48,3 +48,14 @@ The YouTube export now prioritizes preserving transients over reaching -14 LUFS:
 PCM and WAVE_FORMAT_EXTENSIBLE WAV files are inspected from at most the first 1 MiB before the full file is read and decoded. The app estimates decoded AudioBuffer memory and rejects files that exceed the current device limits. Unknown/compressed WAV encodings continue through the existing decoder and post-decode checks. No analysis or DSP behavior was changed.
 
 Automated Chromium coverage includes WAV preflight invocation, upload through MIX/Preview/WAV Export, Preview/Export sample comparison, and existing mastering/export regression tests. Physical iPhone Safari behavior remains unverified.
+
+## M0-M2 (development baseline, no DSP change)
+
+Plan: `docs/OSS_RESEARCH_TECH_SELECTION.md`.
+
+- Service worker install no longer stalls over HTTP/1.1: each app-shell body is read before waiting on the rest (the all-or-nothing cache update is unchanged). `tests/smoke.cjs` accepts 44.1 or 48 kHz Preview renders (the AudioContext rate depends on the device).
+- M0: `tests/baseline-metrics.cjs` records sizes, stage timings, heap peak, the analysis/decision snapshot and WAV hashes for a fixed synthetic input (`docs/baseline/d438-chromium.json`). With `Math.random`/`crypto.getRandomValues` seeded in the page, output is bit-identical between runs; `--check` compares a run with the baseline.
+- M1: the seven embedded WASM modules are disassembled into `wasm-src/*.wat`; `npm run wasm:verify` checks they still assemble to the embedded bytes. The original C source is not in the repository.
+- M2: `tests/loudness-reference-regression.cjs` checks LUFS/True Peak against EBU Tech 3341 cases, analytic sines, libebur128 and a high-precision True Peak reference. Results and one open spec deviation (LUFS about 0.04 LU low): `docs/M2_LOUDNESS_REFERENCE.md`.
+
+Running the tests locally: `npm install`, serve the repository on port 8765 (e.g. `npx http-server -p 8765 -c-1 .`), then `node tests/<name>.cjs`. Browser tests need Playwright (global install). Chromium results do not establish iPhone Safari behaviour.
