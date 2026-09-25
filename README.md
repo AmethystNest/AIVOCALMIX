@@ -68,3 +68,18 @@ Running the tests locally: `npm install`, serve the repository on port 8765 (e.g
 - Analysis layer moved verbatim: FFT/window/spectrum/RMS/dBFS helpers (`nextPow2` … `dbfs`) to `src/analysis/spectrum-core.js`; `analyze`, `analyzeRelative`, `analyzeHarmonySummary`, the harmony analysis proxy and the peak/RMS WASM helpers to `src/analysis/vocal-analysis.js`. They still call `yieldToBrowser`, `vmDecodeBase64Bytes` and `vmWasmGlobalNumber` from the app script at call time. Cache `v80-d444-analysis-module`.
 - `tests/analysis-regression.cjs` runs the analysis layer in Node on the same four inputs and compares with the analysis results recorded from Chromium (numbers within 1e-12 relative: Node and Chromium V8 differ in the last bit of Math.cos/sin/hypot). It reproduces Chromium's 16-bit decode (float32 `n/32768` for negative, `n/32767` for positive samples, measured).
 - Moving code between scripts is only safe when the moved names are not declared twice (the later declaration wins inside one script). Current duplicate: `estimateAudioBufferBytes` (twice in the app script).
+
+## M4 (structure only, no behaviour change)
+
+Further verbatim moves out of the app script (each re-inserts to the previous `index.html` exactly, loads standalone, runs before the app script and is in the app shell; cache `v80-d448-render-export-modules`):
+
+| File | Contents |
+|---|---|
+| `src/dsp/sample-dsp.js` | sample-array DSP, biquads, lookahead limiter, dither, DSP/clip-stats WASM |
+| `src/dsp/cooperative-dsp.js` | reverb impulse, saturation, gain riding, yielding mono/stereo stages, precision de-esser/compressor |
+| `src/audio/loudness.js`, `sample-peak.js`, `hq-resampler.js`, `true-peak.js` | LUFS, sample peak, export resampler, true peak and gain helpers (with their WASM) |
+| `src/harmony/harmony-analysis.js` | harmony presets, timing analysis/correction, `decideHarmonyChain` |
+| `src/render/vocal-render.js`, `harmony-render.js` | `applyPreProcessingSteps`/`renderChain`, harmony rendering, `mixTwoBuffers` |
+| `src/export/youtube-master.js`, `premaster.js` | YouTube mastering, Fire Lit premaster |
+
+The baseline now also runs the flow with a synthetic harmony stem (recorded on unchanged code before the harmony move). What remains in the app script is state, UI, preview, FX region editing and export orchestration, which reads `state` and the DOM directly.

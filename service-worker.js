@@ -1,6 +1,6 @@
 'use strict';
 const CACHE_PREFIX = 'aivocalmix-main-';
-const CACHE_NAME = `${CACHE_PREFIX}v80-d447-dsp-harmony-modules`;
+const CACHE_NAME = `${CACHE_PREFIX}v80-d448-render-export-modules`;
 const LEGACY_MAIN_CACHE_RE = /^aivocalmix-v80-d\d+-shell$/i;
 const APP_SHELL = [
   './',
@@ -22,6 +22,10 @@ const APP_SHELL = [
   './src/audio/true-peak.js',
   './src/dsp/cooperative-dsp.js',
   './src/harmony/harmony-analysis.js',
+  './src/render/vocal-render.js',
+  './src/render/harmony-render.js',
+  './src/export/youtube-master.js',
+  './src/export/premaster.js',
   './src/decision/mix-decision.js',
   './src/audio/context-lifecycle.js',
   './src/audio/export-memory-preflight.js',

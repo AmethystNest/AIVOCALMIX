@@ -157,3 +157,4 @@ THIRD_PARTY_NOTICES.md
 - M2 完了: `docs/M2_LOUDNESS_REFERENCE.md`。全項目合格。LUFSが規格より約0.04 LU低く出る点（K特性2段目の正規化）は承認を得て修正し、libebur128と一致（YouTube用書き出しは −13.953 → −14.000 LUFS）。基準値は `docs/baseline/chromium.json` に取り直し。
 - M3 判断層 完了: `src/decision/mix-decision.js`（一字一句そのまま移動）。84ケースのゴールデンテストと、エンドツーエンドのビット一致で挙動不変を確認。
 - M3 解析層 完了: `src/analysis/spectrum-core.js`・`src/analysis/vocal-analysis.js`（一字一句そのまま移動、元ファイルの完全復元を確認）。Node上のゴールデンテスト（Chromium記録値と相対1e-12以内）で検証。`index.html` の本体スクリプトは約1.35MB→約1.27MB。
+- M4 完了（純粋な処理部分）: DSP・計測・ハモリ・レンダリング・マスタリングを `src/` の11ファイルへ一字一句そのまま移動。基準値にハモリありの経路を追加し、全出力のビット一致で挙動不変を確認。本体スクリプトは約7,400行、`index.html` は約1.35MB→約1.05MB。残りは状態・画面・再生・書き出し制御で、分離には状態管理の設計変更が必要。

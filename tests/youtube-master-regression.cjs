@@ -2,11 +2,11 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 const vm = require('node:vm');
-const html = fs.readFileSync(path.join(__dirname, '..', 'index.html'), 'utf8');
-const start = html.indexOf('async function masterForYouTube(');
-const end = html.indexOf('// True Peak計測とゲイン適用', start);
+const moduleSource = fs.readFileSync(path.join(__dirname, '..', 'src', 'export', 'youtube-master.js'), 'utf8');
+const start = moduleSource.indexOf('async function masterForYouTube(');
+const end = moduleSource.length;
 assert.ok(start > 0 && end > start);
-assert.match(html.slice(start, end), /True Peak -1\.5dBTPへ調整中/);
+assert.match(moduleSource.slice(start, end), /True Peak -1\.5dBTPへ調整中/);
 const gains = [];
 const context = {
   yieldToBrowser: async () => {},
@@ -26,7 +26,7 @@ const context = {
     return { buffer };
   }
 };
-vm.runInNewContext(html.slice(start, end), context);
+vm.runInNewContext(moduleSource.slice(start, end), context);
 async function test(peak, expectedBoostLimit) {
   gains.length = 0;
   context.originalPeak = peak;
