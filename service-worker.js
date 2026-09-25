@@ -1,6 +1,6 @@
 'use strict';
 const CACHE_PREFIX = 'aivocalmix-main-';
-const CACHE_NAME = `${CACHE_PREFIX}v80-d441-install-brand-export-image`;
+const CACHE_NAME = `${CACHE_PREFIX}v80-d442-lufs-kweight-fix`;
 const LEGACY_MAIN_CACHE_RE = /^aivocalmix-v80-d\d+-shell$/i;
 const APP_SHELL = [
   './',

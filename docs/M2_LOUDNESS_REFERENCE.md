@@ -2,23 +2,21 @@
 
 Test: `tests/loudness-reference-regression.cjs` (Chromium, local server on port 8765). All checks pass.
 
-## Result
+## Result (after the K-weighting fix)
 
 | Check | Reference | App result | Verdict |
 |---|---|---|---|
-| EBU Tech 3341 cases 1-5, 48 kHz and 44.1 kHz, WASM and JS paths | -23.0 / -33.0 LUFS, +-0.1 LU | -0.022 to -0.099 LU below target | Pass, with a consistent negative offset (see below) |
+| EBU Tech 3341 cases 1-5, 48 kHz and 44.1 kHz, WASM and JS paths | -23.0 / -33.0 LUFS, +-0.1 LU | -0.055 to +0.024 LU | Pass |
 | True Peak of sines with known peak (incl. Tech 3341 case 15) | exact analytic peak, +0.2/-0.4 dB | -0.02 to +0.04 dB | Pass |
-| Music-like signal, Integrated LUFS | libebur128 67b33ab | -0.043 LU (48 kHz), -0.047 LU (44.1 kHz) | Pass |
+| Music-like signal, Integrated LUFS | libebur128 67b33ab, now +-0.01 LU | 0.000 LU (48 and 44.1 kHz) | Pass |
 | Music-like signal, True Peak, export path (8x, 16 taps per side) | band-limited peak (Kaiser windowed sinc, 1024 taps per side, 64x) | -0.002 dB (48 kHz), -0.167 dB (44.1 kHz) | Pass |
 | Same, 4x path (function default only; the app always calls 8x) | same | -0.249 dB (48 kHz), -0.386 dB (44.1 kHz) | Pass, close to the limit |
 
-## Finding 1: Integrated LUFS reads about 0.04 LU low (spec deviation, not fixed)
+## Finding 1 (fixed): Integrated LUFS read about 0.04 LU low
 
-`kWeightingCoeffs()` normalises the numerator of the second K-weighting stage (RLB high-pass) by `1 / (1 + K/Q + K^2)`. ITU-R BS.1770 and libebur128 use the unnormalised numerator `[1, -2, 1]`. The normalisation is -0.043 dB at 48 kHz and -0.047 dB at 44.1 kHz, which matches the measured offset exactly. The JS path and the WASM module (which receives the coefficients from JS) both carry it.
+`kWeightingCoeffs()` normalised the numerator of the second K-weighting stage (RLB high-pass) by `1 / (1 + K/Q + K^2)`. ITU-R BS.1770 and libebur128 use the unnormalised numerator `[1, -2, 1]`. The normalisation was -0.043 dB at 48 kHz and -0.047 dB at 44.1 kHz, which matched the measured offset exactly (EBU cases read -0.022 to -0.099 LU low; case 4 was at -23.098, near the limit). The WASM module receives its coefficients from JS, so one change fixes both paths.
 
-Effect: the app thinks a mix is 0.04 LU quieter than it is, so loudness-targeted output (YouTube -14 LUFS) ends up about 0.04 LU louder than the target. Inaudible, and the True Peak ceiling still holds. EBU case 4 reads -23.098, close to the +-0.1 LU limit.
-
-Fixing it changes exported audio (by roughly 0.04 dB in the YouTube path), so it is left for an explicit decision.
+After the fix the numerator is `[1, -2, 1]`. LUFS is used only by the Export meters and YouTube mastering (not by analysis or MIX decisions). On the baseline input the YouTube master measured with libebur128 went from -13.953 to -14.000 LUFS; the normal and premaster exports are bit-identical to before.
 
 ## Finding 2: libebur128 is not a usable True Peak reference here
 

@@ -1,6 +1,6 @@
 {
-  "recordedAt": "2026-09-25T01:51:27.803Z",
-  "git": "60cdbaf",
+  "recordedAt": "2026-09-25T02:18:16.985Z",
+  "git": "577919b",
   "browser": "chromium 141.0.7390.37 headless",
   "input": {
     "vocal": {
@@ -17,8 +17,8 @@
     }
   },
   "static": {
-    "indexHtmlBytes": 1350990,
-    "inlineScriptBytes": 598118,
+    "indexHtmlBytes": 1351058,
+    "inlineScriptBytes": 598186,
     "inlineStyleBytes": 334347,
     "wasmBase64": [
       {
@@ -64,7 +64,7 @@
       "src/ui/viewport-keyboard.js": 2213
     },
     "appShellFiles": 19,
-    "appShellBytes": 2380368
+    "appShellBytes": 2380436
   },
   "deterministic": {
     "normal": true,
@@ -74,149 +74,149 @@
   },
   "run1": {
     "wallMs": {
-      "upload": 773,
-      "analyze": 1393,
-      "mix": 6971,
-      "exportNormal": 11047,
-      "exportYouTube": 19471,
-      "exportPremaster": 9904
+      "upload": 800,
+      "analyze": 1368,
+      "mix": 4852,
+      "exportNormal": 11632,
+      "exportYouTube": 19100,
+      "exportPremaster": 9803
     },
     "stageTimings": [
       {
         "operation": "Analyze",
         "stage": "入力確認",
-        "ms": 0.19999999995343387,
+        "ms": 0.10000000009313226,
         "ok": true,
-        "at": 1790300990112
+        "at": 1790302600897
       },
       {
         "operation": "Analyze",
         "stage": "Vocal解析",
-        "ms": 447.89999999990687,
+        "ms": 433.8000000002794,
         "ok": true,
-        "at": 1790300990560
+        "at": 1790302601331
       },
       {
         "operation": "Analyze",
         "stage": "Vocal×伴奏 相対解析",
-        "ms": 417.29999999981374,
+        "ms": 374.70000000018626,
         "ok": true,
-        "at": 1790300990992
+        "at": 1790302601744
       },
       {
         "operation": "Mix",
         "stage": "入力確認",
-        "ms": 0.10000000009313226,
+        "ms": 0.20000000018626451,
         "ok": true,
-        "at": 1790300992855
+        "at": 1790302602085
       },
       {
         "operation": "Mix",
         "stage": "Vocal前処理",
-        "ms": 1696.3000000000466,
+        "ms": 1664.8000000002794,
         "ok": true,
-        "at": 1790300994554
+        "at": 1790302603755
       },
       {
         "operation": "Mix",
         "stage": "Vocalチェーン",
-        "ms": 89.0999999998603,
+        "ms": 84.70000000018626,
         "ok": true,
-        "at": 1790300994685
+        "at": 1790302603885
       },
       {
         "operation": "Mix",
         "stage": "安全リミッター",
-        "ms": 423.69999999995343,
+        "ms": 304.10000000009313,
         "ok": true,
-        "at": 1790300995109
+        "at": 1790302604189
       },
       {
         "operation": "Mix",
         "stage": "Vocal最終音量",
-        "ms": 1342.1000000000931,
+        "ms": 1054.8999999999069,
         "ok": true,
-        "at": 1790300996492
+        "at": 1790302605306
       },
       {
         "operation": "Mix",
         "stage": "全ステム合成",
-        "ms": 721.9000000001397,
+        "ms": 599.2999999998137,
         "ok": true,
-        "at": 1790300997257
+        "at": 1790302605940
       },
       {
         "operation": "Mix",
         "stage": "Before生成",
-        "ms": 53.800000000046566,
+        "ms": 52.5,
         "ok": true,
-        "at": 1790300997357
+        "at": 1790302606026
       },
       {
         "operation": "Export",
         "stage": "True Peak再合成",
-        "ms": 3332,
+        "ms": 3474.7999999998137,
         "ok": true,
-        "at": 1790301003088
+        "at": 1790302611813
       },
       {
         "operation": "Export",
         "stage": "WAV生成",
-        "ms": 6086.40000000014,
+        "ms": 6542.100000000093,
         "ok": true,
-        "at": 1790301009174
+        "at": 1790302618355
       },
       {
         "operation": "Export YouTube",
         "stage": "フルMIX再合成",
-        "ms": 3605.7000000001863,
+        "ms": 3468.6999999997206,
         "ok": true,
-        "at": 1790301014492
+        "at": 1790302623355
       },
       {
         "operation": "Export YouTube",
         "stage": "YouTubeマスタリング",
-        "ms": 7874.800000000047,
+        "ms": 7966.100000000093,
         "ok": true,
-        "at": 1790301022367
+        "at": 1790302631322
       },
       {
         "operation": "Export YouTube",
         "stage": "WAV生成",
-        "ms": 6259.600000000093,
+        "ms": 6137.5,
         "ok": true,
-        "at": 1790301028627
+        "at": 1790302637459
       },
       {
         "operation": "Export Premaster",
         "stage": "Premaster再合成",
-        "ms": 129.5,
+        "ms": 93.60000000009313,
         "ok": true,
-        "at": 1790301030297
+        "at": 1790302639131
       },
       {
         "operation": "Export Premaster",
         "stage": "Sample Rate変換",
-        "ms": 0.09999999986030161,
+        "ms": 0.10000000009313226,
         "ok": true,
-        "at": 1790301030374
+        "at": 1790302639202
       },
       {
         "operation": "Export Premaster",
         "stage": "Fire Litヘッドルーム調整",
-        "ms": 4909.399999999907,
+        "ms": 4955,
         "ok": true,
-        "at": 1790301035346
+        "at": 1790302644158
       },
       {
         "operation": "Export Premaster",
         "stage": "WAV生成",
-        "ms": 3141,
+        "ms": 3063.399999999907,
         "ok": true,
-        "at": 1790301038548
+        "at": 1790302647277
       }
     ],
-    "jsHeapPeakMB": 51.7,
+    "jsHeapPeakMB": 51.2,
     "snapshot": {
       "audioContextSampleRate": 44100,
       "vocalAnalysis": {
@@ -418,14 +418,14 @@
       },
       "youtube": {
         "file": "vocal_mix_youtube_master_16bit_44100hz.wav",
-        "sha256": "a95283a20d73971954848f8c1eebecb15637fc65d8de24c52c749c415e64c74b",
+        "sha256": "275f0ec5582b68671f96605a1942fa870b543a58d2bba2f2421133e8da6454b8",
         "bytes": 2469644,
         "channels": 2,
         "sampleRate": 44100,
         "bits": 16,
         "frames": 617400,
-        "samplePeakDb": -1.536,
-        "rmsDb": -15.845
+        "samplePeakDb": -1.583,
+        "rmsDb": -15.892
       },
       "premaster": {
         "file": "vocal_mix_retsu_premaster_16bit_44100hz.wav",
@@ -443,13 +443,13 @@
   },
   "run2Timing": {
     "wallMs": {
-      "upload": 789,
-      "analyze": 1337,
-      "mix": 4883,
-      "exportNormal": 11579,
-      "exportYouTube": 19681,
-      "exportPremaster": 9804
+      "upload": 820,
+      "analyze": 1314,
+      "mix": 5003,
+      "exportNormal": 12169,
+      "exportYouTube": 19869,
+      "exportPremaster": 9321
     },
-    "jsHeapPeakMB": 51.1
+    "jsHeapPeakMB": 55.4
   }
 }

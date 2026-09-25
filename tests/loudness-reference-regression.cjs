@@ -5,7 +5,8 @@
 //  2. True Peak of sines whose continuous peak is known analytically
 //     (includes Tech 3341 case 15: fs/4, 0 deg, 0.5 FS -> -6.0 dBTP), tolerance
 //     +0.2/-0.4 dB as in Tech 3341.
-//  3. A deterministic music-like signal: loudness against libebur128 (MIT) and
+//  3. A deterministic music-like signal: loudness against libebur128 (MIT,
+//     +-0.01 LU since both implement the same BS.1770 filter) and
 //     true peak against a high-precision band-limited reconstruction; the
 //     reference values were measured once and are recorded below.
 // Both the WASM path (…Cooperative) and the JS path are measured.
@@ -170,7 +171,7 @@ const db = v => 20 * Math.log10(v);
         };
       }, { rate, src: musicLikeSignal.toString() });
       for (const path of ['lufsWasm', 'lufsJs']) {
-        check(`music ${rate} Hz ${path} vs libebur128`, Math.abs(r[path] - ref.lufs) <= 0.1,
+        check(`music ${rate} Hz ${path} vs libebur128`, Math.abs(r[path] - ref.lufs) <= 0.01,
           `${r[path].toFixed(3)} vs ${ref.lufs} LUFS (diff ${(r[path] - ref.lufs).toFixed(3)})`);
       }
       for (const path of ['export8x', 'wasm4x']) {

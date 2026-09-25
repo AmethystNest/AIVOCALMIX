@@ -25,6 +25,6 @@ node tools/wasm-sources.cjs --build   # print base64 assembled from the .wat fil
 
 1. Edit the `.wat` file.
 2. `node tools/wasm-sources.cjs --build` and replace the matching constant in `index.html`. The rebuilt module has no custom sections, which is fine for execution.
-3. `npm run wasm:verify`, then the regression tests (`tests/loudness-reference-regression.cjs` for LUFS/True Peak, `tests/baseline-metrics.cjs --check docs/baseline/d438-chromium.json` for end-to-end output).
+3. `npm run wasm:verify`, then the regression tests (`tests/loudness-reference-regression.cjs` for LUFS/True Peak, `tests/baseline-metrics.cjs --check docs/baseline/chromium.json` for end-to-end output).
 
 If the original C source turns up, add it here and prefer it over the `.wat` files.
