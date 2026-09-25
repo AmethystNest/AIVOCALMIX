@@ -14,10 +14,12 @@
 const path = require('path');
 const fs = require('fs');
 const crypto = require('crypto');
-let playwright;
-try { playwright = require('playwright'); }
-catch (_) { playwright = require(path.join(process.env.APPDATA || '', 'npm', 'node_modules', 'playwright')); }
-const { chromium } = playwright;
+function loadChromium() {
+  let playwright;
+  try { playwright = require('playwright'); }
+  catch (_) { playwright = require(path.join(process.env.APPDATA || '', 'npm', 'node_modules', 'playwright')); }
+  return playwright.chromium;
+}
 const baseUrl = process.env.VM_SMOKE_BASE_URL || 'http://127.0.0.1:8765/';
 const root = path.join(__dirname, '..');
 
@@ -49,7 +51,10 @@ function wav16(channels, rate) {
 
 // 12 s sung-like vocal: harmonic tone with vibrato, phrase gaps, breath noise
 // and a sibilant burst; instrumental: stereo chord pad plus a kick pulse.
-function syntheticInputs(rate = 44100, seconds = 12) {
+// opts varies the material for decision fixtures; the defaults produce the
+// baseline input byte-for-byte.
+function syntheticInputs(rate = 44100, seconds = 12, opts = {}) {
+  const { vocalGain = 1, sibilance = 0.12, hiss = 0, boxiness = 0, instGain = 1 } = opts;
   const rnd = mulberry32(438);
   const frames = rate * seconds;
   const vocal = new Float32Array(frames);
@@ -65,8 +70,10 @@ function syntheticInputs(rate = 44100, seconds = 12) {
     let s = 0;
     for (let h = 1; h <= 12; h++) s += Math.sin(h * phase) / (h * h * 0.6 + 0.4);
     const breath = !inPhrase && (t % 2) > 1.8 ? (rnd() * 2 - 1) * 0.04 : 0;
-    const sib = (t % 4) > 1.5 && (t % 4) < 1.62 ? (rnd() * 2 - 1) * 0.12 : 0;
-    vocal[i] = 0.35 * env * s + breath + sib;
+    const sib = (t % 4) > 1.5 && (t % 4) < 1.62 ? (rnd() * 2 - 1) * sibilance : 0;
+    const box = boxiness ? boxiness * env * Math.sin(2 * Math.PI * 350 * t) : 0;
+    const noise = hiss ? (rnd() * 2 - 1) * hiss : 0;
+    vocal[i] = vocalGain * (0.35 * env * s + breath + sib + box) + noise;
   }
   const instL = new Float32Array(frames), instR = new Float32Array(frames);
   const chord = [110, 138.59, 164.81, 220];
@@ -77,8 +84,8 @@ function syntheticInputs(rate = 44100, seconds = 12) {
     const beat = t % 0.5;
     const kick = Math.sin(2 * Math.PI * (50 + 80 * Math.exp(-beat * 30)) * beat) * Math.exp(-beat * 12) * 0.5;
     const hat = (rnd() * 2 - 1) * Math.exp(-((t + 0.25) % 0.5) * 60) * 0.06;
-    instL[i] = pad + kick + hat;
-    instR[i] = pad * 0.9 + kick + hat * 0.7;
+    instL[i] = instGain * (pad + kick + hat);
+    instR[i] = instGain * (pad * 0.9 + kick + hat * 0.7);
   }
   return { vocal: wav16([vocal], rate), inst: wav16([instL, instR], rate) };
 }
@@ -257,9 +264,11 @@ async function runOnce(browser, inputs, runTag) {
   }
 }
 
-(async () => {
+module.exports = { syntheticInputs, wav16 };
+
+if (require.main === module) (async () => {
   const inputs = syntheticInputs();
-  const browser = await chromium.launch({ headless: true });
+  const browser = await loadChromium().launch({ headless: true });
   try {
     const first = await runOnce(browser, inputs, 'run1');
     const second = await runOnce(browser, inputs, 'run2');

@@ -60,3 +60,8 @@ Plan: `docs/OSS_RESEARCH_TECH_SELECTION.md`.
 - K-weighting fix: the second K-weighting stage now uses the BS.1770 numerator `[1, -2, 1]` (it was normalised, so LUFS read about 0.04 LU low). Integrated LUFS matches libebur128; the YouTube master lands on -14.00 instead of about -13.95 LUFS. Cache bumped to `v80-d442-lufs-kweight-fix`.
 
 Running the tests locally: `npm install`, serve the repository on port 8765 (e.g. `npx http-server -p 8765 -c-1 .`), then `node tests/<name>.cjs`. Browser tests need Playwright (global install). Chromium results do not establish iPhone Safari behaviour.
+
+## M3 (structure only, no behaviour change)
+
+- MIX decision layer (`DEFAULT_MIX_RULES` … `optimizeProcessingBudget`: presets, rules, `decideChain`, safety caps, processing budget) moved verbatim to `src/decision/mix-decision.js`, loaded before the main app script and cached in the app shell (`v80-d443-decision-module`).
+- `tests/mix-decision-regression.cjs` runs the module in Node against `tests/fixtures/mix-decision.json`: analysis results from four synthetic inputs x 21 setting combinations (84 cases, 34 distinct chains), recorded from the app before the move. `--record` re-records it; do that only for intended decision changes.

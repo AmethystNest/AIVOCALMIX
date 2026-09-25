@@ -155,3 +155,4 @@ THIRD_PARTY_NOTICES.md
 - M0 完了: `tests/baseline-metrics.cjs`、`docs/baseline/chromium.json`。乱数を固定すれば出力はビット一致。途中でService Workerのinstall停止バグ（HTTP/1.1）を発見して修正。
 - M1 完了（WATで代替）: 7モジュールを `wasm-src/*.wat` に逆アセンブルし、埋め込みバイナリと実行部分がバイト一致することを `npm run wasm:verify` で検証。元のCソースは無し。
 - M2 完了: `docs/M2_LOUDNESS_REFERENCE.md`。全項目合格。LUFSが規格より約0.04 LU低く出る点（K特性2段目の正規化）は承認を得て修正し、libebur128と一致（YouTube用書き出しは −13.953 → −14.000 LUFS）。基準値は `docs/baseline/chromium.json` に取り直し。
+- M3 判断層 完了: `src/decision/mix-decision.js`（一字一句そのまま移動）。84ケースのゴールデンテストと、エンドツーエンドのビット一致で挙動不変を確認。
