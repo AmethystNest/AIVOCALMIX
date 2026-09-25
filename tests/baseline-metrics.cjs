@@ -1,5 +1,6 @@
 // M0 baseline recorder. Records sizes, stage timings, analysis/decision
-// output and exported WAV fingerprints for a fixed synthetic input, so later
+// output and exported WAV fingerprints for a fixed synthetic input (with and
+// without a harmony stem), so later
 // refactors can be compared against the same numbers.
 //
 //   node tests/baseline-metrics.cjs                 print JSON
@@ -88,6 +89,26 @@ function syntheticInputs(rate = 44100, seconds = 12, opts = {}) {
     instR[i] = instGain * (pad * 0.9 + kick + hat * 0.7);
   }
   return { vocal: wav16([vocal], rate), inst: wav16([instL, instR], rate) };
+}
+
+// Harmony stem: the vocal melody a major third up, quieter and slightly late,
+// so the harmony analysis, timing and blend paths run.
+function syntheticHarmony(rate = 44100, seconds = 12) {
+  const frames = rate * seconds, out = new Float32Array(frames);
+  const notes = [220, 246.94, 261.63, 293.66, 329.63, 293.66];
+  const delay = Math.round(0.02 * rate);
+  let phase = 0;
+  for (let i = delay; i < frames; i++) {
+    const t = (i - delay) / rate;
+    const f0 = notes[Math.floor(t / 2) % notes.length] * 1.2599 * (1 + 0.005 * Math.sin(2 * Math.PI * 5.2 * t));
+    phase += 2 * Math.PI * f0 / rate;
+    const inPhrase = (t % 2) < 1.7;
+    const env = inPhrase ? Math.min(1, (t % 2) / 0.06, (1.7 - (t % 2)) / 0.1) : 0;
+    let v = 0;
+    for (let h = 1; h <= 10; h++) v += Math.sin(h * phase) / (h * h * 0.7 + 0.3);
+    out[i] = 0.18 * env * v;
+  }
+  return wav16([out], rate);
 }
 
 function sha256(buffer) { return crypto.createHash('sha256').update(buffer).digest('hex'); }
@@ -225,6 +246,10 @@ async function runOnce(browser, inputs, runTag) {
     await time('upload', async () => {
       await page.locator('#fileVocal').setInputFiles({ name: 'vocal.wav', mimeType: 'audio/wav', buffer: inputs.vocal });
       await page.locator('#fileInst').setInputFiles({ name: 'inst.wav', mimeType: 'audio/wav', buffer: inputs.inst });
+      if (inputs.harmony) {
+        await page.locator('#fileHarmony').setInputFiles({ name: 'harmony.wav', mimeType: 'audio/wav', buffer: inputs.harmony });
+        await page.waitForFunction(() => !!state.harmonyBuffer, null, { timeout: 60000 });
+      }
       await page.waitForFunction(() => !document.querySelector('#btnAnalyze').disabled, null, { timeout: 60000 });
     });
     await time('analyze', async () => {
@@ -276,7 +301,7 @@ async function runOnce(browser, inputs, runTag) {
   }
 }
 
-module.exports = { syntheticInputs, wav16 };
+module.exports = { syntheticInputs, syntheticHarmony, wav16 };
 
 if (require.main === module) (async () => {
   const inputs = syntheticInputs();
@@ -284,7 +309,12 @@ if (require.main === module) (async () => {
   try {
     const first = await runOnce(browser, inputs, 'run1');
     const second = await runOnce(browser, inputs, 'run2');
+    const harmonyInputs = { ...inputs, harmony: syntheticHarmony() };
+    const harmonyFirst = await runOnce(browser, harmonyInputs, 'harmony1');
+    const harmonySecond = await runOnce(browser, harmonyInputs, 'harmony2');
     const deterministic = {
+      harmony: JSON.stringify(harmonyFirst.exports) === JSON.stringify(harmonySecond.exports) &&
+        JSON.stringify(harmonyFirst.snapshot) === JSON.stringify(harmonySecond.snapshot),
       normal: first.exports.normal.sha256 === second.exports.normal.sha256,
       youtube: first.exports.youtube.sha256 === second.exports.youtube.sha256,
       premaster: first.exports.premaster.sha256 === second.exports.premaster.sha256,
@@ -299,14 +329,16 @@ if (require.main === module) (async () => {
       static: staticSizes(),
       deterministic,
       run1: first,
-      run2Timing: { wallMs: second.wallMs, jsHeapPeakMB: second.jsHeapPeakMB }
+      run2Timing: { wallMs: second.wallMs, jsHeapPeakMB: second.jsHeapPeakMB },
+      harmony: { input: { sha256: sha256(harmonyInputs.harmony), seconds: 12, channels: 1, rate: 44100 },
+        run1: harmonyFirst }
     };
     const json = JSON.stringify(result, null, 2);
     const arg = name => { const at = process.argv.indexOf(name); return at > 0 ? process.argv[at + 1] : null; };
     if (arg('--write')) fs.writeFileSync(arg('--write'), json + '\n');
     const checkFile = arg('--check');
     if (!checkFile) console.log(json);
-    if (first.errors.length || second.errors.length) process.exitCode = 1;
+    if (first.errors.length || second.errors.length || harmonyFirst.errors.length || harmonySecond.errors.length) process.exitCode = 1;
     if (!Object.values(deterministic).every(Boolean)) {
       console.error('Non-deterministic output between two runs', deterministic);
       process.exitCode = 1;
@@ -322,8 +354,17 @@ if (require.main === module) (async () => {
       for (const k of Object.keys(expected.run1.snapshot)) {
         if (JSON.stringify(expected.run1.snapshot[k]) !== JSON.stringify(first.snapshot[k])) diffs.push(`snapshot.${k}`);
       }
+      if (expected.harmony) {
+        if (expected.harmony.input.sha256 !== result.harmony.input.sha256) diffs.push('harmony.input');
+        for (const k of Object.keys(expected.harmony.run1.exports)) {
+          if (expected.harmony.run1.exports[k].sha256 !== harmonyFirst.exports[k]?.sha256) diffs.push(`harmony.export.${k}`);
+        }
+        for (const k of Object.keys(expected.harmony.run1.snapshot)) {
+          if (JSON.stringify(expected.harmony.run1.snapshot[k]) !== JSON.stringify(harmonyFirst.snapshot[k])) diffs.push(`harmony.snapshot.${k}`);
+        }
+      } else console.warn('Baseline has no harmony run; re-record with --write to include it');
       if (diffs.length) { console.error('Baseline mismatch:', diffs.join(', ')); process.exitCode = 1; }
-      else console.log(`Baseline match (${checkFile}): exports ${Object.keys(first.exports).join('/')}, analysis/decision snapshot`);
+      else console.log(`Baseline match (${checkFile}): exports ${Object.keys(first.exports).join('/')}, analysis/decision snapshot, with and without harmony`);
     }
   } finally { await browser.close(); }
 })().catch(e => { console.error(e); process.exitCode = 1; });
