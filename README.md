@@ -87,3 +87,13 @@ The baseline now also runs the flow with a synthetic harmony stem (recorded on u
 ## M5 (CSS, no visual change)
 
 The inline `<style>` blocks moved verbatim into `styles/app.css`, `styles/patches-d4-d42.css` and `styles/patches-d46-d439.css`, linked at the original positions (cache `v80-d449-external-css`). `tests/visual-regression.cjs` compares computed styles and screenshots of every screen before and after a CSS change. Details and two open findings (an unclosed `@media` block, an unused 227 KB image on phones): `docs/M5_CSS.md`.
+
+## Release procedure (versioned assets)
+
+`index.html` is fetched network-first, but `src/` and `styles/` files are served cache-first by the service worker. So that a new `index.html` never runs with the previous release's scripts or styles, their URLs carry `?v=<cache version>`:
+
+1. Bump `CACHE_NAME` in `service-worker.js`.
+2. `node tools/asset-version.cjs` (stamps every `./src/` and `./styles/` URL in `index.html` and `APP_SHELL`).
+3. `node tests/app-shell-consistency.cjs` checks that every loaded asset is stamped and listed in `APP_SHELL`, every `APP_SHELL` file exists and no script in `src/` is unreferenced.
+
+Verified in Chromium: after installing one release and serving a changed `src/` file with a new cache name, the page runs the new file when the URLs are re-stamped and the old cached file when they are not.

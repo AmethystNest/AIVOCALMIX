@@ -163,7 +163,7 @@ function staticSizes() {
   const sw = fs.readFileSync(path.join(root, 'service-worker.js'), 'utf8');
   const shellList = sw.slice(sw.indexOf('APP_SHELL = ['), sw.indexOf('];', sw.indexOf('APP_SHELL = [')));
   const shell = [...shellList.matchAll(/'\.\/([^']+)'/g)].map(m => m[1]).filter(f => f && f !== 'index.html');
-  const shellBytes = shell.reduce((n, f) => n + fs.statSync(path.join(root, f)).size, 0);
+  const shellBytes = shell.reduce((n, f) => n + fs.statSync(path.join(root, f.replace(/\?.*$/, ''))).size, 0);
   return {
     indexHtmlBytes: Buffer.byteLength(html), inlineScriptBytes: inlineScripts, inlineStyleBytes: styles,
     wasmBase64, srcFiles: Object.fromEntries(srcFiles.sort()),
