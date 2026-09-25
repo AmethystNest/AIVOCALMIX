@@ -1,5 +1,5 @@
 // Keeps wasm-src/*.wat in sync with the WebAssembly modules embedded in
-// index.html as base64 constants.
+// index.html and src/*.js as base64 constants.
 //
 //   node tools/wasm-sources.cjs            verify (exit 1 on mismatch)
 //   node tools/wasm-sources.cjs --extract  regenerate wasm-src/*.wat
@@ -27,8 +27,20 @@ const MODULES = {
   VM_TRUE_PEAK_WASM_BASE64: 'true-peak.wat'
 };
 
+// index.html plus the scripts moved out of it into src/.
+function appSources() {
+  const files = [path.join(root, 'index.html')];
+  (function walk(dir) {
+    for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
+      const p = path.join(dir, e.name);
+      if (e.isDirectory()) walk(p); else if (p.endsWith('.js')) files.push(p);
+    }
+  })(path.join(root, 'src'));
+  return files.map(f => fs.readFileSync(f, 'utf8')).join('\n');
+}
+
 function embeddedModules() {
-  const html = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
+  const html = appSources();
   const found = {};
   for (const m of html.matchAll(/const (VM_[A-Z0-9_]*WASM[A-Z0-9_]*BASE64)\s*=\s*'([A-Za-z0-9+/=]+)'/g)) {
     found[m[1]] = new Uint8Array(Buffer.from(m[2], 'base64'));

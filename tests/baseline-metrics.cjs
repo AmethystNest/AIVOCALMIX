@@ -112,13 +112,25 @@ function pcmStats(output) {
     rmsDb: +(10 * Math.log10(sum / count || 1e-24)).toFixed(3) };
 }
 
+function srcJsFiles() {
+  const out = [];
+  (function walk(dir) {
+    for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
+      const p = path.join(dir, e.name);
+      if (e.isDirectory()) walk(p); else if (p.endsWith('.js')) out.push(p);
+    }
+  })(path.join(root, 'src'));
+  return out;
+}
+
 function staticSizes() {
   const html = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
   const inlineScripts = [...html.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/g)]
     .reduce((n, m) => n + Buffer.byteLength(m[1]), 0);
   const styles = [...html.matchAll(/<style[^>]*>([\s\S]*?)<\/style>/g)]
     .reduce((n, m) => n + Buffer.byteLength(m[1]), 0);
-  const wasmBase64 = [...html.matchAll(/(VM_[A-Z0-9_]*WASM[A-Z0-9_]*)\s*=\s*['"`]([A-Za-z0-9+/=]+)['"`]/g)]
+  const appJs = [html, ...srcJsFiles().map(f => fs.readFileSync(f, 'utf8'))].join('\n');
+  const wasmBase64 = [...appJs.matchAll(/(VM_[A-Z0-9_]*WASM[A-Z0-9_]*)\s*=\s*['"`]([A-Za-z0-9+/=]+)['"`]/g)]
     .map(m => ({ name: m[1], base64Bytes: m[2].length }));
   const srcFiles = [];
   (function walk(dir) {
