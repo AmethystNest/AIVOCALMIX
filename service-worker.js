@@ -1,6 +1,6 @@
 'use strict';
 const CACHE_PREFIX = 'aivocalmix-main-';
-const CACHE_NAME = `${CACHE_PREFIX}v80-d446-measurement-modules`;
+const CACHE_NAME = `${CACHE_PREFIX}v80-d447-dsp-harmony-modules`;
 const LEGACY_MAIN_CACHE_RE = /^aivocalmix-v80-d\d+-shell$/i;
 const APP_SHELL = [
   './',
@@ -20,6 +20,8 @@ const APP_SHELL = [
   './src/audio/sample-peak.js',
   './src/audio/hq-resampler.js',
   './src/audio/true-peak.js',
+  './src/dsp/cooperative-dsp.js',
+  './src/harmony/harmony-analysis.js',
   './src/decision/mix-decision.js',
   './src/audio/context-lifecycle.js',
   './src/audio/export-memory-preflight.js',
