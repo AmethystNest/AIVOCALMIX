@@ -4,7 +4,7 @@ const path = require('node:path');
 const vm = require('node:vm');
 const html = fs.readFileSync(path.join(__dirname, '..', 'index.html'), 'utf8');
 const start = html.indexOf('async function masterForYouTube(');
-const end = html.indexOf('let vmTruePeakRuntimePromise', start);
+const end = html.indexOf('// True Peak計測とゲイン適用', start);
 assert.ok(start > 0 && end > start);
 assert.match(html.slice(start, end), /True Peak -1\.5dBTPへ調整中/);
 const gains = [];
