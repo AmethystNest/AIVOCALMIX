@@ -1,0 +1,455 @@
+{
+  "recordedAt": "2026-09-25T01:51:27.803Z",
+  "git": "60cdbaf",
+  "browser": "chromium 141.0.7390.37 headless",
+  "input": {
+    "vocal": {
+      "sha256": "70ecc13460a7c11955c35bb5587de5f88d372485e9d19a7ba5f126345bea0a18",
+      "seconds": 12,
+      "channels": 1,
+      "rate": 44100
+    },
+    "inst": {
+      "sha256": "ff182eb788c1c16a759d1baddc402252fd85697f453d539760d18131080693dd",
+      "seconds": 12,
+      "channels": 2,
+      "rate": 44100
+    }
+  },
+  "static": {
+    "indexHtmlBytes": 1350990,
+    "inlineScriptBytes": 598118,
+    "inlineStyleBytes": 334347,
+    "wasmBase64": [
+      {
+        "name": "VM_CLIPSTATS_WASM_BASE64",
+        "base64Bytes": 1016
+      },
+      {
+        "name": "VM_WASM_DSP_BASE64",
+        "base64Bytes": 1760
+      },
+      {
+        "name": "VM_ANALYSIS_STATS_WASM_BASE64",
+        "base64Bytes": 1032
+      },
+      {
+        "name": "VM_SAMPLE_PEAK_WASM_BASE64",
+        "base64Bytes": 692
+      },
+      {
+        "name": "VM_LUFS_WASM_BASE64",
+        "base64Bytes": 1184
+      },
+      {
+        "name": "VM_HQ_RESAMPLER_WASM_BASE64",
+        "base64Bytes": 1336
+      },
+      {
+        "name": "VM_TRUE_PEAK_WASM_BASE64",
+        "base64Bytes": 1852
+      }
+    ],
+    "srcFiles": {
+      "src/audio/context-lifecycle.js": 727,
+      "src/audio/export-memory-preflight.js": 1420,
+      "src/audio/render-memory-preflight.js": 3846,
+      "src/audio/upload-decode.js": 7359,
+      "src/audio/wav-codec.js": 10473,
+      "src/navigation-guard.js": 1258,
+      "src/pwa/lifecycle.js": 4058,
+      "src/pwa/mobile-resilience.js": 2122,
+      "src/ui/hard-reset.js": 2959,
+      "src/ui/page-lifecycle.js": 3232,
+      "src/ui/viewport-keyboard.js": 2213
+    },
+    "appShellFiles": 19,
+    "appShellBytes": 2380368
+  },
+  "deterministic": {
+    "normal": true,
+    "youtube": true,
+    "premaster": true,
+    "analysis": true
+  },
+  "run1": {
+    "wallMs": {
+      "upload": 773,
+      "analyze": 1393,
+      "mix": 6971,
+      "exportNormal": 11047,
+      "exportYouTube": 19471,
+      "exportPremaster": 9904
+    },
+    "stageTimings": [
+      {
+        "operation": "Analyze",
+        "stage": "入力確認",
+        "ms": 0.19999999995343387,
+        "ok": true,
+        "at": 1790300990112
+      },
+      {
+        "operation": "Analyze",
+        "stage": "Vocal解析",
+        "ms": 447.89999999990687,
+        "ok": true,
+        "at": 1790300990560
+      },
+      {
+        "operation": "Analyze",
+        "stage": "Vocal×伴奏 相対解析",
+        "ms": 417.29999999981374,
+        "ok": true,
+        "at": 1790300990992
+      },
+      {
+        "operation": "Mix",
+        "stage": "入力確認",
+        "ms": 0.10000000009313226,
+        "ok": true,
+        "at": 1790300992855
+      },
+      {
+        "operation": "Mix",
+        "stage": "Vocal前処理",
+        "ms": 1696.3000000000466,
+        "ok": true,
+        "at": 1790300994554
+      },
+      {
+        "operation": "Mix",
+        "stage": "Vocalチェーン",
+        "ms": 89.0999999998603,
+        "ok": true,
+        "at": 1790300994685
+      },
+      {
+        "operation": "Mix",
+        "stage": "安全リミッター",
+        "ms": 423.69999999995343,
+        "ok": true,
+        "at": 1790300995109
+      },
+      {
+        "operation": "Mix",
+        "stage": "Vocal最終音量",
+        "ms": 1342.1000000000931,
+        "ok": true,
+        "at": 1790300996492
+      },
+      {
+        "operation": "Mix",
+        "stage": "全ステム合成",
+        "ms": 721.9000000001397,
+        "ok": true,
+        "at": 1790300997257
+      },
+      {
+        "operation": "Mix",
+        "stage": "Before生成",
+        "ms": 53.800000000046566,
+        "ok": true,
+        "at": 1790300997357
+      },
+      {
+        "operation": "Export",
+        "stage": "True Peak再合成",
+        "ms": 3332,
+        "ok": true,
+        "at": 1790301003088
+      },
+      {
+        "operation": "Export",
+        "stage": "WAV生成",
+        "ms": 6086.40000000014,
+        "ok": true,
+        "at": 1790301009174
+      },
+      {
+        "operation": "Export YouTube",
+        "stage": "フルMIX再合成",
+        "ms": 3605.7000000001863,
+        "ok": true,
+        "at": 1790301014492
+      },
+      {
+        "operation": "Export YouTube",
+        "stage": "YouTubeマスタリング",
+        "ms": 7874.800000000047,
+        "ok": true,
+        "at": 1790301022367
+      },
+      {
+        "operation": "Export YouTube",
+        "stage": "WAV生成",
+        "ms": 6259.600000000093,
+        "ok": true,
+        "at": 1790301028627
+      },
+      {
+        "operation": "Export Premaster",
+        "stage": "Premaster再合成",
+        "ms": 129.5,
+        "ok": true,
+        "at": 1790301030297
+      },
+      {
+        "operation": "Export Premaster",
+        "stage": "Sample Rate変換",
+        "ms": 0.09999999986030161,
+        "ok": true,
+        "at": 1790301030374
+      },
+      {
+        "operation": "Export Premaster",
+        "stage": "Fire Litヘッドルーム調整",
+        "ms": 4909.399999999907,
+        "ok": true,
+        "at": 1790301035346
+      },
+      {
+        "operation": "Export Premaster",
+        "stage": "WAV生成",
+        "ms": 3141,
+        "ok": true,
+        "at": 1790301038548
+      }
+    ],
+    "jsHeapPeakMB": 51.7,
+    "snapshot": {
+      "audioContextSampleRate": 44100,
+      "vocalAnalysis": {
+        "peakDbfs": -5.870287,
+        "rmsDbfs": -12.37834,
+        "crestFactorDb": 6.50805,
+        "dynamicRangeDb": 21.30815,
+        "quietDropDb": 0.05362344,
+        "peakSpreadDb": 0.04839377,
+        "quietInstability": 0,
+        "peakInstability": 0,
+        "spectralCentroidHz": 2119.253,
+        "sibilanceRatio": 0.02298832,
+        "noiseFloorDb": -32.64923,
+        "boxyRatio": 0.4848409,
+        "muddyRatio": 0.1988975,
+        "harshRatio": 0.05824045,
+        "distortionRatio": 0.1250283,
+        "dynamicsStrategy": "none",
+        "processingBudget": {
+          "adjusted": false,
+          "notes": [],
+          "tonalBoostDb": 0,
+          "dynamicsStages": 0,
+          "spaceWet": 0
+        }
+      },
+      "rel": {
+        "levelDiffDb": 4.044372,
+        "activeLevelDiffDb": 4.210322,
+        "maskingRatio2_5k": 0.004201925,
+        "vocalPresenceRatio1_3k": 0.1450281,
+        "maskingSnrDb1_4k": 57.85474,
+        "spectralOverlap1_4k": 0.01400642,
+        "maskingOccupancy": 0,
+        "activeVocalFrameRatio": 0.9398058,
+        "floatingScore": 0.8490336,
+        "buriedScore": 0.03154054,
+        "placement": "floating"
+      },
+      "chain": [
+        {
+          "name": "dcBlock",
+          "params": {
+            "cutoffHz": 5
+          },
+          "reason": "DCオフセット除去(常時、プリセットに関わらず適用)"
+        },
+        {
+          "name": "highpass",
+          "params": {
+            "cutoffHz": 80
+          },
+          "reason": "低域不要成分の除去(常時)"
+        },
+        {
+          "name": "expander",
+          "params": {
+            "thresholdDb": -45,
+            "ratio": 2.5,
+            "attackMs": 5,
+            "releaseMs": 120
+          },
+          "reason": "ダイナミックレンジが大きく(21.3dB)息継ぎ等のノイズフロアが目立ちやすいため軽く整理"
+        },
+        {
+          "name": "dynamicEQ",
+          "params": {
+            "freqHz": 350,
+            "q": 8,
+            "thresholdRatio": 0.35,
+            "maxCutDb": 4
+          },
+          "reason": "こもり/箱鳴り(200-500Hz)が目立つ(比率0.48)ため、強く出た瞬間だけDynamic EQで抑制"
+        },
+        {
+          "name": "dynamicEQ",
+          "params": {
+            "freqHz": 750,
+            "q": 8,
+            "thresholdRatio": 0.35,
+            "maxCutDb": 4
+          },
+          "reason": "中域の濁り(500-1000Hz)が目立つ(比率0.20)ため、強く出た瞬間だけDynamic EQで抑制"
+        },
+        {
+          "name": "gain",
+          "params": {
+            "gainDb": -6.210322
+          },
+          "reason": "浮きの主因を音量過多と判定。発声中Level差4.2dBを下げて馴染ませる"
+        },
+        {
+          "name": "limiter",
+          "params": {
+            "ceilingDb": -0.3
+          },
+          "reason": "クリッピング防止(常時)"
+        }
+      ],
+      "latestRenderSummary": {
+        "label": "Mix[ナチュラル(標準)] (Vocal+Inst)",
+        "at": {},
+        "sourceScreen": "Mix",
+        "vocalTrimDb": 0,
+        "harmonyTrimDb": 0,
+        "hasHarmony": false,
+        "vocalChain": [
+          {
+            "name": "dcBlock",
+            "reason": "DCオフセット除去(常時、プリセットに関わらず適用)",
+            "params": {
+              "cutoffHz": 5
+            }
+          },
+          {
+            "name": "highpass",
+            "reason": "低域不要成分の除去(常時)",
+            "params": {
+              "cutoffHz": 80
+            }
+          },
+          {
+            "name": "expander",
+            "reason": "ダイナミックレンジが大きく(21.3dB)息継ぎ等のノイズフロアが目立ちやすいため軽く整理",
+            "params": {
+              "thresholdDb": -45,
+              "ratio": 2.5,
+              "attackMs": 5,
+              "releaseMs": 120
+            }
+          },
+          {
+            "name": "dynamicEQ",
+            "reason": "こもり/箱鳴り(200-500Hz)が目立つ(比率0.48)ため、強く出た瞬間だけDynamic EQで抑制",
+            "params": {
+              "freqHz": 350,
+              "q": 8,
+              "thresholdRatio": 0.35,
+              "maxCutDb": 4
+            }
+          },
+          {
+            "name": "dynamicEQ",
+            "reason": "中域の濁り(500-1000Hz)が目立つ(比率0.20)ため、強く出た瞬間だけDynamic EQで抑制",
+            "params": {
+              "freqHz": 750,
+              "q": 8,
+              "thresholdRatio": 0.35,
+              "maxCutDb": 4
+            }
+          },
+          {
+            "name": "gain",
+            "reason": "浮きの主因を音量過多と判定。発声中Level差4.2dBを下げて馴染ませる",
+            "params": {
+              "gainDb": -6.210322
+            }
+          },
+          {
+            "name": "limiter",
+            "reason": "クリッピング防止(常時)",
+            "params": {
+              "ceilingDb": -0.3
+            }
+          }
+        ],
+        "harmonyChain": [],
+        "instrumental": {
+          "key": "natural",
+          "label": "そのまま(標準)",
+          "gainDb": 0,
+          "highShelfDb": 0
+        },
+        "finalCombine": {
+          "stems": "Vocal + Instrumental",
+          "safety": "安全リミッター / True Peak保護 / 最終レベル整合"
+        }
+      },
+      "mixedSong": {
+        "sampleRate": 44100,
+        "length": 617400,
+        "channels": 2,
+        "samplePeakDb": -1.303,
+        "rmsDb": -15.806
+      }
+    },
+    "exports": {
+      "normal": {
+        "file": "vocal_mix_final_16bit_44100hz.wav",
+        "sha256": "332ac58f256990e79c9bd47d2b3276ea36c9526df37cf0dcb73fcaaec030b6ea",
+        "bytes": 2469644,
+        "channels": 2,
+        "sampleRate": 44100,
+        "bits": 16,
+        "frames": 617400,
+        "samplePeakDb": -1.303,
+        "rmsDb": -15.806
+      },
+      "youtube": {
+        "file": "vocal_mix_youtube_master_16bit_44100hz.wav",
+        "sha256": "a95283a20d73971954848f8c1eebecb15637fc65d8de24c52c749c415e64c74b",
+        "bytes": 2469644,
+        "channels": 2,
+        "sampleRate": 44100,
+        "bits": 16,
+        "frames": 617400,
+        "samplePeakDb": -1.536,
+        "rmsDb": -15.845
+      },
+      "premaster": {
+        "file": "vocal_mix_retsu_premaster_16bit_44100hz.wav",
+        "sha256": "36c37cf7c484a4963aa9c49848908fde6f6f4bbf69a2187b4d8c7b73d5ff2225",
+        "bytes": 2469644,
+        "channels": 2,
+        "sampleRate": 44100,
+        "bits": 16,
+        "frames": 617400,
+        "samplePeakDb": -4.021,
+        "rmsDb": -18.524
+      }
+    },
+    "errors": []
+  },
+  "run2Timing": {
+    "wallMs": {
+      "upload": 789,
+      "analyze": 1337,
+      "mix": 4883,
+      "exportNormal": 11579,
+      "exportYouTube": 19681,
+      "exportPremaster": 9804
+    },
+    "jsHeapPeakMB": 51.1
+  }
+}
