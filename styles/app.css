@@ -489,6 +489,7 @@ body { position:relative; }
 .hero::before { content:""; display:block; width:94px; height:18px; margin:0 auto 8px; opacity:.7; background:center/contain no-repeat url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 22'%3E%3Cg fill='none' stroke='%23cbb2ff' stroke-opacity='.8'%3E%3Cpath d='M2 11h31c9 0 10-9 18-9 7 0 7 9 9 9s2-9 9-9c8 0 9 9 18 9h31'/%3E%3Cpath d='M46 11c5 0 8 4 14 9 6-5 9-9 14-9' stroke-opacity='.5'/%3E%3C/g%3E%3C/svg%3E"); }
 @media(max-width:700px){
   body::before { opacity:.72 !important; filter:saturate(1.08) contrast(1.08) brightness(.78); }
+}
   
 
 /* =========================================================
