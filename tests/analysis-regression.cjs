@@ -12,14 +12,10 @@ const root = path.join(__dirname, '..');
 const read = f => fs.readFileSync(path.join(root, f), 'utf8');
 const fixture = JSON.parse(read('tests/fixtures/mix-decision.json'));
 
-// Globals the analysis layer takes from the app script at call time.
-const html = read('index.html');
-function extract(startMarker, endMarker) {
-  const start = html.indexOf(startMarker), end = html.indexOf(endMarker, start);
-  assert.ok(start >= 0 && end > start, `marker not found: ${startMarker}`);
-  return html.slice(start, end);
-}
-const wasmHelpers = extract('function vmDecodeBase64Bytes(', 'async function vmEnsureWasmDspRuntime(');
+// Globals the analysis layer takes from other scripts at call time.
+const dsp = read('src/dsp/sample-dsp.js');
+const wasmHelpers = dsp.slice(dsp.indexOf('function vmDecodeBase64Bytes('), dsp.indexOf('async function vmEnsureWasmDspRuntime('));
+assert.ok(wasmHelpers.length > 0, 'WASM helpers not found');
 
 const context = { console, WebAssembly, atob, performance, setTimeout, yieldToBrowser: async () => {} };
 vm.createContext(context);
