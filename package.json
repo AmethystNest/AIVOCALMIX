@@ -1,0 +1,12 @@
+{
+  "name": "aivocalmix",
+  "private": true,
+  "description": "Development tooling only. The app is served as static files and has no runtime dependencies.",
+  "scripts": {
+    "wasm:verify": "node tools/wasm-sources.cjs",
+    "wasm:extract": "node tools/wasm-sources.cjs --extract"
+  },
+  "devDependencies": {
+    "wabt": "1.0.37"
+  }
+}
