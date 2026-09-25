@@ -35,7 +35,10 @@ self.addEventListener('install', (event) => {
       const entries = await Promise.all(APP_SHELL.map(async (url) => {
         const fresh = await fetch(url, { cache: 'reload' });
         if (!fresh || !fresh.ok) throw new Error(`App Shell fetch failed: ${url}`);
-        return [url, fresh];
+        // 本文を先に読み切る。未読のレスポンスを保持したまま待つと、HTTP/1.1
+        // (同一ホスト同時接続数の上限あり)で大きいファイルが接続を塞ぎ、installが停止する。
+        const body = await fresh.blob();
+        return [url, new Response(body, { status: fresh.status, statusText: fresh.statusText, headers: fresh.headers })];
       }));
 
       // 全件取得成功後にのみcacheへ反映して、更新を実質的にatomicにする。

@@ -101,7 +101,9 @@ function pcm16WavSamples(output) {
       console.log('wav bytes', output.length, 'pcm peak', peak);
       const decoded = pcm16WavSamples(output);
       assert.equal(decoded.channels, previewReference.channels, 'Preview/Export channel count mismatch');
-      assert.equal(previewReference.sampleRate, 48000, 'Unexpected rendered Preview sample rate');
+      // Rendering follows the AudioContext rate (device dependent: 48 kHz on most
+      // devices, 44.1 kHz in some headless environments).
+      assert.ok([44100, 48000].includes(previewReference.sampleRate), 'Unexpected rendered Preview sample rate');
       // Export may apply the final True Peak ceiling. Compare the waveform after
       // fitting a single gain rather than expecting bit-for-bit identity.
       const count = previewReference.samples[0].length;
