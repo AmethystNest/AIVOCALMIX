@@ -1,10 +1,13 @@
 'use strict';
 const CACHE_PREFIX = 'aivocalmix-main-';
-const CACHE_NAME = `${CACHE_PREFIX}v80-d448-render-export-modules`;
+const CACHE_NAME = `${CACHE_PREFIX}v80-d449-external-css`;
 const LEGACY_MAIN_CACHE_RE = /^aivocalmix-v80-d\d+-shell$/i;
 const APP_SHELL = [
   './',
   './index.html',
+  './styles/app.css',
+  './styles/patches-d4-d42.css',
+  './styles/patches-d46-d439.css',
   './manifest-aivocalmix-v441.webmanifest',
   './assets/premaster-mascot-d441.png',
   './favicon-32-aivocalmix-v441.png',

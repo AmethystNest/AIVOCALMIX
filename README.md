@@ -83,3 +83,7 @@ Further verbatim moves out of the app script (each re-inserts to the previous `i
 | `src/export/youtube-master.js`, `premaster.js` | YouTube mastering, Fire Lit premaster |
 
 The baseline now also runs the flow with a synthetic harmony stem (recorded on unchanged code before the harmony move). What remains in the app script is state, UI, preview, FX region editing and export orchestration, which reads `state` and the DOM directly.
+
+## M5 (CSS, no visual change)
+
+The inline `<style>` blocks moved verbatim into `styles/app.css`, `styles/patches-d4-d42.css` and `styles/patches-d46-d439.css`, linked at the original positions (cache `v80-d449-external-css`). `tests/visual-regression.cjs` compares computed styles and screenshots of every screen before and after a CSS change. Details and two open findings (an unclosed `@media` block, an unused 227 KB image on phones): `docs/M5_CSS.md`.

@@ -1,0 +1,1800 @@
+/* @style analysis-visual-d46 */
+body[data-screen="analysis"] .screen[data-screen="analysis"] > .panel{
+  position:relative;overflow:hidden;padding-top:19px;
+}
+body[data-screen="analysis"] .screen[data-screen="analysis"] > .panel::before{
+  content:"";position:absolute;left:18px;right:18px;top:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(194,165,255,.34),transparent);
+  pointer-events:none;
+}
+body[data-screen="analysis"] .screen[data-screen="analysis"] > .panel h2{margin-bottom:14px;letter-spacing:.035em;}
+body[data-screen="analysis"] .meter-grid{gap:10px;}
+body[data-screen="analysis"] .metric{
+  min-height:86px;padding:13px 14px;border-color:rgba(190,155,255,.23);
+  background:linear-gradient(180deg,rgba(34,20,70,.44),rgba(15,9,39,.48));
+  box-shadow:inset 0 1px rgba(255,255,255,.025),0 7px 18px rgba(0,0,0,.11);
+}
+body[data-screen="analysis"] .metric .label{opacity:.78;letter-spacing:.03em;}
+body[data-screen="analysis"] .metric .value{margin-top:5px;font-size:clamp(17px,4.8vw,23px);}
+body[data-screen="analysis"] #tags{display:flex;flex-wrap:wrap;gap:8px;}
+body[data-screen="analysis"] #tags .tagline{
+  margin:0;padding:6px 10px;border-color:rgba(193,159,255,.3);
+  background:rgba(109,68,186,.12);color:#d8c8fb;
+}
+body[data-screen="analysis"] #btnToMix{width:100%;margin-top:2px;}
+@media(max-width:700px){
+  body[data-screen="analysis"] .screen[data-screen="analysis"] > .panel{padding:17px 14px;margin-bottom:12px;}
+  body[data-screen="analysis"] .meter-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;}
+  body[data-screen="analysis"] .metric{min-height:78px;padding:11px 10px;}
+  body[data-screen="analysis"] .metric .value{font-size:18px;}
+  body[data-screen="analysis"] #tags{gap:6px;}
+}
+
+/* @style performance-d49 */
+/* D360: lightweight CSS-only task feedback; DSP remains the priority. */
+.task-progress-fill{
+  position:relative;
+  overflow:visible;
+  animation:vmProgressFlow 1.8s linear infinite !important;
+  transition:width .22s cubic-bezier(.22,.72,.2,1) !important;
+  background-size:220% 100% !important;
+  box-shadow:0 0 10px rgb(170 130 255 / 28%),0 0 18px rgb(104 102 255 / 10%);
+}
+.task-progress-track{
+  position:relative;
+  overflow:hidden;
+}
+.task-progress-track::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background:linear-gradient(100deg,transparent 0 38%,rgb(255 255 255 / 17%) 48%,transparent 58% 100%);
+  transform:translateX(-120%);
+  animation:vmProgressSweep 2.2s ease-in-out infinite;
+}
+.task-progress.active .task-progress-pct{
+}
+@keyframes vmProgressFlow{
+  from{background-position:0% 50%}
+  to{background-position:220% 50%}
+}
+@keyframes vmProgressSweep{
+  0%,18%{transform:translateX(-120%);opacity:0}
+  36%{opacity:.9}
+  62%{transform:translateX(120%);opacity:.45}
+  100%{transform:translateX(120%);opacity:0}
+}
+@keyframes vmPctPulse{
+  0%,100%{opacity:.72;text-shadow:0 0 0 transparent}
+  50%{opacity:1;text-shadow:0 0 9px rgb(175 137 255 / 52%)}
+}
+.task-progress-pct{white-space:nowrap;font-size:11px !important;}
+@media(max-width:700px){
+  .task-progress-row{gap:10px;align-items:flex-start}
+  .task-progress-label{min-width:0;flex:1}
+  .task-progress-pct{flex:0 0 auto;text-align:right}
+}
+@media(prefers-reduced-motion:reduce){
+  .task-progress-fill,.task-progress-track::after,.task-progress.active .task-progress-pct{
+    animation:none !important;
+  }
+}
+
+/* @style mobile-tap-feedback-d55 */
+/* D55: smartphone-first tap affordance */
+button,
+.btn,
+.tab,
+.drop,
+.upload-drop,
+.file-drop,
+label[for^="file"]{
+  -webkit-tap-highlight-color: rgba(181, 145, 255, .22);
+  touch-action: manipulation;
+}
+
+button,
+.btn,
+.tab,
+.drop,
+.upload-drop,
+.file-drop{
+  transition:
+    transform .08s ease,
+    box-shadow .12s ease,
+    filter .12s ease,
+    background-color .12s ease,
+    border-color .12s ease !important;
+}
+
+button:active,
+.btn:active,
+.tab:active,
+.drop:active,
+.upload-drop:active,
+.file-drop:active{
+  transform: scale(.975);
+  filter: brightness(1.12);
+}
+
+.drop:active,
+.upload-drop:active,
+.file-drop:active{
+  border-color: rgba(210, 184, 255, .72) !important;
+  background:
+    linear-gradient(180deg, rgba(102, 66, 170, .26), rgba(34, 18, 72, .34)) !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(223, 204, 255, .16),
+    0 0 0 3px rgba(157, 111, 255, .10),
+    0 8px 22px rgba(0,0,0,.18) !important;
+}
+
+button:active,
+.btn:active{
+  box-shadow:
+    inset 0 2px 8px rgba(0,0,0,.22),
+    0 0 0 3px rgba(173, 133, 255, .12) !important;
+}
+
+.tab:active{
+  box-shadow:
+    inset 0 2px 8px rgba(0,0,0,.18),
+    0 0 0 2px rgba(173, 133, 255, .10) !important;
+}
+
+/* keyboard/accessibility focus */
+button:focus-visible,
+.btn:focus-visible,
+.tab:focus-visible,
+.drop:focus-visible,
+.upload-drop:focus-visible,
+.file-drop:focus-visible{
+  outline: 2px solid rgba(205, 179, 255, .86);
+  outline-offset: 2px;
+}
+
+/* Mobile: make upload areas feel clearly tappable */
+@media(max-width:700px){
+  .drop,
+  .upload-drop,
+  .file-drop{
+    min-height: 92px;
+    cursor: pointer;
+  }
+
+  .drop::after,
+  .upload-drop::after,
+  .file-drop::after{
+    content:"タップして選択";
+    display:block;
+    margin-top:8px;
+    font-size:12px;
+    letter-spacing:.04em;
+    color:rgba(222, 207, 255, .78);
+    pointer-events:none;
+  }
+
+  button,
+  .btn,
+  .tab{
+    min-height:44px;
+  }
+}
+
+/* @style mix-mobile-d59 */
+/* D59: Mix画面のスマホ可読性・操作性だけを整理。DSP/ID/配置順は変更しない。 */
+
+body[data-screen="mix"] .screen[data-screen="mix"] > .panel{
+  position:relative;
+  overflow:hidden;
+}
+
+body[data-screen="mix"] .screen[data-screen="mix"] > .panel > h2{
+  line-height:1.45;
+  margin-bottom:13px;
+}
+
+body[data-screen="mix"] .screen[data-screen="mix"] > .panel > h2 .accent{
+  display:inline;
+  font-size:.92em;
+  opacity:.82;
+}
+
+/* 自動チェーンを「処理名 / 理由」が追いやすい形へ */
+body[data-screen="mix"] ol.chain li{
+  align-items:flex-start;
+  padding:12px 0;
+  gap:10px;
+}
+
+body[data-screen="mix"] ol.chain .step-name{
+  min-width:112px;
+  line-height:1.45;
+}
+
+body[data-screen="mix"] ol.chain .step-reason{
+  flex:1;
+  min-width:0;
+  line-height:1.55;
+}
+
+body[data-screen="mix"] ol.chain .step-params{
+  line-height:1.45;
+}
+
+/* 実行ボタンを主操作として明確化 */
+body[data-screen="mix"] #btnRenderMix{
+  width:100%;
+  min-height:52px;
+  margin-top:5px;
+  padding:13px 16px;
+  line-height:1.35;
+}
+
+body[data-screen="mix"] #btnDownloadMix{
+  width:100%;
+  min-height:46px;
+  margin-top:9px;
+}
+
+/* 状態と進捗をボタンから少し離して見やすく */
+body[data-screen="mix"] #mixStatus{
+  margin-top:12px;
+  line-height:1.5;
+}
+
+body[data-screen="mix"] #mixProgress{
+  margin-top:10px;
+}
+
+/* Harmony診断ボタン */
+body[data-screen="mix"] #harmonyDiagPanel > div[style*="display:flex"]{
+  flex-wrap:wrap;
+}
+
+body[data-screen="mix"] #btnPlayHarmonyOnly,
+body[data-screen="mix"] #btnStopHarmonyOnly{
+  min-height:44px;
+}
+
+/* スマホ */
+@media(max-width:700px){
+  body[data-screen="mix"] .screen[data-screen="mix"] > .panel{
+    padding:16px 14px;
+    margin-bottom:12px;
+  }
+
+  body[data-screen="mix"] .screen[data-screen="mix"] > .panel > h2{
+    font-size:11.5px;
+    padding-bottom:9px;
+    margin-bottom:11px;
+  }
+
+  body[data-screen="mix"] .screen[data-screen="mix"] > .panel > h2 .accent{
+    display:block;
+    margin-top:3px;
+    font-size:10px;
+  }
+
+  body[data-screen="mix"] .screen[data-screen="mix"] p.lead{
+    font-size:13px;
+    line-height:1.65;
+  }
+
+  body[data-screen="mix"] ol.chain li{
+    display:grid;
+    grid-template-columns:28px minmax(0,1fr);
+    column-gap:8px;
+    row-gap:3px;
+    padding:11px 0;
+  }
+
+  body[data-screen="mix"] ol.chain li::before{
+    grid-column:1;
+    grid-row:1 / span 3;
+    width:auto;
+    padding-top:1px;
+  }
+
+  body[data-screen="mix"] ol.chain .step-name{
+    grid-column:2;
+    min-width:0;
+    font-size:12px;
+    font-weight:700;
+  }
+
+  body[data-screen="mix"] ol.chain .step-reason{
+    grid-column:2;
+    font-size:12.5px;
+  }
+
+  body[data-screen="mix"] ol.chain .step-params{
+    grid-column:2;
+    font-size:10px;
+    overflow-wrap:anywhere;
+  }
+
+  body[data-screen="mix"] #harmonyDiagPanel > div[style*="display:flex"]{
+    display:grid !important;
+    grid-template-columns:1fr 1fr;
+    gap:8px !important;
+  }
+
+  body[data-screen="mix"] #harmonyDiagTime{
+    grid-column:1 / -1;
+    min-height:20px;
+  }
+}
+
+/* @style mix-harmony-diagnostic-hide-d60 */
+/* D60: MixタブのHarmony診断UIは不要のため非表示。
+   既存JS互換性を保つためDOM自体は残す。 */
+body[data-screen="mix"] #harmonyDiagPanel{
+  display:none !important;
+}
+
+/* @style preview-mobile-d61 */
+/* D61: Preview画面のスマホ操作性のみ整理。DSP/機能/DOM順は変更しない。 */
+
+body[data-screen="preview"] .screen[data-screen="preview"] > .panel{
+  position:relative;
+  overflow:hidden;
+}
+
+body[data-screen="preview"] #btnBefore,
+body[data-screen="preview"] #btnAfter{
+  min-height:46px;
+  line-height:1.35;
+}
+
+body[data-screen="preview"] #waveWrapper{
+  margin-top:12px;
+  border-radius:8px;
+  overflow:hidden;
+  border:1px solid rgba(190,155,255,.20);
+  background:rgba(18,11,40,.38);
+  box-shadow:inset 0 1px rgba(255,255,255,.02);
+}
+
+body[data-screen="preview"] #wavePreview{
+  width:100% !important;
+  min-height:92px;
+}
+
+body[data-screen="preview"] #btnPlay,
+body[data-screen="preview"] #btnStop{
+  min-height:46px;
+  min-width:104px;
+}
+
+body[data-screen="preview"] #btnAnalyzeReference,
+body[data-screen="preview"] #btnApplyReference,
+body[data-screen="preview"] #btnComputeSpectrum,
+body[data-screen="preview"] #btnRerenderVolume,
+body[data-screen="preview"] #btnToExport{
+  min-height:48px;
+}
+
+body[data-screen="preview"] #btnRerenderVolume,
+body[data-screen="preview"] #btnToExport{
+  width:100%;
+}
+
+body[data-screen="preview"] .fx-row{
+  gap:10px;
+}
+
+body[data-screen="preview"] .fx-row input[type="range"]{
+  min-width:0;
+}
+
+
+body[data-screen="preview"] #latestProcessSummary .process-meta{
+  margin:0 0 12px;
+  color:#c6b6ea;
+  font-family:var(--mono);
+  font-size:11px;
+  line-height:1.55;
+}
+
+body[data-screen="preview"] #latestProcessSummary .process-group + .process-group{
+  margin-top:16px;
+}
+
+body[data-screen="preview"] #latestProcessSummary h3{
+  margin:0 0 8px;
+  font-family:var(--mono);
+  font-size:12px;
+  color:#f2e9ff;
+  letter-spacing:.06em;
+}
+
+body[data-screen="preview"] #latestProcessSummary .lead{
+  margin:0;
+}
+
+body[data-screen="preview"] .history-row{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto auto auto;
+  gap:8px;
+  align-items:center;
+}
+
+@media(max-width:700px){
+  body[data-screen="preview"] .screen[data-screen="preview"] > .panel{
+    padding:16px 14px;
+    margin-bottom:12px;
+  }
+
+  body[data-screen="preview"] .toggle-row{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:8px;
+  }
+
+  body[data-screen="preview"] #btnBefore,
+  body[data-screen="preview"] #btnAfter{
+    width:100%;
+    padding:10px 8px;
+    font-size:12px;
+  }
+
+  body[data-screen="preview"] #wavePreview{
+    min-height:110px;
+  }
+
+  body[data-screen="preview"] #previewProgressBar{
+    height:7px !important;
+  }
+
+  body[data-screen="preview"] #waveWrapper + .lead{
+    font-size:12px !important;
+    line-height:1.45;
+  }
+
+  body[data-screen="preview"] #btnPlay,
+  body[data-screen="preview"] #btnStop{
+    min-width:0;
+    width:100%;
+  }
+
+  body[data-screen="preview"] #btnPlay{
+    grid-column:1;
+  }
+
+  body[data-screen="preview"] #btnStop{
+    grid-column:2;
+  }
+
+  body[data-screen="preview"] #previewTime{
+    grid-column:1 / -1;
+    justify-self:end;
+    min-height:18px;
+  }
+
+  body[data-screen="preview"] #btnPlay,
+  body[data-screen="preview"] #btnStop{
+    font-size:13px;
+  }
+
+  body[data-screen="preview"] #btnAnalyzeReference,
+  body[data-screen="preview"] #btnApplyReference{
+    width:100%;
+  }
+
+  body[data-screen="preview"] #btnComputeSpectrum{
+    width:100%;
+  }
+
+  body[data-screen="preview"] .fx-row{
+    display:grid;
+    grid-template-columns:minmax(90px,auto) minmax(0,1fr) auto;
+    align-items:center;
+  }
+
+  body[data-screen="preview"] .fx-row label{
+    min-width:0;
+  }
+
+  body[data-screen="preview"] .fx-val{
+    min-width:64px;
+    text-align:right;
+  }
+
+  body[data-screen="preview"] .history-row{
+    grid-template-columns:1fr 1fr;
+    align-items:start;
+  }
+
+  body[data-screen="preview"] .history-label{
+    grid-column:1 / -1;
+  }
+
+  body[data-screen="preview"] .history-time{
+    justify-self:start;
+  }
+
+  body[data-screen="preview"] .hist-play,
+  body[data-screen="preview"] .hist-dl{
+    width:100%;
+  }
+
+  body[data-screen="preview"] #finalHarmonyVolumeRow{
+    display:grid !important;
+  }
+
+  body[data-screen="preview"] #spectrumCanvas{
+    height:160px !important;
+  }
+}
+
+/* playback row only */
+@media(max-width:700px){
+  body[data-screen="preview"] #previewProgressBar + div[style*="display:flex"]{
+    display:grid !important;
+    grid-template-columns:1fr 1fr;
+    gap:8px !important;
+    align-items:center !important;
+  }
+}
+
+/* @style preview-clean-d65 */
+/* D65: Previewは「聴く → 音量調整」を主役にし、詳細機能は折りたたむ。 */
+body[data-screen="preview"] .preview-tools-label{
+  display:flex;
+  align-items:baseline;
+  justify-content:space-between;
+  gap:10px;
+  margin:18px 2px 8px;
+  padding:0 2px;
+}
+body[data-screen="preview"] .preview-tools-label > span{
+  font-family:var(--mono);
+  font-size:12px;
+  letter-spacing:.08em;
+  color:#d9c8fb;
+}
+body[data-screen="preview"] .preview-tools-label > small{
+  font-size:10.5px;
+  color:#8f7daf;
+}
+
+body[data-screen="preview"] details.preview-accordion{
+  padding:0 !important;
+  overflow:hidden;
+}
+body[data-screen="preview"] details.preview-accordion > summary{
+  list-style:none;
+  cursor:pointer;
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  gap:8px 12px;
+  align-items:center;
+  padding:15px 16px;
+  min-height:50px;
+  -webkit-tap-highlight-color:rgba(181,145,255,.22);
+  touch-action:manipulation;
+}
+body[data-screen="preview"] details.preview-accordion > summary::-webkit-details-marker{
+  display:none;
+}
+body[data-screen="preview"] details.preview-accordion > summary::after{
+  content:"＋";
+  grid-column:2;
+  grid-row:1 / span 2;
+  align-self:center;
+  font-family:var(--mono);
+  font-size:18px;
+  color:#b997ff;
+  transition:transform .12s ease;
+}
+body[data-screen="preview"] details.preview-accordion[open] > summary::after{
+  content:"−";
+}
+body[data-screen="preview"] .preview-accordion-title{
+  font-family:var(--serif);
+  font-size:14px;
+  font-weight:600;
+  color:#eee6ff;
+}
+body[data-screen="preview"] .preview-accordion-sub{
+  font-size:10.5px;
+  color:#9481b6;
+}
+body[data-screen="preview"] .preview-accordion-body{
+  border-top:1px solid rgba(190,155,255,.13);
+  padding:14px 16px 16px;
+}
+body[data-screen="preview"] details.preview-accordion:active > summary{
+  background:rgba(121,79,205,.10);
+}
+
+@media(max-width:700px){
+  body[data-screen="preview"] .preview-tools-label{
+    margin-top:14px;
+  }
+  body[data-screen="preview"] details.preview-accordion{
+    margin-bottom:9px !important;
+  }
+  body[data-screen="preview"] details.preview-accordion > summary{
+    padding:13px 14px;
+    min-height:48px;
+  }
+  body[data-screen="preview"] .preview-accordion-body{
+    padding:13px 14px 15px;
+  }
+  body[data-screen="preview"] #btnToExport{
+    margin-top:12px;
+  }
+}
+
+/* @style export-mobile-d66 */
+/* D66: Exportタブのスマホ最適化。書き出しロジックは変更しない。 */
+
+body[data-screen="export"] .screen[data-screen="export"] > .panel{
+  position:relative;
+  overflow:hidden;
+}
+
+body[data-screen="export"] .export-grid{
+  gap:10px;
+}
+
+body[data-screen="export"] .export-field{
+  min-width:0;
+}
+
+body[data-screen="export"] .export-field label{
+  display:block;
+  margin-bottom:6px;
+}
+
+body[data-screen="export"] .export-field select{
+  width:100%;
+  min-height:46px;
+}
+
+body[data-screen="export"] #btnExport,
+body[data-screen="export"] #btnExportMaster{
+  width:100%;
+  min-height:52px;
+  line-height:1.35;
+}
+
+body[data-screen="export"] #exportStatus{
+  margin-top:11px;
+  line-height:1.5;
+}
+
+body[data-screen="export"] .meter-grid{
+  gap:8px;
+}
+
+@media(max-width:700px){
+  body[data-screen="export"] .screen[data-screen="export"] > .panel{
+    padding:16px 14px;
+    margin-bottom:12px;
+  }
+
+  body[data-screen="export"] .export-grid{
+    grid-template-columns:1fr 1fr;
+    gap:8px;
+  }
+
+  body[data-screen="export"] .export-field label{
+    font-size:11px;
+  }
+
+  body[data-screen="export"] .export-field select{
+    font-size:16px;
+    padding:10px 9px;
+  }
+
+  body[data-screen="export"] .screen[data-screen="export"] > .panel > div[style*="display:flex"]{
+    display:grid !important;
+    grid-template-columns:1fr;
+    gap:9px !important;
+  }
+
+  body[data-screen="export"] .meter-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+
+  body[data-screen="export"] .metric{
+    min-height:72px;
+    padding:10px;
+  }
+
+  body[data-screen="export"] .metric .value{
+    font-size:17px;
+  }
+
+  body[data-screen="export"] p.lead{
+    font-size:12.5px;
+    line-height:1.65;
+  }
+}
+
+/* @style export-character-d69 */
+/* D69: export character visible on mobile + mastering button color aligned */
+body[data-screen="export"] .export-actions{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:12px;
+  margin-top:8px;
+}
+body[data-screen="export"] .export-card{
+  position:relative;
+  overflow:hidden;
+  border:1px solid rgba(211,173,255,.28);
+  border-radius:18px;
+  padding:14px;
+  background:
+    linear-gradient(180deg, rgba(97,46,162,.20), rgba(26,10,52,.54)),
+    rgba(10, 5, 26, .68);
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.03), 0 10px 26px rgba(15,5,35,.22);
+}
+body[data-screen="export"] .export-card-title{
+  font-family: var(--display);
+  font-size:18px;
+  letter-spacing:.04em;
+  color:var(--parchment);
+  margin-bottom:6px;
+}
+body[data-screen="export"] .export-card-desc{
+  margin:0;
+  color:var(--parchment-dim);
+  line-height:1.7;
+  font-size:13px;
+}
+body[data-screen="export"] .export-card button{
+  width:100%;
+  margin-top:12px;
+}
+body[data-screen="export"] .export-card-retsu{
+  display:flex;
+  flex-direction:column;
+  align-items:stretch;
+}
+body[data-screen="export"] .export-card-figure{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  min-height:150px;
+  margin-top:8px;
+  margin-bottom:4px;
+}
+body[data-screen="export"] .export-mascot{
+  display:block;
+  width:min(170px, 52vw);
+  max-width:100%;
+  height:auto;
+  object-fit:contain;
+  filter: drop-shadow(0 10px 18px rgba(40,10,80,.34));
+}
+body[data-screen="export"] #btnExportMaster{
+  background:linear-gradient(120deg,#B99AFF,#8263EF 52%,#5C42C8) !important;
+  color:#0A061A !important;
+  border:none !important;
+  box-shadow:0 0 22px rgb(154 112 255 / 24%), inset 0 1px rgb(255 255 255 / 38%);
+}
+body[data-screen="export"] .export-help{
+  margin-top:10px !important;
+}
+@media (max-width:700px){
+  body[data-screen="export"] .export-card{
+    padding:14px 14px 15px;
+    border-radius:16px;
+  }
+  body[data-screen="export"] .export-card-title{
+    font-size:17px;
+    line-height:1.45;
+  }
+  body[data-screen="export"] .export-card-desc{
+    font-size:12.5px;
+    line-height:1.78;
+  }
+  body[data-screen="export"] .export-card-figure{
+    min-height:138px;
+  }
+  body[data-screen="export"] .export-mascot{
+    width:min(152px, 48vw);
+  }
+  body[data-screen="export"] .export-help{
+    font-size:12.5px;
+    line-height:1.75;
+  }
+}
+
+/* @style youtube-master-d70 */
+body[data-screen="export"] .export-finish-mode{
+  margin-top:12px;
+  padding:11px;
+  border:1px solid rgba(190,155,255,.20);
+  border-radius:12px;
+  background:rgba(18,10,40,.34);
+}
+body[data-screen="export"] .export-finish-mode label{
+  display:block;
+  margin-bottom:6px;
+  font-family:var(--mono);
+  font-size:10px;
+  letter-spacing:.06em;
+  color:#bca9df;
+}
+body[data-screen="export"] #exportFinishMode{
+  width:100%;
+  min-height:46px;
+  font-size:15px;
+}
+body[data-screen="export"] .export-mode-desc{
+  margin:7px 0 0;
+  font-size:11.5px;
+  line-height:1.55;
+  color:#9f8cbe;
+}
+@media(max-width:700px){
+  body[data-screen="export"] #exportFinishMode{
+    font-size:16px;
+  }
+}
+
+/* @style export-clean-d71 */
+body[data-screen="export"] #exportStatus:empty{
+  display:none;
+}
+body[data-screen="export"] #exportStatus:not(:empty){
+  margin-top:12px;
+}
+body[data-screen="export"] .export-actions{
+  margin-bottom:0;
+}
+body[data-screen="export"] #exportLegacyCompat{
+  display:none !important;
+}
+
+/* @style fx-clean-d72 */
+/* D72: FXは Reverb / Delay を主役にし、追加機能を折りたたむ。 */
+body[data-screen="fx"] .screen[data-screen="fx"] > .panel{
+  position:relative;
+  overflow:hidden;
+}
+
+body[data-screen="fx"] .fx-tools-label{
+  display:flex;
+  align-items:baseline;
+  justify-content:space-between;
+  gap:10px;
+  margin:16px 2px 8px;
+  padding:0 2px;
+}
+body[data-screen="fx"] .fx-tools-label > span{
+  font-family:var(--mono);
+  font-size:12px;
+  letter-spacing:.08em;
+  color:#d9c8fb;
+}
+body[data-screen="fx"] .fx-tools-label > small{
+  font-size:10.5px;
+  color:#8f7daf;
+}
+
+body[data-screen="fx"] details.fx-accordion{
+  padding:0 !important;
+  overflow:hidden;
+}
+body[data-screen="fx"] details.fx-accordion > summary{
+  list-style:none;
+  cursor:pointer;
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  gap:5px 12px;
+  align-items:center;
+  padding:14px 16px;
+  min-height:50px;
+  -webkit-tap-highlight-color:rgba(181,145,255,.22);
+  touch-action:manipulation;
+}
+body[data-screen="fx"] details.fx-accordion > summary::-webkit-details-marker{
+  display:none;
+}
+body[data-screen="fx"] details.fx-accordion > summary::after{
+  content:"＋";
+  grid-column:2;
+  grid-row:1 / span 2;
+  align-self:center;
+  font-family:var(--mono);
+  font-size:18px;
+  color:#b997ff;
+}
+body[data-screen="fx"] details.fx-accordion[open] > summary::after{
+  content:"−";
+}
+body[data-screen="fx"] .fx-accordion-title{
+  font-family:var(--serif);
+  font-size:14px;
+  font-weight:600;
+  color:#eee6ff;
+}
+body[data-screen="fx"] .fx-accordion-sub{
+  font-size:10.5px;
+  color:#9481b6;
+}
+body[data-screen="fx"] .fx-accordion-body{
+  border-top:1px solid rgba(190,155,255,.13);
+  padding:14px 16px 16px;
+}
+
+body[data-screen="fx"] #btnRenderFx,
+body[data-screen="fx"] #btnDownloadFx{
+  width:100%;
+  min-height:50px;
+}
+body[data-screen="fx"] #btnDownloadFx{
+  margin-top:8px;
+}
+
+@media(max-width:700px){
+  body[data-screen="fx"] .screen[data-screen="fx"] > .panel{
+    padding:16px 14px;
+    margin-bottom:12px;
+  }
+
+  body[data-screen="fx"] .fx-row{
+    display:grid;
+    grid-template-columns:minmax(92px,auto) minmax(0,1fr) auto;
+    gap:8px;
+    align-items:center;
+  }
+
+  body[data-screen="fx"] .fx-row label{
+    min-width:0;
+  }
+
+  body[data-screen="fx"] .fx-row select{
+    grid-column:2 / -1;
+    min-width:0;
+    width:100%;
+    font-size:16px;
+  }
+
+  body[data-screen="fx"] .fx-row input[type="number"]{
+    min-width:0;
+    width:100%;
+    font-size:16px;
+  }
+
+  body[data-screen="fx"] .fx-val{
+    min-width:58px;
+    text-align:right;
+  }
+
+  body[data-screen="fx"] .fx-tools-label{
+    margin-top:13px;
+  }
+
+  body[data-screen="fx"] details.fx-accordion{
+    margin-bottom:9px !important;
+  }
+
+  body[data-screen="fx"] details.fx-accordion > summary{
+    padding:13px 14px;
+    min-height:48px;
+  }
+
+  body[data-screen="fx"] .fx-accordion-body{
+    padding:13px 14px 15px;
+  }
+
+  body[data-screen="fx"] #fxRegionWave{
+    height:110px !important;
+  }
+
+  body[data-screen="fx"] #btnRenderFx{
+    margin-top:12px;
+  }
+}
+
+/* @style fx-minimal-d73 */
+/* D73: 常時表示は適用先ステムとレンダリングのみ。追加FXはすべて折りたたみ。 */
+body[data-screen="fx"] #btnDownloadFx{
+  display:none !important;
+}
+body[data-screen="fx"] .fx-tools-label{
+  margin-top:14px;
+}
+body[data-screen="fx"] #btnRenderFx{
+  width:100%;
+  min-height:52px;
+  margin-top:14px;
+}
+body[data-screen="fx"] #fxStatus{
+  margin-top:10px;
+}
+body[data-screen="fx"] #fxProgress{
+  margin-top:9px;
+}
+@media(max-width:700px){
+  body[data-screen="fx"] #btnRenderFx{
+    min-height:54px;
+    margin-top:12px;
+  }
+}
+
+/* @style fx-region-all-d74 */
+@media(max-width:700px){
+  body[data-screen="fx"] #fxRegionReverbUse,
+  body[data-screen="fx"] #fxRegionDelayUse,
+  body[data-screen="fx"] #fxRegionDoublerUse,
+  body[data-screen="fx"] #fxRegionDriveUse{
+    width:22px;
+    height:22px;
+    justify-self:end;
+  }
+}
+
+/* @style analysis-clean-d75 */
+/* D75: AnalysisはVocal結果を主役にし、詳細を折りたたむ。 */
+body[data-screen="analysis"] .analysis-tools-label{
+  display:flex;
+  align-items:baseline;
+  justify-content:space-between;
+  gap:10px;
+  margin:15px 2px 8px;
+}
+body[data-screen="analysis"] .analysis-tools-label > span{
+  font-family:var(--mono);
+  font-size:12px;
+  letter-spacing:.08em;
+  color:#d9c8fb;
+}
+body[data-screen="analysis"] .analysis-tools-label > small{
+  font-size:10.5px;
+  color:#8f7daf;
+}
+
+body[data-screen="analysis"] details.analysis-accordion{
+  padding:0 !important;
+  overflow:hidden;
+}
+body[data-screen="analysis"] details.analysis-accordion > summary{
+  list-style:none;
+  cursor:pointer;
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  gap:5px 12px;
+  align-items:center;
+  min-height:50px;
+  padding:14px 16px;
+  -webkit-tap-highlight-color:rgba(181,145,255,.22);
+  touch-action:manipulation;
+}
+body[data-screen="analysis"] details.analysis-accordion > summary::-webkit-details-marker{
+  display:none;
+}
+body[data-screen="analysis"] details.analysis-accordion > summary::after{
+  content:"＋";
+  grid-column:2;
+  grid-row:1 / span 2;
+  align-self:center;
+  font-family:var(--mono);
+  font-size:18px;
+  color:#b997ff;
+}
+body[data-screen="analysis"] details.analysis-accordion[open] > summary::after{
+  content:"−";
+}
+body[data-screen="analysis"] .analysis-accordion-title{
+  font-family:var(--serif);
+  font-size:14px;
+  font-weight:600;
+  color:#eee6ff;
+}
+body[data-screen="analysis"] .analysis-accordion-sub{
+  font-size:10.5px;
+  color:#9481b6;
+}
+body[data-screen="analysis"] .analysis-accordion-body{
+  border-top:1px solid rgba(190,155,255,.13);
+  padding:14px 16px 16px;
+}
+body[data-screen="analysis"] #btnToMix{
+  width:100%;
+  min-height:52px;
+  margin-top:12px;
+}
+
+@media(max-width:700px){
+  body[data-screen="analysis"] .screen[data-screen="analysis"] > .panel{
+    padding:16px 14px;
+    margin-bottom:10px;
+  }
+  body[data-screen="analysis"] .meter-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:8px;
+  }
+  body[data-screen="analysis"] .metric{
+    min-height:72px;
+    padding:10px;
+  }
+  body[data-screen="analysis"] details.analysis-accordion{
+    margin-bottom:9px !important;
+  }
+  body[data-screen="analysis"] details.analysis-accordion > summary{
+    padding:13px 14px;
+    min-height:48px;
+  }
+  body[data-screen="analysis"] .analysis-accordion-body{
+    padding:13px 14px 15px;
+  }
+  body[data-screen="analysis"] #btnToMix{
+    min-height:54px;
+  }
+}
+
+/* @style upload-clean-d76 */
+/* D76: Uploadは「音源 → 基本MIX → 解析」を主役にし、追加補正だけ折りたたむ。 */
+body[data-screen="upload"] .upload-mix-intro{
+  margin-top:-6px;
+  margin-bottom:13px;
+  line-height:1.6;
+}
+
+body[data-screen="upload"] details.upload-accordion{
+  padding:0 !important;
+  overflow:hidden;
+  margin:12px 0 14px;
+}
+body[data-screen="upload"] details.upload-accordion > summary{
+  list-style:none;
+  cursor:pointer;
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  gap:5px 12px;
+  align-items:center;
+  min-height:50px;
+  padding:14px 16px;
+  -webkit-tap-highlight-color:rgba(181,145,255,.22);
+  touch-action:manipulation;
+}
+body[data-screen="upload"] details.upload-accordion > summary::-webkit-details-marker{
+  display:none;
+}
+body[data-screen="upload"] details.upload-accordion > summary::after{
+  content:"＋";
+  grid-column:2;
+  grid-row:1 / span 2;
+  align-self:center;
+  font-family:var(--mono);
+  font-size:18px;
+  color:#b997ff;
+}
+body[data-screen="upload"] details.upload-accordion[open] > summary::after{
+  content:"−";
+}
+body[data-screen="upload"] .upload-accordion-title{
+  font-family:var(--serif);
+  font-size:14px;
+  font-weight:600;
+  color:#eee6ff;
+}
+body[data-screen="upload"] .upload-accordion-sub{
+  font-size:10.5px;
+  color:#9481b6;
+}
+body[data-screen="upload"] .upload-accordion-body{
+  border-top:1px solid rgba(190,155,255,.13);
+  padding:14px 16px 16px;
+}
+body[data-screen="upload"] .upload-advanced-note{
+  margin:10px 0 0 !important;
+  font-size:11.5px;
+  line-height:1.55;
+}
+
+body[data-screen="upload"] #btnAnalyze{
+  width:100%;
+  min-height:52px;
+  margin-top:12px;
+}
+
+@media(max-width:700px){
+  body[data-screen="upload"] .upload-grid{
+    gap:10px;
+  }
+
+  body[data-screen="upload"] .wave{
+    height:58px;
+  }
+
+  body[data-screen="upload"] .upload-section-kicker{
+    margin-top:14px;
+  }
+
+  body[data-screen="upload"] details.upload-accordion{
+    margin:10px 0 12px;
+  }
+
+  body[data-screen="upload"] details.upload-accordion > summary{
+    padding:13px 14px;
+    min-height:48px;
+  }
+
+  body[data-screen="upload"] .upload-accordion-body{
+    padding:12px 14px 14px;
+  }
+
+  body[data-screen="upload"] .upload-option-stack .fx-row{
+    padding:10px 0;
+  }
+
+  body[data-screen="upload"] .upload-option-stack .fx-row .sub{
+    grid-column:1 / -1;
+    margin-top:3px;
+    line-height:1.55;
+  }
+
+  body[data-screen="upload"] #btnAnalyze{
+    min-height:54px;
+  }
+}
+
+/* @style mix-clean-d77 */
+body[data-screen="mix"] .mix-tools-label{
+  display:flex;
+  align-items:baseline;
+  justify-content:space-between;
+  gap:10px;
+  margin:15px 2px 8px;
+}
+body[data-screen="mix"] .mix-tools-label > span{
+  font-family:var(--mono);
+  font-size:12px;
+  letter-spacing:.08em;
+  color:#d9c8fb;
+}
+body[data-screen="mix"] .mix-tools-label > small{
+  font-size:10.5px;
+  color:#8f7daf;
+}
+body[data-screen="mix"] details.mix-accordion{
+  padding:0 !important;
+  overflow:hidden;
+}
+body[data-screen="mix"] details.mix-accordion > summary{
+  list-style:none;
+  cursor:pointer;
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  gap:5px 12px;
+  align-items:center;
+  min-height:50px;
+  padding:14px 16px;
+  touch-action:manipulation;
+  -webkit-tap-highlight-color:rgba(181,145,255,.22);
+}
+body[data-screen="mix"] details.mix-accordion > summary::-webkit-details-marker{display:none;}
+body[data-screen="mix"] details.mix-accordion > summary::after{
+  content:"＋";
+  grid-column:2;
+  grid-row:1 / span 2;
+  align-self:center;
+  font-family:var(--mono);
+  font-size:18px;
+  color:#b997ff;
+}
+body[data-screen="mix"] details.mix-accordion[open] > summary::after{content:"−";}
+body[data-screen="mix"] .mix-accordion-title{
+  font-family:var(--serif);
+  font-size:14px;
+  font-weight:600;
+  color:#eee6ff;
+}
+body[data-screen="mix"] .mix-accordion-sub{
+  font-size:10.5px;
+  color:#9481b6;
+}
+body[data-screen="mix"] .mix-accordion-body{
+  border-top:1px solid rgba(190,155,255,.13);
+  padding:14px 16px 16px;
+}
+body[data-screen="mix"] #btnRenderMix,
+body[data-screen="mix"] #btnDownloadMix{
+  width:100%;
+  min-height:52px;
+}
+body[data-screen="mix"] #btnDownloadMix{margin-top:8px;}
+body[data-screen="mix"] .mix-note-panel{
+  padding-top:12px !important;
+  padding-bottom:12px !important;
+}
+@media(max-width:700px){
+  body[data-screen="mix"] .screen[data-screen="mix"] > .panel{
+    padding:16px 14px;
+    margin-bottom:10px;
+  }
+  body[data-screen="mix"] details.mix-accordion{
+    margin-bottom:9px !important;
+  }
+  body[data-screen="mix"] details.mix-accordion > summary{
+    padding:13px 14px;
+    min-height:48px;
+  }
+  body[data-screen="mix"] .mix-accordion-body{
+    padding:13px 14px 15px;
+  }
+  body[data-screen="mix"] #btnRenderMix,
+  body[data-screen="mix"] #btnDownloadMix{
+    min-height:54px;
+  }
+}
+
+/* @style pwa-lifecycle-d81 */
+.pwa-net-status{
+  display:inline-block;
+  margin-left:8px;
+  font-family:var(--mono);
+  font-size:10px;
+  color:#8f7daf;
+}
+.pwa-net-status.offline{
+  color:#d9a2c7;
+}
+.pwa-update-toast{
+  position:fixed;
+  left:50%;
+  bottom:calc(82px + env(safe-area-inset-bottom));
+  transform:translateX(-50%);
+  z-index:9999;
+  width:min(92vw,420px);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:11px 12px 11px 14px;
+  border:1px solid rgba(190,155,255,.34);
+  border-radius:14px;
+  background:rgba(20,10,45,.94);
+  box-shadow:0 12px 32px rgba(10,4,28,.42);
+  backdrop-filter:blur(12px);
+}
+.pwa-update-toast[hidden]{
+  display:none !important;
+}
+.pwa-update-toast span{
+  font-size:12px;
+  color:#eee6ff;
+}
+.pwa-update-toast button{
+  min-height:38px;
+  padding:8px 13px;
+  border-radius:10px;
+  border:0;
+  background:linear-gradient(120deg,#B99AFF,#8263EF 52%,#5C42C8);
+  color:#0A061A;
+  font-weight:700;
+}
+@media(max-width:700px){
+  .pwa-update-toast{
+    bottom:calc(76px + env(safe-area-inset-bottom));
+  }
+}
+
+/* @style input-reliability-d86 */
+.drop-zone.drag-over{
+  border-color:rgba(185,154,255,.72);
+  box-shadow:inset 0 0 0 1px rgba(185,154,255,.16),0 0 18px rgba(125,86,220,.14);
+}
+
+/* @style viewport-keyboard-d88 */
+@media (max-width:700px){
+  html,body{min-height:var(--vm-viewport-height,100dvh);}
+  .screen.active{min-height:calc(var(--vm-viewport-height,100dvh) - 150px);}
+  body.vm-keyboard-open nav.tabs{
+    transform:translateY(115%);
+    pointer-events:none;
+    opacity:0;
+  }
+  body.vm-keyboard-open .app{
+    padding-bottom:calc(18px + env(safe-area-inset-bottom));
+  }
+  nav.tabs{
+    transition:transform .16s ease,opacity .16s ease;
+  }
+}
+@media (prefers-reduced-motion:reduce){
+  nav.tabs{transition:none !important;}
+}
+
+/* @style wav-save-lock-d91 */
+button[aria-busy="true"]{
+  cursor:wait;
+}
+
+/* @style export-activity-d217 */
+/* D217: 書き出し中であることを、JS更新が一時的に止まっても視認できる
+   compositor-friendly(transform/opacity中心)アニメーションで表示する。 */
+.export-activity{
+  display:none;
+  align-items:center;
+  justify-content:center;
+  gap:11px;
+  min-height:44px;
+  margin-top:12px;
+  padding:10px 13px;
+  border:1px solid rgba(190,155,255,.22);
+  border-radius:14px;
+  background:rgba(44,25,91,.32);
+  font-family:var(--mono);
+  font-size:12px;
+  letter-spacing:.06em;
+  color:#d8c7ff;
+  pointer-events:none;
+}
+body.is-exporting[data-screen="export"] .export-activity{
+  display:flex;
+}
+.export-activity-ring{
+  width:20px;
+  height:20px;
+  flex:0 0 20px;
+  border-radius:50%;
+  border:2px solid rgba(205,180,255,.20);
+  border-top-color:rgba(225,207,255,.95);
+  border-right-color:rgba(151,106,255,.85);
+  will-change:transform;
+  animation:vmExportSpin .82s linear infinite;
+}
+.export-activity-dots{
+  display:inline-flex;
+  gap:4px;
+  margin-left:2px;
+}
+.export-activity-dots i{
+  display:block;
+  width:4px;
+  height:4px;
+  border-radius:50%;
+  background:currentColor;
+  opacity:.25;
+  will-change:opacity,transform;
+  animation:vmExportDot 1.05s ease-in-out infinite;
+}
+.export-activity-dots i:nth-child(2){animation-delay:.14s;}
+.export-activity-dots i:nth-child(3){animation-delay:.28s;}
+@keyframes vmExportSpin{to{transform:rotate(360deg);}}
+@keyframes vmExportDot{
+  0%,100%{opacity:.22;transform:translateY(0);}
+  50%{opacity:1;transform:translateY(-2px);}
+}
+body.is-exporting[data-screen="export"] #btnExport.vm-export-active,
+body.is-exporting[data-screen="export"] #btnExportMaster.vm-export-active{
+  position:relative;
+  padding-right:48px;
+  box-shadow:0 0 0 1px rgba(219,194,255,.26),0 0 20px rgba(141,88,255,.28);
+}
+body.is-exporting[data-screen="export"] #btnExport.vm-export-active::after,
+body.is-exporting[data-screen="export"] #btnExportMaster.vm-export-active::after{
+  content:"";
+  position:absolute;
+  right:17px;
+  top:50%;
+  width:16px;
+  height:16px;
+  margin-top:-8px;
+  border-radius:50%;
+  border:2px solid rgba(255,255,255,.28);
+  border-top-color:rgba(255,255,255,.96);
+  will-change:transform;
+  animation:vmExportSpin .75s linear infinite;
+}
+
+/* @style mix-activity-d222 */
+body.is-rendering[data-screen="mix"] #btnRenderMix{
+  position:relative;
+  padding-right:50px;
+  box-shadow:0 0 0 1px rgba(219,194,255,.24),0 0 20px rgba(141,88,255,.24);
+}
+body.is-rendering[data-screen="mix"] #btnRenderMix::after{
+  content:"";
+  position:absolute;
+  right:18px;
+  top:50%;
+  width:17px;height:17px;margin-top:-8.5px;border-radius:50%;
+  border:2px solid rgba(255,255,255,.25);
+  border-top-color:rgba(255,255,255,.96);
+  border-right-color:rgba(214,190,255,.9);
+  will-change:transform;
+  animation:vmMixSpin .8s linear infinite;
+}
+@keyframes vmMixSpin{to{transform:rotate(360deg);}}
+.mix-activity{
+  display:none;align-items:center;justify-content:center;gap:10px;
+  margin-top:10px;min-height:38px;font-family:var(--mono);
+  font-size:11px;letter-spacing:.06em;color:#cdb9ff;pointer-events:none;
+}
+body.is-rendering[data-screen="mix"] .mix-activity{display:flex;}
+.mix-activity i{
+  width:5px;height:5px;border-radius:50%;background:currentColor;opacity:.25;
+  will-change:opacity,transform;animation:vmMixPulse 1.05s ease-in-out infinite;
+}
+.mix-activity i:nth-child(2){animation-delay:.15s;}
+.mix-activity i:nth-child(3){animation-delay:.30s;}
+@keyframes vmMixPulse{
+  0%,100%{opacity:.25;transform:translateY(0);}
+  50%{opacity:1;transform:translateY(-3px);}
+}
+
+/* @style iphone-distribution-d293 */
+/* D293: iPhone Safari / Home Screen PWA hardening.
+   Approved layout/visual identity is unchanged; only platform behavior is adjusted. */
+html.vm-ios {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+html.vm-ios body {
+  /* background-attachment:fixed can trigger expensive repaints in iOS WebKit. */
+  background-attachment: scroll;
+  overscroll-behavior-y: none;
+}
+html.vm-ios button,
+html.vm-ios input[type="button"],
+html.vm-ios input[type="submit"],
+html.vm-ios input[type="range"],
+html.vm-ios select,
+html.vm-ios label {
+  touch-action: manipulation;
+}
+html.vm-ios button,
+html.vm-ios .tab-btn,
+html.vm-ios nav.tabs button {
+  -webkit-tap-highlight-color: transparent;
+}
+html.vm-ios input,
+html.vm-ios select,
+html.vm-ios textarea {
+  /* 16px prevents Safari focus-zoom without altering surrounding geometry. */
+  font-size: max(16px, 1em);
+}
+html.vm-ios body {
+  padding-top: env(safe-area-inset-top, 0px);
+}
+html.vm-ios .app {
+  padding-left: max(20px, env(safe-area-inset-left, 0px));
+  padding-right: max(20px, env(safe-area-inset-right, 0px));
+  padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px));
+}
+@media (max-width:700px) {
+  html.vm-ios .app {
+    padding-left: max(14px, env(safe-area-inset-left, 0px));
+    padding-right: max(14px, env(safe-area-inset-right, 0px));
+    padding-bottom: calc(92px + env(safe-area-inset-bottom, 0px));
+  }
+}
+
+/* @style home-wave-fx-d357 */
+body[data-screen="home"] #scope{
+  box-shadow:
+    inset 0 0 30px rgb(111 74 220 / 12%),
+    inset 0 1px rgb(226 211 255 / 8%),
+    0 0 18px rgb(102 55 210 / 7%);
+}
+
+/* @style vm-ui-motion-d370 */
+/* D370: flicker-safe tab transition.
+   No opacity/filter/mix-blend/pseudo sweep on the entering screen. */
+.screen.active{animation:none !important}
+.screen.vm-screen-enter{
+  animation:vmScreenEnterTransformOnly 1.08s cubic-bezier(.14,.72,.18,1) both !important;
+  will-change:transform;
+  backface-visibility:hidden;
+  -webkit-backface-visibility:hidden;
+  transform-origin:50% 22%;
+}
+@keyframes vmScreenEnterTransformOnly{
+  from{opacity:0;transform:translate3d(0,82px,0) scale(.978)}
+  to{opacity:1;transform:translate3d(0,0,0) scale(1)}
+}
+
+/* Selected tab: transform only. No flash, no shadow/brightness animation. */
+.tab-btn.vm-tab-arrive{
+  animation:vmTabArriveTransformOnly .28s cubic-bezier(.18,.78,.2,1) both;
+  backface-visibility:hidden;
+  -webkit-backface-visibility:hidden;
+}
+@keyframes vmTabArriveTransformOnly{
+  0%{transform:translate3d(0,2px,0) scale(.97)}
+  62%{transform:translate3d(0,-1px,0) scale(1.018)}
+  100%{transform:translate3d(0,0,0) scale(1)}
+}
+
+/* Completion feedback remains separate from navigation. */
+.completion-banner.show{animation:vmCompleteArriveSoft .32s ease-out both}
+.completion-banner.show .check{display:inline-block;animation:vmCheckPopSoft .34s ease-out both}
+@keyframes vmCompleteArriveSoft{
+  from{opacity:0;transform:translateY(3px)}
+  to{opacity:1;transform:none}
+}
+@keyframes vmCheckPopSoft{
+  from{opacity:0;transform:scale(.8)}
+  to{opacity:1;transform:scale(1)}
+}
+body.is-processing .task-progress.active{filter:drop-shadow(0 0 8px rgb(129 95 235 / 10%))}
+@media(prefers-reduced-motion:reduce){
+  .screen.vm-screen-enter,
+  .tab-btn.vm-tab-arrive,
+  .completion-banner.show,
+  .completion-banner.show .check{animation:none !important}
+}
+
+/* @style ios-motion-guard-d370 */
+/* iPhone/iPad Safari: use the exact same transform-only navigation path. */
+html.vm-ios .screen.vm-screen-enter{
+  animation:vmScreenEnterTransformOnly 1.00s cubic-bezier(.14,.72,.18,1) both !important;
+  will-change:transform;
+  backface-visibility:hidden;
+  -webkit-backface-visibility:hidden;
+}
+html.vm-ios .tab-btn.vm-tab-arrive{
+  animation:vmTabArriveTransformOnly .26s cubic-bezier(.18,.78,.2,1) both !important;
+}
+html.vm-ios body.is-processing .task-progress.active{filter:none !important}
+html.vm-ios .task-progress-fill{box-shadow:0 0 7px rgb(170 130 255 / 20%) !important}
+html.vm-ios .task-progress-track::after{animation-duration:2.6s !important}
+
+@media(max-width:700px){
+  html.vm-ios,
+  html.vm-ios body{min-height:-webkit-fill-available}
+  html.vm-ios header.top{
+    -webkit-backdrop-filter:blur(10px);
+    backdrop-filter:blur(10px);
+    transform:translateZ(0);
+  }
+  html.vm-ios nav.tabs{
+    -webkit-backdrop-filter:blur(12px) saturate(1.08);
+    backdrop-filter:blur(12px) saturate(1.08);
+    transform:translateZ(0);
+    padding-bottom:max(env(safe-area-inset-bottom), 4px);
+  }
+}
+
+/* @style vm-transition-sweep-d372 */
+#vmTransitionSweep{
+  position:fixed;
+  top:0;
+  bottom:0;
+  left:-56vw;
+  width:46vw;
+  max-width:360px;
+  min-width:180px;
+  z-index:85;
+  pointer-events:none;
+  overflow:visible;
+  transform:translate3d(-145vw,0,0) skewX(-12deg);
+  backface-visibility:hidden;
+  -webkit-backface-visibility:hidden;
+
+  /* Dark violet-blue nebula veil: deliberately much dimmer than the old white sweep. */
+  background:
+    linear-gradient(
+      90deg,
+      rgb(82 62 140 / 0%) 0%,
+      rgb(92 72 160 / 2%) 18%,
+      rgb(122 96 196 / 5%) 36%,
+      rgb(147 120 214 / 8%) 50%,
+      rgb(92 114 196 / 5%) 63%,
+      rgb(70 64 138 / 2%) 78%,
+      rgb(70 64 138 / 0%) 100%
+    );
+}
+
+/* Star dust rides on the same single moving layer; no separate animation loop. */
+#vmTransitionSweep::before,
+#vmTransitionSweep::after{
+  content:"";
+  position:absolute;
+  inset:8% -12% 8% -12%;
+  pointer-events:none;
+  transform:skewX(12deg);
+  background-repeat:no-repeat;
+}
+
+#vmTransitionSweep::before{
+  background-image:
+    radial-gradient(circle at 18% 28%, rgb(224 216 255 / 42%) 0 1px, transparent 1.8px),
+    radial-gradient(circle at 33% 66%, rgb(168 186 255 / 28%) 0 1px, transparent 1.7px),
+    radial-gradient(circle at 51% 40%, rgb(218 201 255 / 34%) 0 1.2px, transparent 2px),
+    radial-gradient(circle at 68% 73%, rgb(172 151 235 / 26%) 0 1px, transparent 1.8px),
+    radial-gradient(circle at 82% 22%, rgb(206 223 255 / 30%) 0 1px, transparent 1.7px);
+}
+
+#vmTransitionSweep::after{
+  inset:14% -6% 14% -6%;
+  background-image:
+    radial-gradient(ellipse at 24% 52%, rgb(132 106 198 / 10%) 0 2px, transparent 7px),
+    radial-gradient(ellipse at 58% 31%, rgb(112 128 210 / 8%) 0 2px, transparent 8px),
+    radial-gradient(ellipse at 76% 64%, rgb(155 118 210 / 8%) 0 2px, transparent 7px);
+}
+
+#vmTransitionSweep.vm-sweep-run{
+  animation:vmTransitionSweepRun 1.52s cubic-bezier(.18,.54,.22,1) both;
+}
+
+@keyframes vmTransitionSweepRun{
+  from{transform:translate3d(-145vw,0,0) skewX(-12deg)}
+  to{transform:translate3d(195vw,0,0) skewX(-12deg)}
+}
+
+/* iPhone: fewer particles and a thinner, darker veil. */
+html.vm-ios #vmTransitionSweep{
+  width:38vw;
+  max-width:270px;
+  min-width:150px;
+  background:
+    linear-gradient(
+      90deg,
+      rgb(82 62 140 / 0%) 0%,
+      rgb(100 80 165 / 2%) 26%,
+      rgb(137 110 200 / 6%) 50%,
+      rgb(89 103 175 / 3%) 68%,
+      rgb(70 64 138 / 0%) 100%
+    );
+}
+
+html.vm-ios #vmTransitionSweep::before{
+  background-image:
+    radial-gradient(circle at 24% 30%, rgb(220 212 255 / 30%) 0 1px, transparent 1.7px),
+    radial-gradient(circle at 54% 62%, rgb(171 189 255 / 22%) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 78% 34%, rgb(205 193 245 / 24%) 0 1px, transparent 1.7px);
+}
+
+html.vm-ios #vmTransitionSweep::after{
+  display:none;
+}
+
+html.vm-ios #vmTransitionSweep.vm-sweep-run{
+  animation-duration:1.42s;
+}
+
+@media(prefers-reduced-motion:reduce){
+  #vmTransitionSweep.vm-sweep-run{animation:none!important}
+}
+
+/* @style vm-event-motion-d378 */
+/* D378: event-only motion. Nothing here runs continuously while idle. */
+
+/* A short highlight when progress meaningfully advances. */
+.task-progress-track.vm-progress-step{
+  animation:vmProgressStep .24s ease-out both;
+}
+@keyframes vmProgressStep{
+  0%{transform:scaleY(1)}
+  45%{transform:scaleY(1.12)}
+  100%{transform:scaleY(1)}
+}
+
+/* One-shot finish glow. */
+.task-progress.vm-progress-finish{
+  animation:vmProgressFinish .42s ease-out both;
+}
+@keyframes vmProgressFinish{
+  0%{filter:none}
+  55%{filter:drop-shadow(0 0 10px rgb(185 151 255 / 32%))}
+  100%{filter:none}
+}
+
+/* iPhone: even shorter compositor-only feedback. */
+html.vm-ios .task-progress-track.vm-progress-step{
+  animation-duration:.20s;
+}
+html.vm-ios .task-progress.vm-progress-finish{
+  animation:none;
+}
+
+@media(prefers-reduced-motion:reduce){
+  .task-progress-track.vm-progress-step,
+  .task-progress.vm-progress-finish{animation:none!important}
+}
+
+/* @style aivocalmix-d439-brand-fix */body[data-screen="export"] .export-card-figure{min-height:0!important;height:auto!important;overflow:visible!important}body[data-screen="export"] .export-mascot{display:block;width:min(180px,48vw)!important;max-width:100%;height:auto!important;max-height:none!important;object-fit:contain!important;object-position:center;border-radius:10px}@media(max-width:700px){body[data-screen="export"] .export-mascot{width:min(180px,48vw)!important}}
