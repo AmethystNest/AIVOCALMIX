@@ -26,6 +26,7 @@ jobs:
         run: |
           node tests/static-check.cjs
           node tests/app-shell-consistency.cjs
+          node tests/declaration-uniqueness.cjs
           node tools/wasm-sources.cjs
       - name: Logic regressions
         run: |
@@ -48,6 +49,9 @@ jobs:
         browser: [chromium, webkit]
     env:
       VM_BROWSER: ${{ matrix.browser }}
+      # Playwright WebKit fails reloads under its offline emulation, so the
+      # WebKit smoke checks the offline start by stopping its own server.
+      VM_SMOKE_OFFLINE: ${{ matrix.browser == 'webkit' && 'server' || '' }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
