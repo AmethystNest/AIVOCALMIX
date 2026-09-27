@@ -17,7 +17,7 @@ function loadChromium() {
   let playwright;
   try { playwright = require('playwright'); }
   catch (_) { playwright = require(path.join(process.env.APPDATA || '', 'npm', 'node_modules', 'playwright')); }
-  return playwright.chromium;
+  return playwright[process.env.VM_BROWSER || 'chromium'];
 }
 const baseUrl = process.env.VM_SMOKE_BASE_URL || 'http://127.0.0.1:8765/';
 

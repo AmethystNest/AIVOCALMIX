@@ -13,7 +13,7 @@ catch (_) { playwright = require(path.join(process.env.APPDATA || '', 'npm', 'no
 const baseUrl = process.env.VM_SMOKE_BASE_URL || 'http://127.0.0.1:8765/';
 
 (async () => {
-  const browser = await playwright.chromium.launch({ headless: true });
+  const browser = await playwright[process.env.VM_BROWSER || 'chromium'].launch({ headless: true });
   const context = await browser.newContext({ serviceWorkers: 'block' });
   const page = await context.newPage();
   const errors = [];

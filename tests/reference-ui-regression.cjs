@@ -142,7 +142,7 @@ function checkReachesOutput(label, r) {
 }
 
 (async () => {
-  const browser = await playwright.chromium.launch({ headless: true });
+  const browser = await playwright[process.env.VM_BROWSER || 'chromium'].launch({ headless: true });
   try {
     const rerender = process.argv.includes('--rerender-mix');
     const v1 = await run(browser, false, rerender);

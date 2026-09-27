@@ -2,7 +2,8 @@ const path = require('path');
 let playwright;
 try { playwright = require('playwright'); }
 catch (_) { playwright = require(path.join(process.env.APPDATA, 'npm', 'node_modules', 'playwright')); }
-const { chromium } = playwright;
+// VM_BROWSER=webkit|firefox runs the same flow in another engine (default chromium).
+const chromium = playwright[process.env.VM_BROWSER || 'chromium'];
 const fs = require('fs');
 const assert = require('node:assert/strict');
 const baseUrl = process.env.VM_SMOKE_BASE_URL || 'http://127.0.0.1:8765/';
