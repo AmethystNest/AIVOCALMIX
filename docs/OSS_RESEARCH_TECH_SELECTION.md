@@ -164,3 +164,4 @@ THIRD_PARTY_NOTICES.md
 - M7 計測: 書き出し時間の大半は計算ではなく描画フレーム待ち（`yieldToBrowser`）。Worker/AudioWorklet化より待ち方の見直しが有効な見込み。iPhone実機の工程別時間を見てから判断（`docs/M7_PERFORMANCE.md`）。
 - 承認済み修正: リファレンス補正を書き出し3種とプレビューに反映（補正の重ねがけも防止）。CSSの閉じ忘れを修正（全画面の計算済みスタイル不変）。M7は実機がないため保留。
 - MVP項目5 完了: `THIRD_PARTY_NOTICES.md`（同梱ライブラリなし、Webフォント3種はOFL 1.1、開発ツール、アルゴリズム参考元）。
+- CI整備: GitHub ActionsでNode・Chromium・WebKitの全テストが成功（WebKitはiPhone Safariに最も近い代替）。WebKitで判明した問題を修正: 新方式補正のエンジン差（JS畳み込み化）、初回訪問時の自動再読み込み。重複宣言の検出テストを追加。

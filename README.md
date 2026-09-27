@@ -101,3 +101,14 @@ Verified in Chromium: after installing one release and serving a changed `src/` 
 ## M6 (reference matching v2, off by default)
 
 新方式(試験的) in the reference-matching panel switches to `src/reference/reference-match-v2.js` (loudest sections, Mid/Side, smoothed curve, linear-phase FIR). Off, the existing method is unchanged. Also fixed: loading a reference no longer marks the Mix result as stale, and an applied correction now reaches Preview and all exports. Details: `docs/M6_REFERENCE_MATCH_V2.md`.
+
+## CI (GitHub Actions)
+
+`.github/workflows/tests.yml` runs on every push and pull request:
+
+- Node: static/consistency checks (`static-check`, `app-shell-consistency`, `declaration-uniqueness`, `wasm-sources`) and the logic regressions.
+- Browser, Chromium and WebKit: smoke (full flow, all exports, offline start), source replacement, loudness/true peak reference, reference matching v2 evaluation and UI flow; Chromium also checks the bit-exact baseline. WebKit is the closest engine to iPhone Safari available in CI, not a substitute for a device.
+
+Locally: `npm ci`, `npx playwright install chromium webkit`, serve on port 8765, then `VM_BROWSER=webkit node tests/smoke.cjs` (etc.). `VM_SMOKE_OFFLINE=server` makes the smoke test run and stop its own server for the offline check.
+
+Fixed while setting it up: the page no longer reloads itself when the service worker first takes control on a first visit (updates still reload via 更新する), and reference matching v2 convolves in JS because WebKit's ConvolverNode left a ~1 % error.
