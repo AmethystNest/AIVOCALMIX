@@ -190,6 +190,34 @@ function buildReferenceMatchFirV2(grid, curveDb, sr, taps = VM_REF2.firTaps) {
   return fir;
 }
 
+// Extra latency the engine's ConvolverNode adds on top of the FIR itself.
+// Chromium adds none; other engines (seen in WebKit) may process the
+// convolution with a block delay. Measured once per (sample rate, IR length)
+// by passing an impulse through a delta IR of the same length.
+const VM_REF2_CONVOLVER_LATENCY = new Map();
+async function vmRef2ConvolverLatency(sr, taps) {
+  const key = `${sr}|${taps}`;
+  if (VM_REF2_CONVOLVER_LATENCY.has(key)) return VM_REF2_CONVOLVER_LATENCY.get(key);
+  const ctx = new OfflineAudioContext(1, taps + 8192, sr);
+  const impulse = ctx.createBuffer(1, 1, sr);
+  impulse.getChannelData(0)[0] = 1;
+  const src = ctx.createBufferSource();
+  src.buffer = impulse;
+  const conv = ctx.createConvolver();
+  conv.normalize = false;
+  const ir = ctx.createBuffer(1, taps, sr);
+  ir.getChannelData(0)[0] = 1;
+  conv.buffer = ir;
+  src.connect(conv);
+  conv.connect(ctx.destination);
+  src.start();
+  const out = (await ctx.startRendering()).getChannelData(0);
+  let peak = 0;
+  for (let i = 1; i < out.length; i++) if (Math.abs(out[i]) > Math.abs(out[peak])) peak = i;
+  VM_REF2_CONVOLVER_LATENCY.set(key, peak);
+  return peak;
+}
+
 // Applies the correction at `amount` (0-1). Returns a new AudioBuffer of the
 // same length; the caller runs the final limiter as for v1.
 async function applyReferenceMatchV2(source, match, amount) {
@@ -197,7 +225,7 @@ async function applyReferenceMatchV2(source, match, amount) {
   const scale = c => Float64Array.from(c, v => v * amount);
   const midFir = buildReferenceMatchFirV2(match.gridHz, scale(match.midDb), sr);
   const sideFir = buildReferenceMatchFirV2(match.gridHz, scale(match.sideDb), sr);
-  const delay = (midFir.length - 1) / 2;
+  const delay = (midFir.length - 1) / 2 + await vmRef2ConvolverLatency(sr, midFir.length);
 
   const ctx = new OfflineAudioContext(Math.max(2, channels), len + delay, sr);
   const src = ctx.createBufferSource();
