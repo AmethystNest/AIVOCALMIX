@@ -41,7 +41,15 @@
     location.reload();
   }
 
-  navigator.serviceWorker.addEventListener('controllerchange', vmReloadForPwaUpdateWhenSafe);
+  // The first install claims an uncontrolled page (clients.claim()); that page
+  // already runs the current files, so reloading it only interrupts the user
+  // (e.g. a file being picked right after the first visit). Reload only when
+  // an existing controller is replaced, i.e. on an update.
+  let hadController = !!navigator.serviceWorker.controller;
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if (!hadController) { hadController = true; return; }
+    vmReloadForPwaUpdateWhenSafe();
+  });
 
   // D297: update activation happened during a long render/export.
   // Processing ends first, then reload; never discard a Mix/WAV mid-operation.

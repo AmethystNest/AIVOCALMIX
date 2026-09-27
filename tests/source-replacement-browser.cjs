@@ -18,7 +18,7 @@ function wav() {
 }
 
 (async () => {
-  const browser = await playwright.chromium.launch({ headless: true });
+  const browser = await playwright[process.env.VM_BROWSER || 'chromium'].launch({ headless: true });
   const page = await browser.newPage({ serviceWorkers: 'block' });
   const errors = [];
   page.on('pageerror', e => errors.push(e.message));

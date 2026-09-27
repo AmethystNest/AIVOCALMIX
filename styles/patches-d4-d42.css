@@ -1,0 +1,816 @@
+/* @style navigation-safety-v80-d4 */
+/* v80-D4: stable navigation hit-testing contract. */
+#vmDecorationRoot { display:none !important; }
+.app { position:relative; z-index:1; }
+nav.tabs { pointer-events:auto !important; isolation:isolate; }
+nav.tabs, nav.tabs * { touch-action:manipulation; }
+nav.tabs button { pointer-events:auto !important; position:relative; z-index:1; }
+@media (max-width:700px) { nav.tabs { z-index:2147483647 !important; } }
+
+/* @style visual-fidelity-home-d21 */
+/* =========================================================
+   v80-D21 VISUAL FIDELITY LAYER
+   Home-only visual treatment based on the approved purple/gothic reference.
+   Contract: visual properties only; no pointer capture; no functional DOM changes.
+   Rejected outer leaf/vine frame is intentionally NOT used.
+   ========================================================= */
+:root{
+  --vm-violet-1:#d8c2ff;
+  --vm-violet-2:#a97bff;
+  --vm-violet-3:#6f45d8;
+  --vm-ink:#08051c;
+  --vm-line:rgb(202 177 255 / 48%);
+  --vm-line-soft:rgb(183 146 255 / 20%);
+  --vm-glow:rgb(145 91 255 / 28%);
+}
+
+/* Home atmosphere: layered light/noise impression without decorative leaves. */
+body[data-screen="home"] .screen[data-screen="home"]{
+  position:relative;
+  isolation:isolate;
+}
+body[data-screen="home"] .screen[data-screen="home"]::before{
+  content:"";
+  position:absolute;
+  inset:-18px -10px -26px;
+  z-index:-2;
+  pointer-events:none;
+  background:
+    radial-gradient(circle at 50% 0%, rgb(125 71 244 / 16%), transparent 38%),
+    radial-gradient(circle at 90% 38%, rgb(98 45 196 / 10%), transparent 30%),
+    linear-gradient(180deg, rgb(15 8 43 / 30%), rgb(4 3 17 / 10%));
+}
+body[data-screen="home"] .screen[data-screen="home"]::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:-1;
+  pointer-events:none;
+  opacity:.33;
+  background-image:
+    radial-gradient(circle at 15% 20%, rgb(220 201 255 / 55%) 0 1px, transparent 1.3px),
+    radial-gradient(circle at 76% 14%, rgb(177 138 255 / 48%) 0 1px, transparent 1.4px),
+    radial-gradient(circle at 62% 64%, rgb(206 183 255 / 42%) 0 1px, transparent 1.2px),
+    radial-gradient(circle at 28% 78%, rgb(157 111 255 / 40%) 0 1px, transparent 1.2px);
+  background-size:91px 83px,117px 103px,139px 127px,163px 149px;
+}
+
+/* Reference-like hero card: fine double frame, glass, internal glow. */
+body[data-screen="home"] .hero{
+  position:relative;
+  overflow:hidden;
+  padding:34px 24px 26px;
+  margin:8px 0 18px;
+  border:1px solid var(--vm-line);
+  border-radius:2px;
+  background:
+    linear-gradient(180deg, rgb(18 10 49 / 78%), rgb(8 5 29 / 84%)),
+    radial-gradient(circle at 85% 10%, rgb(108 63 218 / 20%), transparent 36%);
+  box-shadow:
+    inset 0 0 0 1px rgb(255 255 255 / 4%),
+    inset 0 0 45px rgb(103 58 210 / 11%),
+    0 0 28px rgb(78 39 159 / 15%);
+}
+body[data-screen="home"] .hero::before{
+  content:"";
+  position:absolute;
+  inset:9px;
+  width:auto;
+  height:auto;
+  margin:0;
+  opacity:1;
+  pointer-events:none;
+  border:1px solid var(--vm-line-soft);
+  background:
+    linear-gradient(90deg,var(--vm-violet-1),transparent 62%) 0 0/70px 1px no-repeat,
+    linear-gradient(180deg,var(--vm-violet-1),transparent 62%) 0 0/1px 70px no-repeat,
+    linear-gradient(270deg,var(--vm-violet-1),transparent 62%) 100% 0/70px 1px no-repeat,
+    linear-gradient(180deg,var(--vm-violet-1),transparent 62%) 100% 0/1px 70px no-repeat,
+    linear-gradient(90deg,var(--vm-violet-1),transparent 62%) 0 100%/70px 1px no-repeat,
+    linear-gradient(0deg,var(--vm-violet-1),transparent 62%) 0 100%/1px 70px no-repeat,
+    linear-gradient(270deg,var(--vm-violet-1),transparent 62%) 100% 100%/70px 1px no-repeat,
+    linear-gradient(0deg,var(--vm-violet-1),transparent 62%) 100% 100%/1px 70px no-repeat;
+  filter:drop-shadow(0 0 7px rgb(151 96 255 / 32%));
+}
+body[data-screen="home"] .hero::after{
+  content:"✦  ─────  ◇  ─────  ✦";
+  position:absolute;
+  left:50%;
+  top:12px;
+  transform:translateX(-50%);
+  color:rgb(213 194 255 / 72%);
+  font-family:var(--serif);
+  font-size:10px;
+  letter-spacing:.16em;
+  white-space:nowrap;
+  text-shadow:0 0 9px rgb(159 104 255 / 45%);
+  pointer-events:none;
+}
+
+body[data-screen="home"] .hero .eyebrow{
+  position:relative;
+  z-index:1;
+  margin-top:10px;
+  color:#cdb6ff;
+  font-family:var(--serif);
+  font-size:12px;
+  letter-spacing:.13em;
+  text-transform:uppercase;
+}
+body[data-screen="home"] .hero h2{
+  position:relative;
+  z-index:1;
+  max-width:720px;
+  margin:10px 0 14px;
+  font-family:var(--serif);
+  font-weight:600;
+  letter-spacing:.025em;
+  color:#f0eaff;
+  text-shadow:0 0 18px rgb(176 125 255 / 22%);
+}
+body[data-screen="home"] .hero p{
+  position:relative;
+  z-index:1;
+  max-width:680px;
+  color:#bba9df;
+  line-height:1.9;
+}
+body[data-screen="home"] #scope{
+  position:relative;
+  z-index:1;
+  margin-top:20px;
+  border-top:1px solid rgb(203 179 255 / 16%);
+  border-bottom:1px solid rgb(203 179 255 / 12%);
+  background:linear-gradient(180deg,rgb(104 61 195 / 5%),transparent);
+}
+
+/* Brand treatment borrows the reference's luminous title, without changing header geometry. */
+body[data-screen="home"] .brand h1{
+  color:#eee6ff;
+  letter-spacing:.08em;
+  text-shadow:0 0 16px rgb(169 111 255 / 38%);
+}
+
+/* Refine existing panels globally with the same design language; geometry untouched. */
+.panel{
+  border-color:rgb(185 151 255 / 28%);
+  box-shadow:inset 0 0 0 1px rgb(255 255 255 / 2%), 0 8px 28px rgb(0 0 0 / 12%);
+}
+.panel::after{
+  content:"◇";
+  color:rgb(213 191 255 / 38%);
+  text-shadow:0 0 8px rgb(157 99 255 / 40%);
+}
+
+/* Bottom navigation: visual-only fidelity. Pointer contract remains from D4. */
+nav.tabs{
+  border-top-color:rgb(210 188 255 / 38%);
+  background:linear-gradient(180deg,rgb(10 6 32 / 91%),rgb(5 3 20 / 97%));
+  box-shadow:0 -9px 30px rgb(0 0 0 / 35%), inset 0 1px rgb(255 255 255 / 3%);
+}
+nav.tabs button{
+  color:#b8a4df;
+  text-shadow:none;
+}
+nav.tabs button.active{
+  color:#f1e9ff;
+  background:linear-gradient(180deg,rgb(121 72 224 / 24%),rgb(76 40 157 / 26%));
+  box-shadow:inset 0 0 0 1px rgb(199 169 255 / 16%),0 0 18px rgb(120 68 228 / 10%);
+}
+nav.tabs button.active .num{
+  color:#c7a7ff;
+  text-shadow:0 0 8px rgb(152 91 255 / 55%);
+}
+
+@media(max-width:700px){
+  body[data-screen="home"] .hero{
+    padding:36px 19px 24px;
+    margin-top:4px;
+  }
+  body[data-screen="home"] .hero h2{
+    font-size:clamp(27px,8.2vw,38px);
+    line-height:1.27;
+  }
+  body[data-screen="home"] .hero p{
+    font-size:13px;
+    line-height:1.86;
+  }
+  body[data-screen="home"] .hero::before{ inset:7px; }
+  body[data-screen="home"] .hero::after{ top:10px; font-size:9px; }
+}
+
+/* @style visual-skin-depth-d22 */
+/* =========================================================
+   v80-D22 VISUAL SKIN DEPTH
+   Surface-only skin. Existing UI geometry/DOM/IDs/DSP are untouched.
+   No outer leaf/vine frame. No pointer interception.
+   ========================================================= */
+:root{
+  --vm-surface-0:#050213;
+  --vm-surface-1:#0b0521;
+  --vm-surface-2:#13092f;
+  --vm-ink-violet:#1d0d45;
+  --vm-lilac:#d9c8ff;
+  --vm-lilac-soft:rgb(217 200 255 / 42%);
+  --vm-neon:#9d68ff;
+  --vm-neon-soft:rgb(157 104 255 / 22%);
+  --vm-edge:rgb(203 177 255 / 34%);
+  --vm-edge-hot:rgb(225 209 255 / 63%);
+}
+
+/* Deep velvet/starfield atmosphere. Geometry is unchanged. */
+html,body{
+  background-color:var(--vm-surface-0);
+  background-image:
+    radial-gradient(ellipse 72% 38% at 50% -8%, rgb(117 58 226 / 25%), transparent 67%),
+    radial-gradient(circle at 8% 28%, rgb(86 36 176 / 16%), transparent 26%),
+    radial-gradient(circle at 92% 44%, rgb(100 47 205 / 13%), transparent 28%),
+    radial-gradient(circle at 50% 110%, rgb(70 35 155 / 18%), transparent 42%),
+    radial-gradient(circle at 17% 18%, rgb(228 213 255 / 32%) 0 1px, transparent 1.35px),
+    radial-gradient(circle at 78% 11%, rgb(192 164 255 / 28%) 0 1px, transparent 1.4px),
+    radial-gradient(circle at 67% 61%, rgb(160 121 255 / 21%) 0 1px, transparent 1.25px),
+    linear-gradient(180deg,#08031b 0%,#050213 54%,#03010c 100%);
+  background-size:auto,auto,auto,auto,123px 119px,167px 151px,211px 193px,auto;
+}
+
+/* Header: luminous engraved divider without changing height/spacing. */
+header.top{
+  border-bottom-color:transparent;
+  background-image:linear-gradient(90deg,transparent,rgba(206,177,255,.18) 12%,rgba(229,214,255,.55) 50%,rgba(206,177,255,.18) 88%,transparent);
+  background-repeat:no-repeat;
+  background-size:100% 1px;
+  background-position:left bottom;
+  text-shadow:0 0 18px rgb(153 96 255 / 18%);
+}
+.brand h1{
+  filter:drop-shadow(0 0 8px rgb(158 101 255 / 24%));
+}
+header.top .sub{
+  color:#c8b3eb;
+  text-shadow:0 0 10px rgb(159 105 255 / 26%);
+}
+
+/* Panels become dark violet glass with engraved luminous borders. */
+.panel{
+  background-color:rgb(10 5 30 / 86%);
+  background-image:
+    linear-gradient(135deg,rgba(235,220,255,.07),transparent 24%),
+    radial-gradient(circle at 82% 4%,rgba(129,72,236,.16),transparent 31%),
+    radial-gradient(circle at 12% 100%,rgba(84,37,181,.10),transparent 34%),
+    linear-gradient(180deg,rgba(21,10,55,.88),rgba(7,4,24,.92));
+  border-color:var(--vm-edge);
+  box-shadow:
+    inset 0 0 0 1px rgb(255 255 255 / 2%),
+    inset 0 0 34px rgb(105 55 217 / 8%),
+    0 0 0 1px rgb(54 28 105 / 22%),
+    0 12px 34px rgb(0 0 0 / 24%),
+    0 0 22px rgb(94 46 187 / 7%);
+  backdrop-filter:blur(7px) saturate(1.08);
+  -webkit-backdrop-filter:blur(7px) saturate(1.08);
+}
+
+/* Non-leaf filigree: small scrollwork confined to panel corners. */
+.panel::before{
+  content:"";
+  position:absolute;
+  inset:5px;
+  pointer-events:none;
+  opacity:.72;
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='72' viewBox='0 0 72 72'%3E%3Cg fill='none' stroke='%23d7c1ff' stroke-opacity='.72' stroke-width='.75'%3E%3Cpath d='M2 27V6a4 4 0 0 1 4-4h21M2 14h9c7 0 8-8 8-8M9 2v7c0 7 8 8 8 8M22 2c0 9 5 14 14 14M2 22c9 0 14 5 14 14'/%3E%3Cpath d='M5 5l5 5m8-8 4 4M2 18l4 4' stroke-opacity='.42'/%3E%3Ccircle cx='18' cy='18' r='1.7' fill='%23d7c1ff' fill-opacity='.65'/%3E%3C/g%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='72' viewBox='0 0 72 72'%3E%3Cg transform='translate(72 0) scale(-1 1)' fill='none' stroke='%23d7c1ff' stroke-opacity='.72' stroke-width='.75'%3E%3Cpath d='M2 27V6a4 4 0 0 1 4-4h21M2 14h9c7 0 8-8 8-8M9 2v7c0 7 8 8 8 8M22 2c0 9 5 14 14 14M2 22c9 0 14 5 14 14'/%3E%3Cpath d='M5 5l5 5m8-8 4 4M2 18l4 4' stroke-opacity='.42'/%3E%3Ccircle cx='18' cy='18' r='1.7' fill='%23d7c1ff' fill-opacity='.65'/%3E%3C/g%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='72' viewBox='0 0 72 72'%3E%3Cg transform='translate(0 72) scale(1 -1)' fill='none' stroke='%23d7c1ff' stroke-opacity='.72' stroke-width='.75'%3E%3Cpath d='M2 27V6a4 4 0 0 1 4-4h21M2 14h9c7 0 8-8 8-8M9 2v7c0 7 8 8 8 8M22 2c0 9 5 14 14 14M2 22c9 0 14 5 14 14'/%3E%3Cpath d='M5 5l5 5m8-8 4 4M2 18l4 4' stroke-opacity='.42'/%3E%3Ccircle cx='18' cy='18' r='1.7' fill='%23d7c1ff' fill-opacity='.65'/%3E%3C/g%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='72' viewBox='0 0 72 72'%3E%3Cg transform='translate(72 72) scale(-1 -1)' fill='none' stroke='%23d7c1ff' stroke-opacity='.72' stroke-width='.75'%3E%3Cpath d='M2 27V6a4 4 0 0 1 4-4h21M2 14h9c7 0 8-8 8-8M9 2v7c0 7 8 8 8 8M22 2c0 9 5 14 14 14M2 22c9 0 14 5 14 14'/%3E%3Cpath d='M5 5l5 5m8-8 4 4M2 18l4 4' stroke-opacity='.42'/%3E%3Ccircle cx='18' cy='18' r='1.7' fill='%23d7c1ff' fill-opacity='.65'/%3E%3C/g%3E%3C/svg%3E");
+  background-position:left top,right top,left bottom,right bottom;
+  background-repeat:no-repeat;
+  background-size:62px 62px;
+  filter:drop-shadow(0 0 5px rgb(164 108 255 / 30%));
+}
+.panel::after{
+  color:rgb(229 214 255 / 58%);
+  text-shadow:0 0 10px rgb(165 107 255 / 64%);
+}
+
+.panel h2{
+  color:#cdb9f0;
+  border-bottom-color:transparent;
+  background-image:linear-gradient(90deg,rgba(209,181,255,.44),rgba(126,75,226,.16) 48%,transparent 92%);
+  background-repeat:no-repeat;
+  background-size:100% 1px;
+  background-position:left bottom;
+  text-shadow:0 0 10px rgb(157 101 255 / 19%);
+}
+
+/* Controls receive the same jewel/glass material. */
+.drop,
+.meter,
+.toggle-row button,
+.fx-row select,
+.fx-row input[type="text"],
+.fx-row input[type="number"],
+input[type="text"],input[type="number"],select{
+  background-color:rgb(11 6 33 / 82%);
+  background-image:linear-gradient(180deg,rgba(225,205,255,.045),rgba(91,46,180,.025));
+  border-color:rgb(185 151 255 / 31%);
+  color:#e5daf8;
+  box-shadow:inset 0 0 13px rgb(92 47 184 / 8%);
+}
+.drop{
+  border-color:rgb(184 145 255 / 38%);
+  color:#baa5dd;
+  box-shadow:inset 0 0 24px rgb(90 43 188 / 6%);
+}
+.drop:hover,.drop.loaded{
+  border-color:rgb(196 162 255 / 70%);
+  color:#dfd0fb;
+  box-shadow:inset 0 0 28px rgb(111 59 217 / 10%),0 0 14px rgb(125 69 228 / 9%);
+}
+canvas.wave,canvas#scope{
+  background-color:#09051d;
+  background-image:
+    linear-gradient(180deg,rgba(128,77,234,.07),transparent 45%),
+    linear-gradient(90deg,rgba(202,176,255,.025) 1px,transparent 1px),
+    linear-gradient(rgba(202,176,255,.018) 1px,transparent 1px);
+  background-size:auto,28px 100%,100% 20px;
+  border-color:rgb(185 151 255 / 28%);
+  box-shadow:inset 0 0 24px rgb(91 42 190 / 9%);
+}
+.meter{
+  background-image:
+    radial-gradient(circle at 100% 0%,rgba(126,73,226,.13),transparent 45%),
+    linear-gradient(180deg,rgba(25,13,59,.88),rgba(11,6,34,.9));
+  border-color:rgb(186 150 255 / 27%);
+  box-shadow:inset 0 0 18px rgb(103 54 207 / 7%);
+}
+.meter .value{
+  color:#bea1ff;
+  text-shadow:0 0 10px rgb(157 98 255 / 27%);
+}
+
+/* Tags / notices / progress: coordinated jewel accents. */
+.tagline{
+  background:rgb(91 43 178 / 15%);
+  border-color:rgb(178 137 255 / 35%);
+  color:#cdb5ff;
+  box-shadow:inset 0 0 12px rgb(104 54 201 / 8%);
+}
+.caveat{
+  background:linear-gradient(90deg,rgb(120 62 222 / 12%),rgb(68 33 145 / 5%));
+  border-left-color:#ad83ff;
+  box-shadow:inset 0 0 22px rgb(91 42 185 / 6%);
+}
+.task-progress-track{
+  background:rgb(17 9 43 / 92%);
+  box-shadow:inset 0 0 10px rgb(92 46 180 / 12%);
+}
+.task-progress-fill{
+  box-shadow:0 0 12px rgb(156 99 255 / 34%);
+}
+.completion-banner{
+  background:linear-gradient(90deg,rgb(96 50 188 / 18%),rgb(60 31 132 / 12%));
+  border-color:rgb(182 145 255 / 52%);
+  box-shadow:inset 0 0 20px rgb(116 62 219 / 9%),0 0 16px rgb(109 59 207 / 7%);
+}
+
+/* Buttons: preserve box geometry, increase material depth only. */
+button.secondary,.toggle-row button{
+  border-color:rgb(184 149 255 / 34%);
+  color:#cbb7ec;
+  background-color:rgb(14 8 38 / 70%);
+  box-shadow:inset 0 0 15px rgb(102 53 201 / 7%);
+  text-shadow:0 0 9px rgb(154 96 255 / 17%);
+}
+button.secondary:hover,.toggle-row button.active{
+  border-color:rgb(204 177 255 / 68%);
+  color:#efe7ff;
+  box-shadow:inset 0 0 18px rgb(120 65 224 / 11%),0 0 14px rgb(124 70 228 / 9%);
+}
+button.primary,.btn.primary{
+  box-shadow:
+    inset 0 1px rgb(255 255 255 / 42%),
+    inset 0 -10px 28px rgb(75 36 160 / 16%),
+    0 0 22px rgb(154 103 255 / 27%),
+    0 8px 22px rgb(0 0 0 / 24%);
+  text-shadow:0 1px rgb(255 255 255 / 16%);
+}
+
+/* Bottom nav: engraved glass strip; geometry/hit targets unchanged. */
+nav.tabs{
+  background-color:rgb(6 3 22 / 94%);
+  background-image:
+    linear-gradient(180deg,rgba(136,83,241,.10),transparent 36%),
+    radial-gradient(ellipse at 50% 0%,rgba(141,84,244,.10),transparent 52%);
+  border-color:rgb(185 151 255 / 30%);
+  box-shadow:
+    inset 0 1px rgb(229 214 255 / 8%),
+    0 -10px 32px rgb(0 0 0 / 40%),
+    0 0 24px rgb(91 44 188 / 8%);
+}
+nav.tabs button{
+  color:#ad9acb;
+  border-color:rgb(184 148 255 / 12%);
+  text-shadow:0 0 9px rgb(149 93 255 / 10%);
+}
+nav.tabs button.active{
+  color:#f2eaff;
+  background-image:
+    radial-gradient(ellipse at 50% 30%,rgba(170,111,255,.22),transparent 67%),
+    linear-gradient(180deg,rgba(116,65,216,.22),rgba(60,28,139,.24));
+  border-color:rgb(200 170 255 / 32%);
+  box-shadow:
+    inset 0 0 0 1px rgb(226 211 255 / 7%),
+    inset 0 0 24px rgb(134 77 237 / 12%),
+    0 0 18px rgb(123 67 228 / 11%);
+  text-shadow:0 0 10px rgb(189 151 255 / 31%);
+}
+nav.tabs button.active::after{
+  background:linear-gradient(90deg,transparent,#cbb1ff 18%,#9a6dff 50%,#d9c6ff 82%,transparent);
+  box-shadow:0 0 9px rgb(156 101 255 / 62%);
+}
+
+/* Home hero gets stronger material, while retaining exact existing structure/geometry. */
+body[data-screen="home"] .hero{
+  background-image:
+    radial-gradient(circle at 82% 16%,rgba(112,60,217,.18),transparent 34%),
+    radial-gradient(circle at 14% 84%,rgba(83,39,177,.11),transparent 38%),
+    linear-gradient(180deg,rgba(18,9,48,.88),rgba(6,3,22,.93));
+  border-color:rgb(213 189 255 / 52%);
+  box-shadow:
+    inset 0 0 0 1px rgb(255 255 255 / 3%),
+    inset 0 0 48px rgb(114 57 226 / 10%),
+    0 0 0 1px rgb(71 34 149 / 22%),
+    0 0 32px rgb(97 46 194 / 12%),
+    0 14px 38px rgb(0 0 0 / 26%);
+}
+body[data-screen="home"] .hero h2{
+  color:#f7f1ff;
+  text-shadow:0 0 17px rgb(188 148 255 / 20%),0 1px 0 rgb(255 255 255 / 8%);
+}
+body[data-screen="home"] .hero .eyebrow{
+  color:#d3bdff;
+  text-shadow:0 0 11px rgb(173 117 255 / 25%);
+}
+body[data-screen="home"] .hero p{
+  color:#c3b1df;
+}
+
+/* Decorative pseudo-elements are visual only. */
+.panel::before,.panel::after,
+body[data-screen="home"] .hero::before,
+body[data-screen="home"] .hero::after{pointer-events:none;}
+
+/* @style background-nebula-only-d26 */
+/* v80-D26: preserve D22 UI skin (double frame / diamond ornament), enhance only background with nebula feel. */
+html, body {
+  background-color: #03000b !important;
+  background-image:
+    radial-gradient(ellipse 96% 62% at 50% -18%, rgba(132, 86, 246, 0.32), transparent 63%),
+    radial-gradient(ellipse 38% 26% at 16% 18%, rgba(127, 72, 244, 0.16), transparent 72%),
+    radial-gradient(ellipse 34% 24% at 84% 22%, rgba(92, 49, 210, 0.16), transparent 74%),
+    radial-gradient(ellipse 40% 28% at 30% 84%, rgba(154, 99, 255, 0.10), transparent 78%),
+    radial-gradient(ellipse 30% 22% at 84% 84%, rgba(72, 39, 168, 0.12), transparent 74%),
+    linear-gradient(180deg, #100423 0%, #070214 46%, #020008 100%) !important;
+  background-attachment: fixed !important;
+}
+body::before,
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+}
+body::before {
+  z-index: 0;
+  opacity: 0.95 !important;
+  background-image:
+    radial-gradient(circle at 4% 10%, rgba(255,255,255,.98) 0 1.1px, transparent 1.8px),
+    radial-gradient(circle at 12% 32%, rgba(227,210,255,.86) 0 .92px, transparent 1.55px),
+    radial-gradient(circle at 18% 72%, rgba(255,255,255,.74) 0 .84px, transparent 1.4px),
+    radial-gradient(circle at 24% 18%, rgba(214,187,255,.80) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 29% 48%, rgba(255,255,255,.60) 0 .78px, transparent 1.32px),
+    radial-gradient(circle at 34% 84%, rgba(221,199,255,.66) 0 .9px, transparent 1.45px),
+    radial-gradient(circle at 42% 14%, rgba(255,255,255,.80) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 48% 36%, rgba(211,181,255,.68) 0 .88px, transparent 1.44px),
+    radial-gradient(circle at 54% 62%, rgba(255,255,255,.70) 0 .84px, transparent 1.42px),
+    radial-gradient(circle at 61% 22%, rgba(218,193,255,.70) 0 .98px, transparent 1.55px),
+    radial-gradient(circle at 68% 46%, rgba(255,255,255,.60) 0 .78px, transparent 1.32px),
+    radial-gradient(circle at 74% 80%, rgba(208,181,255,.68) 0 .88px, transparent 1.44px),
+    radial-gradient(circle at 82% 17%, rgba(255,255,255,.82) 0 1px, transparent 1.6px),
+    radial-gradient(circle at 89% 40%, rgba(216,191,255,.72) 0 .94px, transparent 1.5px),
+    radial-gradient(circle at 95% 74%, rgba(255,255,255,.76) 0 1.04px, transparent 1.68px),
+    radial-gradient(circle at 8% 54%, rgba(255,255,255,.42) 0 .64px, transparent 1.15px),
+    radial-gradient(circle at 15% 86%, rgba(206,178,255,.40) 0 .72px, transparent 1.2px),
+    radial-gradient(circle at 22% 62%, rgba(255,255,255,.36) 0 .62px, transparent 1.12px),
+    radial-gradient(circle at 31% 70%, rgba(203,172,255,.40) 0 .72px, transparent 1.2px),
+    radial-gradient(circle at 39% 56%, rgba(255,255,255,.36) 0 .62px, transparent 1.12px),
+    radial-gradient(circle at 47% 88%, rgba(201,170,255,.40) 0 .72px, transparent 1.2px),
+    radial-gradient(circle at 56% 76%, rgba(255,255,255,.36) 0 .62px, transparent 1.12px),
+    radial-gradient(circle at 65% 58%, rgba(202,171,255,.40) 0 .72px, transparent 1.2px),
+    radial-gradient(circle at 72% 70%, rgba(255,255,255,.34) 0 .62px, transparent 1.1px),
+    radial-gradient(circle at 79% 60%, rgba(203,171,255,.40) 0 .72px, transparent 1.2px),
+    radial-gradient(circle at 86% 86%, rgba(255,255,255,.36) 0 .62px, transparent 1.12px),
+    radial-gradient(circle at 93% 58%, rgba(203,171,255,.40) 0 .72px, transparent 1.2px),
+    radial-gradient(circle at 20% 12%, rgba(255,255,255,.18) 0 2px, transparent 18px),
+    radial-gradient(circle at 52% 44%, rgba(198,154,255,.16) 0 2px, transparent 22px),
+    radial-gradient(circle at 84% 24%, rgba(255,255,255,.16) 0 2px, transparent 20px),
+    radial-gradient(circle at 70% 76%, rgba(173,124,255,.12) 0 3px, transparent 26px);
+  animation: d26StarTwinkle 8s ease-in-out infinite alternate;
+}
+body::after {
+  z-index: 0;
+  opacity: 0.92 !important;
+  background-image:
+    radial-gradient(ellipse 52% 36% at 14% 16%, rgba(131, 83, 255, .22), transparent 70%),
+    radial-gradient(ellipse 34% 28% at 78% 18%, rgba(93, 49, 212, .22), transparent 74%),
+    radial-gradient(ellipse 46% 32% at 30% 82%, rgba(151, 99, 255, .14), transparent 76%),
+    radial-gradient(ellipse 30% 24% at 84% 82%, rgba(73, 42, 169, .18), transparent 72%),
+    radial-gradient(ellipse 28% 22% at 52% 46%, rgba(255,255,255,.07), transparent 80%),
+    radial-gradient(ellipse 24% 18% at 64% 68%, rgba(216,187,255,.06), transparent 82%),
+    radial-gradient(ellipse 22% 18% at 42% 24%, rgba(120, 67, 235, .14), transparent 78%),
+    radial-gradient(ellipse 18% 14% at 74% 58%, rgba(167, 112, 255, .10), transparent 82%);
+  filter: blur(24px) saturate(1.08);
+  animation: d26NebulaFloat 34s ease-in-out infinite alternate;
+}
+@keyframes d26StarTwinkle {
+  0% { opacity: .84; }
+  35% { opacity: .98; }
+  70% { opacity: .90; }
+  100% { opacity: .95; }
+}
+@keyframes d26NebulaFloat {
+  0% { transform: translate3d(0, 0, 0) scale(1); }
+  100% { transform: translate3d(0, -12px, 0) scale(1.035); }
+}
+
+/* @style static-nebula-contract-d29 */
+/* v80-D29: animation removed. Keep D22 double frame/diamond and D26 static star-nebula background. */
+body::before,
+body::after,
+body[data-screen="home"] .hero::before,
+body[data-screen="home"] .hero::after,
+.panel::after,
+.stained,
+.light-sweep {
+  animation: none !important;
+}
+
+/* Home header typography must match the same AI VocalMIX title used on every other tab. */
+body[data-screen="home"] .brand h1 {
+  font-family: var(--serif) !important;
+  letter-spacing: .055em !important;
+}
+
+/* @style home-title-color-match-d30 */
+/* v80-D30: Home title must use the exact same gradient/color treatment as every other tab. */
+body[data-screen="home"] .brand h1 {
+  background: var(--gradient-signature) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  color: transparent !important;
+  text-shadow: none !important;
+}
+
+/* @style header-mascot-d31 */
+/* v80-D31: add character beside the AI VocalMIX title across the app. */
+.brand .title-mascot{
+  display:block;
+  width:auto;
+  height:56px;
+  width:26px;
+  flex:0 0 26px;
+  object-fit:contain;
+  pointer-events:none;
+  user-select:none;
+  margin-right:2px;
+  filter:drop-shadow(0 2px 8px rgba(20,10,45,.32));
+}
+@media (max-width:700px){
+  .brand .title-mascot{
+    height:46px;
+    width:21px;
+    flex-basis:21px;
+    margin-right:1px;
+  }
+}
+
+/* @style header-mascot-d33-tune */
+/* v80-D33: larger mascot, remove READY display across all tabs. */
+.brand{align-items:center; gap:10px;}
+.brand .title-mascot{
+  max-height:56px;
+}
+#clock{display:none !important;}
+@media (max-width:700px){
+  .brand .title-mascot{max-height:46px;}
+}
+
+/* @style header-mascot-d34-size */
+/* v80-D34: make the header mascot significantly larger. */
+.brand .title-mascot{
+  height:56px !important;
+  max-height:56px !important;
+  width:auto;
+  transform:translateY(1px);
+}
+@media (max-width:700px){
+  .brand .title-mascot{
+    height:46px !important;
+    max-height:46px !important;
+  }
+}
+
+/* @style home-hero-character-d36 */
+/* v80-D36: keep title full-width, place mascot beside the description text only. */
+.brand{gap:0 !important;}
+.brand .title-mascot{display:none !important;}
+body[data-screen="home"] .hero .eyebrow,
+body[data-screen="home"] .hero h2{
+  position:relative;
+  z-index:1;
+}
+body[data-screen="home"] .hero p{
+  margin:0;
+  max-width:none;
+}
+body[data-screen="home"] .hero-detail{
+  position:relative;
+  z-index:1;
+  display:grid;
+  grid-template-columns:minmax(0,1fr) clamp(128px, 32vw, 188px);
+  gap:16px;
+  align-items:center;
+}
+body[data-screen="home"] .hero-detail-copy{
+  min-width:0;
+}
+body[data-screen="home"] .hero-character-slot{
+  position:relative;
+  z-index:1;
+  align-self:center;
+  justify-self:end;
+  width:clamp(128px, 32vw, 188px);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding-right:2px;
+}
+body[data-screen="home"] .hero-character{
+  display:block;
+  width:100%;
+  height:auto;
+  object-fit:contain;
+  pointer-events:none;
+  user-select:none;
+  filter:drop-shadow(0 6px 18px rgba(15, 8, 44, .34));
+}
+body[data-screen="home"] #scope{
+  position:relative;
+  z-index:1;
+}
+@media(max-width:700px){
+  body[data-screen="home"] .hero-detail{
+    grid-template-columns:minmax(0,1fr) 138px;
+    gap:12px;
+    align-items:center;
+  }
+  body[data-screen="home"] .hero-character-slot{
+    width:138px;
+  }
+}
+
+/* @style upload-visual-d39 */
+/* v80-D39: rebalance Upload tab. Keep the original layout language, reduce nested-box heaviness. */
+body[data-screen="upload"] .upload-grid > div{
+  position:relative;
+  padding:28px 8px 8px;
+}
+body[data-screen="upload"] .upload-grid > div::before{
+  position:absolute;
+  top:5px;
+  left:4px;
+  font-family:var(--mono);
+  font-size:9px;
+  font-weight:700;
+  letter-spacing:.10em;
+  color:#c8b2f4;
+  opacity:.72;
+}
+body[data-screen="upload"] .upload-grid > div:nth-child(1)::before{content:"VOCAL";}
+body[data-screen="upload"] .upload-grid > div:nth-child(2)::before{content:"INSTRUMENTAL";}
+body[data-screen="upload"] .upload-grid > div:nth-child(3)::before{content:"HARMONY / OPTIONAL";}
+body[data-screen="upload"] .drop{
+  min-height:76px;
+  border-color:rgb(194 164 255 / 27%);
+  background:linear-gradient(180deg,rgb(103 65 174 / 6%),rgb(24 14 57 / 5%));
+}
+body[data-screen="upload"] canvas.wave{
+  margin-top:8px;
+  border-color:rgb(185 153 255 / 18%);
+}
+body[data-screen="upload"] .upload-section-kicker{
+  margin:18px 0 8px;
+  padding:0 0 6px;
+  border-left:0;
+  border-bottom:1px solid rgb(190 156 255 / 16%);
+  background:none;
+  color:#cdb9f3;
+  font-family:var(--mono);
+  font-size:9px;
+  font-weight:700;
+  letter-spacing:.10em;
+  text-transform:uppercase;
+}
+body[data-screen="upload"] .upload-section-kicker:first-of-type{margin-top:12px;}
+body[data-screen="upload"] .upload-control-card{
+  padding:6px 0;
+  margin:4px 0;
+  border:0;
+  background:none;
+}
+body[data-screen="upload"] .upload-control-card label{color:#e2d6ff;}
+body[data-screen="upload"] .upload-control-card + .lead,
+body[data-screen="upload"] .upload-control-card + .preset-detail{margin-left:0;}
+body[data-screen="upload"] .upload-option-stack{
+  display:flex;
+  flex-direction:column;
+  gap:0;
+  margin-top:4px;
+  border-top:1px solid rgb(188 157 255 / 10%);
+}
+body[data-screen="upload"] .upload-option-stack > .fx-row{
+  margin:0;
+  padding:10px 2px;
+  border:0;
+  border-bottom:1px solid rgb(188 157 255 / 10%);
+  border-radius:0;
+  background:none;
+}
+body[data-screen="upload"] .upload-option-stack > .fx-row:hover{background:rgb(24 14 55 / 12%);}
+body[data-screen="upload"] .upload-option-stack > .fx-row .sub{line-height:1.55;}
+body[data-screen="upload"] #btnResetToDefaults{
+  float:right !important;
+  margin:0 0 0 12px;
+}
+@media(max-width:700px){
+  body[data-screen="upload"] .upload-grid > div{padding:26px 4px 6px;}
+  body[data-screen="upload"] .drop{min-height:72px;}
+  body[data-screen="upload"] .upload-section-kicker{margin-top:15px;}
+  body[data-screen="upload"] .upload-control-card{padding:5px 0;}
+  body[data-screen="upload"] .upload-option-stack > .fx-row{padding:9px 0;}
+  body[data-screen="upload"] #btnResetToDefaults{
+    float:none !important;
+    display:inline-flex;
+    margin:8px 0 0;
+  }
+}
+
+/* @style upload-reset-balance-d40 */
+/* D40: reset action aligned independently from the title; no float. */
+body[data-screen="upload"] .upload-mix-heading-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  margin-bottom:8px;
+}
+body[data-screen="upload"] .upload-mix-heading-row h2{
+  margin:0;
+  min-width:0;
+}
+body[data-screen="upload"] .upload-reset-btn{
+  flex:0 0 auto;
+  min-height:36px;
+  padding:7px 12px;
+  font-size:11px;
+  line-height:1.2;
+  white-space:nowrap;
+}
+@media(max-width:700px){
+  body[data-screen="upload"] .upload-mix-heading-row{
+    align-items:center;
+    gap:10px;
+  }
+  body[data-screen="upload"] .upload-reset-btn{
+    min-height:34px;
+    padding:6px 10px;
+    font-size:10.5px;
+  }
+}
+
+/* @style upload-reset-interaction-d41 */
+/* D41: decorative pseudo-elements must never intercept Upload controls. */
+.panel::before, .panel::after{pointer-events:none !important;}
+body[data-screen="upload"] .upload-mix-heading-row{position:relative;z-index:4;}
+body[data-screen="upload"] .upload-reset-btn{position:relative;z-index:5;pointer-events:auto !important;touch-action:manipulation;}
+
+/* @style upload-reset-d42 */
+body[data-screen="upload"] .upload-mix-heading-row{
+  display:flex;align-items:center;justify-content:space-between;gap:14px;
+}
+body[data-screen="upload"] .upload-reset-btn{
+  flex:0 0 auto;min-width:108px;padding:9px 14px;border-radius:8px;line-height:1.2;
+}
+@media(max-width:700px){
+  body[data-screen="upload"] .upload-mix-heading-row{align-items:flex-start;}
+  body[data-screen="upload"] .upload-reset-btn{min-width:104px;padding:8px 12px;margin-top:1px;}
+}

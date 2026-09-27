@@ -1,0 +1,82 @@
+name: tests
+
+on:
+  push:
+  pull_request:
+
+concurrency:
+  group: tests-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  node:
+    name: Node tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+        env:
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: '1'
+      - name: Static and consistency checks
+        run: |
+          node tests/static-check.cjs
+          node tests/app-shell-consistency.cjs
+          node tests/declaration-uniqueness.cjs
+          node tools/wasm-sources.cjs
+      - name: Logic regressions
+        run: |
+          for t in mix-decision-regression analysis-regression export-source-regression \
+                   final-export-memory-regression ios-save-regression ios-wav-preflight-regression \
+                   premaster-memory-regression upload-picker-regression wav-integrity-regression \
+                   youtube-master-regression; do
+            echo "::group::$t"; node "tests/$t.cjs"; echo "::endgroup::"
+          done
+
+  browser:
+    name: Browser tests (${{ matrix.browser }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    strategy:
+      fail-fast: false
+      matrix:
+        # WebKit is the closest available engine to iPhone Safari; it is not
+        # the same as Safari on iOS.
+        browser: [chromium, webkit]
+    env:
+      VM_BROWSER: ${{ matrix.browser }}
+      # Playwright WebKit fails reloads under its offline emulation, so the
+      # WebKit smoke checks the offline start by stopping its own server.
+      VM_SMOKE_OFFLINE: ${{ matrix.browser == 'webkit' && 'server' || '' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+        env:
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: '1'
+      - run: npx playwright install --with-deps ${{ matrix.browser }}
+      - name: Start local server
+        run: |
+          npx http-server -p 8765 -s -c-1 . &
+          for i in $(seq 1 30); do curl -sf http://127.0.0.1:8765/ >/dev/null && exit 0; sleep 1; done
+          exit 1
+      - name: Smoke (upload, analysis, mix, preview, FX, export, offline)
+        run: node tests/smoke.cjs
+      - name: Source replacement
+        run: node tests/source-replacement-browser.cjs
+      - name: Loudness and true peak reference
+        run: node tests/loudness-reference-regression.cjs
+      - name: Reference matching v2 evaluation
+        run: node tests/reference-match-v2-evaluation.cjs
+      - name: Reference matching through the UI
+        run: node tests/reference-ui-regression.cjs
+      - name: End-to-end baseline (bit-exact, Chromium only)
+        if: matrix.browser == 'chromium'
+        run: node tests/baseline-metrics.cjs --check docs/baseline/chromium.json

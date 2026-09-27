@@ -2,10 +2,41 @@ const path = require('path');
 let playwright;
 try { playwright = require('playwright'); }
 catch (_) { playwright = require(path.join(process.env.APPDATA, 'npm', 'node_modules', 'playwright')); }
-const { chromium } = playwright;
+// VM_BROWSER=webkit|firefox runs the same flow in another engine (default chromium).
+const chromium = playwright[process.env.VM_BROWSER || 'chromium'];
 const fs = require('fs');
 const assert = require('node:assert/strict');
-const baseUrl = process.env.VM_SMOKE_BASE_URL || 'http://127.0.0.1:8765/';
+// VM_SMOKE_OFFLINE=server: the test starts its own static server and checks
+// the offline reload by really stopping it, instead of the browser's offline
+// emulation (Playwright WebKit fails reloads under setOffline).
+const offlineViaServer = process.env.VM_SMOKE_OFFLINE === 'server';
+const ownPort = 8775;
+let baseUrl = offlineViaServer ? `http://127.0.0.1:${ownPort}/` : (process.env.VM_SMOKE_BASE_URL || 'http://127.0.0.1:8765/');
+let ownServer = null;
+
+async function startOwnServer() {
+  const { spawn } = require('child_process');
+  const bin = require.resolve('http-server/bin/http-server');
+  ownServer = spawn(process.execPath, [bin, '-p', String(ownPort), '-s', '-c-1', path.join(__dirname, '..')], { stdio: 'ignore' });
+  for (let i = 0; i < 50; i++) {
+    try { const r = await fetch(baseUrl); if (r.ok) return; } catch (_) {}
+    await new Promise(r => setTimeout(r, 200));
+  }
+  throw new Error('own server did not start');
+}
+
+async function stopOwnServer() {
+  if (!ownServer) return;
+  const exited = new Promise(r => ownServer.once('exit', r));
+  ownServer.kill();
+  await exited;
+  ownServer = null;
+  for (let i = 0; i < 50; i++) {
+    try { await fetch(baseUrl); } catch (_) { return; }
+    await new Promise(r => setTimeout(r, 100));
+  }
+  throw new Error('own server is still reachable');
+}
 
 function wav(frequency) {
   const rate = 44100, frames = rate * 3;
@@ -44,6 +75,7 @@ function pcm16WavSamples(output) {
 }
 
 (async () => {
+  if (offlineViaServer) await startOwnServer();
   const browser = await chromium.launch({ headless: true });
   const page = await browser.newPage({ acceptDownloads: true });
   const errors = [];
@@ -101,7 +133,9 @@ function pcm16WavSamples(output) {
       console.log('wav bytes', output.length, 'pcm peak', peak);
       const decoded = pcm16WavSamples(output);
       assert.equal(decoded.channels, previewReference.channels, 'Preview/Export channel count mismatch');
-      assert.equal(previewReference.sampleRate, 48000, 'Unexpected rendered Preview sample rate');
+      // Rendering follows the AudioContext rate (device dependent: 48 kHz on most
+      // devices, 44.1 kHz in some headless environments).
+      assert.ok([44100, 48000].includes(previewReference.sampleRate), 'Unexpected rendered Preview sample rate');
       // Export may apply the final True Peak ceiling. Compare the waveform after
       // fitting a single gain rather than expecting bit-for-bit identity.
       const count = previewReference.samples[0].length;
@@ -266,12 +300,13 @@ function pcm16WavSamples(output) {
     console.log('errors', JSON.stringify(errors));
     assert.deepEqual(errors, [], 'Browser emitted uncaught errors during online smoke');
     await page.waitForFunction(() => !!navigator.serviceWorker?.controller, null, { timeout: 30000 });
-    await page.context().setOffline(true);
+    if (offlineViaServer) await stopOwnServer();
+    else await page.context().setOffline(true);
     await page.reload();
     const offlineCodec = await page.evaluate(() => typeof encodeWavBlobAsync);
     console.log('offline', await page.title(), offlineCodec);
     console.log('offline errors', JSON.stringify(errors));
     assert.equal(offlineCodec, 'function', 'Offline WAV encoder unavailable');
     assert.deepEqual(errors, [], 'Browser emitted uncaught errors during offline smoke');
-  } finally { await browser.close(); }
+  } finally { await browser.close(); await stopOwnServer().catch(() => {}); }
 })().catch(error => { console.error(error); process.exitCode = 1; });

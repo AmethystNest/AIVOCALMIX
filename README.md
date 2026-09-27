@@ -48,3 +48,67 @@ The YouTube export now prioritizes preserving transients over reaching -14 LUFS:
 PCM and WAVE_FORMAT_EXTENSIBLE WAV files are inspected from at most the first 1 MiB before the full file is read and decoded. The app estimates decoded AudioBuffer memory and rejects files that exceed the current device limits. Unknown/compressed WAV encodings continue through the existing decoder and post-decode checks. No analysis or DSP behavior was changed.
 
 Automated Chromium coverage includes WAV preflight invocation, upload through MIX/Preview/WAV Export, Preview/Export sample comparison, and existing mastering/export regression tests. Physical iPhone Safari behavior remains unverified.
+
+## M0-M2 (development baseline, no DSP change)
+
+Plan: `docs/OSS_RESEARCH_TECH_SELECTION.md`.
+
+- Service worker install no longer stalls over HTTP/1.1: each app-shell body is read before waiting on the rest (the all-or-nothing cache update is unchanged). `tests/smoke.cjs` accepts 44.1 or 48 kHz Preview renders (the AudioContext rate depends on the device).
+- M0: `tests/baseline-metrics.cjs` records sizes, stage timings, heap peak, the analysis/decision snapshot and WAV hashes for a fixed synthetic input (`docs/baseline/chromium.json`). With `Math.random`/`crypto.getRandomValues` seeded in the page, output is bit-identical between runs; `--check` compares a run with the baseline.
+- M1: the seven embedded WASM modules are disassembled into `wasm-src/*.wat`; `npm run wasm:verify` checks they still assemble to the embedded bytes. The original C source is not in the repository.
+- M2: `tests/loudness-reference-regression.cjs` checks LUFS/True Peak against EBU Tech 3341 cases, analytic sines, libebur128 and a high-precision True Peak reference. Results: `docs/M2_LOUDNESS_REFERENCE.md`.
+- K-weighting fix: the second K-weighting stage now uses the BS.1770 numerator `[1, -2, 1]` (it was normalised, so LUFS read about 0.04 LU low). Integrated LUFS matches libebur128; the YouTube master lands on -14.00 instead of about -13.95 LUFS. Cache bumped to `v80-d442-lufs-kweight-fix`.
+
+Running the tests locally: `npm install`, serve the repository on port 8765 (e.g. `npx http-server -p 8765 -c-1 .`), then `node tests/<name>.cjs`. Browser tests need Playwright (global install). Chromium results do not establish iPhone Safari behaviour.
+
+## M3 (structure only, no behaviour change)
+
+- MIX decision layer (`DEFAULT_MIX_RULES` … `optimizeProcessingBudget`: presets, rules, `decideChain`, safety caps, processing budget) moved verbatim to `src/decision/mix-decision.js`, loaded before the main app script and cached in the app shell (`v80-d443-decision-module`).
+- `tests/mix-decision-regression.cjs` runs the module in Node against `tests/fixtures/mix-decision.json`: analysis results from four synthetic inputs x 21 setting combinations (84 cases, 34 distinct chains), recorded from the app before the move. `--record` re-records it; do that only for intended decision changes.
+- Analysis layer moved verbatim: FFT/window/spectrum/RMS/dBFS helpers (`nextPow2` … `dbfs`) to `src/analysis/spectrum-core.js`; `analyze`, `analyzeRelative`, `analyzeHarmonySummary`, the harmony analysis proxy and the peak/RMS WASM helpers to `src/analysis/vocal-analysis.js`. They still call `yieldToBrowser`, `vmDecodeBase64Bytes` and `vmWasmGlobalNumber` from the app script at call time. Cache `v80-d444-analysis-module`.
+- `tests/analysis-regression.cjs` runs the analysis layer in Node on the same four inputs and compares with the analysis results recorded from Chromium (numbers within 1e-12 relative: Node and Chromium V8 differ in the last bit of Math.cos/sin/hypot). It reproduces Chromium's 16-bit decode (float32 `n/32768` for negative, `n/32767` for positive samples, measured).
+- Moving code between scripts is only safe when the moved names are not declared twice (the later declaration wins inside one script). Current duplicate: `estimateAudioBufferBytes` (twice in the app script).
+
+## M4 (structure only, no behaviour change)
+
+Further verbatim moves out of the app script (each re-inserts to the previous `index.html` exactly, loads standalone, runs before the app script and is in the app shell; cache `v80-d448-render-export-modules`):
+
+| File | Contents |
+|---|---|
+| `src/dsp/sample-dsp.js` | sample-array DSP, biquads, lookahead limiter, dither, DSP/clip-stats WASM |
+| `src/dsp/cooperative-dsp.js` | reverb impulse, saturation, gain riding, yielding mono/stereo stages, precision de-esser/compressor |
+| `src/audio/loudness.js`, `sample-peak.js`, `hq-resampler.js`, `true-peak.js` | LUFS, sample peak, export resampler, true peak and gain helpers (with their WASM) |
+| `src/harmony/harmony-analysis.js` | harmony presets, timing analysis/correction, `decideHarmonyChain` |
+| `src/render/vocal-render.js`, `harmony-render.js` | `applyPreProcessingSteps`/`renderChain`, harmony rendering, `mixTwoBuffers` |
+| `src/export/youtube-master.js`, `premaster.js` | YouTube mastering, Fire Lit premaster |
+
+The baseline now also runs the flow with a synthetic harmony stem (recorded on unchanged code before the harmony move). What remains in the app script is state, UI, preview, FX region editing and export orchestration, which reads `state` and the DOM directly.
+
+## M5 (CSS, no visual change)
+
+The inline `<style>` blocks moved verbatim into `styles/app.css`, `styles/patches-d4-d42.css` and `styles/patches-d46-d439.css`, linked at the original positions (cache `v80-d449-external-css`). `tests/visual-regression.cjs` compares computed styles and screenshots of every screen before and after a CSS change. Details and two open findings (an unclosed `@media` block, an unused 227 KB image on phones): `docs/M5_CSS.md`.
+
+## Release procedure (versioned assets)
+
+`index.html` is fetched network-first, but `src/` and `styles/` files are served cache-first by the service worker. So that a new `index.html` never runs with the previous release's scripts or styles, their URLs carry `?v=<cache version>`:
+
+1. Bump `CACHE_NAME` in `service-worker.js`.
+2. `node tools/asset-version.cjs` (stamps every `./src/` and `./styles/` URL in `index.html` and `APP_SHELL`).
+3. `node tests/app-shell-consistency.cjs` checks that every loaded asset is stamped and listed in `APP_SHELL`, every `APP_SHELL` file exists and no script in `src/` is unreferenced.
+
+Verified in Chromium: after installing one release and serving a changed `src/` file with a new cache name, the page runs the new file when the URLs are re-stamped and the old cached file when they are not.
+
+## M6 (reference matching v2, off by default)
+
+新方式(試験的) in the reference-matching panel switches to `src/reference/reference-match-v2.js` (loudest sections, Mid/Side, smoothed curve, linear-phase FIR). Off, the existing method is unchanged. Also fixed: loading a reference no longer marks the Mix result as stale, and an applied correction now reaches Preview and all exports. Details: `docs/M6_REFERENCE_MATCH_V2.md`.
+
+## CI (GitHub Actions)
+
+`.github/workflows/tests.yml` runs on every push and pull request:
+
+- Node: static/consistency checks (`static-check`, `app-shell-consistency`, `declaration-uniqueness`, `wasm-sources`) and the logic regressions.
+- Browser, Chromium and WebKit: smoke (full flow, all exports, offline start), source replacement, loudness/true peak reference, reference matching v2 evaluation and UI flow; Chromium also checks the bit-exact baseline. WebKit is the closest engine to iPhone Safari available in CI, not a substitute for a device.
+
+Locally: `npm ci`, `npx playwright install chromium webkit`, serve on port 8765, then `VM_BROWSER=webkit node tests/smoke.cjs` (etc.). `VM_SMOKE_OFFLINE=server` makes the smoke test run and stop its own server for the offline check.
+
+Fixed while setting it up: the page no longer reloads itself when the service worker first takes control on a first visit (updates still reload via 更新する), and reference matching v2 convolves in JS because WebKit's ConvolverNode left a ~1 % error.
