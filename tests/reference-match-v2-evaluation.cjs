@@ -156,7 +156,7 @@ const baseUrl = process.env.VM_SMOKE_BASE_URL || 'http://127.0.0.1:8765/';
         firErr = Math.max(firErr, Math.abs(20 * Math.log10(Math.hypot(re[k], im[k])) - match.midDb[g]));
       }
       out.firMaxErrorDb = +firErr.toFixed(3);
-      out.convolverLatency = await vmRef2ConvolverLatency(sr, fir.length);
+
       out.sections = match.sections;
       out.levelOffsetDb = +match.levelOffsetDb.toFixed(2);
       return out;

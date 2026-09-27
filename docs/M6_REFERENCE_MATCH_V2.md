@@ -7,7 +7,7 @@
 1. Split each track into 3 s sections and keep the loudest half (at most 20 sections), so quiet intros do not skew the comparison.
 2. Average Mid and Side power spectra (4096-point FFT) over those sections.
 3. Difference on a 1/6-octave grid, overall level offset (100 Hz-10 kHz, Mid) removed, smoothed over 1/3 octave, capped at ±6 dB, faded to 0 dB outside 40 Hz-16 kHz. Side is not corrected where it is more than 50 dB below Mid.
-4. Linear-phase FIRs (4095 taps, Blackman) for Mid and Side, applied with ConvolverNodes; the FIR latency is removed, then the existing final limiter runs as for v1. The 適用量 slider scales the curve in dB.
+4. Linear-phase FIRs (4095 taps, Blackman) for Mid and Side, applied by FFT overlap-add convolution in JS (Mid and Side share one complex FFT per 4096-sample block); the FIR delay is removed, then the existing final limiter runs as for v1. The 適用量 slider scales the curve in dB. A first version used ConvolverNodes: exact in Chromium, but WebKit CI showed a ~1.2 % (-38 dB) residual at amount 0 with no time offset, so the convolution now runs in JS and gives the same result in every engine (amount 0 error 6e-14). A 5-minute 48 kHz stereo song takes about 3.7 s in headless Chromium.
 
 ## Evaluation (`tests/reference-match-v2-evaluation.cjs`)
 
@@ -23,7 +23,7 @@ Reference = test mix with a known EQ (200 Hz low shelf -3 dB, 3 kHz peak +4 dB, 
 
 v2 at 50 % leaves half of the difference, as the slider says; v1's overlapping Q=1 peaking filters overshoot at 50 % and cannot close the gap at 100 %. Invariants: amount 0 returns the input (max difference 4e-7), FIR response within 0.04 dB of the curve.
 
-Not evaluated: listening tests and real reference tracks (no ground truth), iPhone memory/time. v2 needs about one more song-length buffer than v1 (the memory guard uses 3x instead of 2x).
+Not evaluated: listening tests and real reference tracks (no ground truth), iPhone memory/time. v2 needs no more memory than v1 (one output buffer; the guard uses 2x the song for both).
 
 ## Fixed on the way
 

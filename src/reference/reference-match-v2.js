@@ -190,88 +190,80 @@ function buildReferenceMatchFirV2(grid, curveDb, sr, taps = VM_REF2.firTaps) {
   return fir;
 }
 
-// Extra latency the engine's ConvolverNode adds on top of the FIR itself.
-// Chromium adds none; engines that split long IRs into stages may delay the
-// later stages (suspected in WebKit). Measured once per (sample rate, IR
-// length) with a delta at the IR centre, where the correction FIR's energy is.
-const VM_REF2_CONVOLVER_LATENCY = new Map();
-async function vmRef2ConvolverLatency(sr, taps) {
-  const key = `${sr}|${taps}`;
-  if (VM_REF2_CONVOLVER_LATENCY.has(key)) return VM_REF2_CONVOLVER_LATENCY.get(key);
-  const ctx = new OfflineAudioContext(1, taps + 8192, sr);
-  const impulse = ctx.createBuffer(1, 1, sr);
-  impulse.getChannelData(0)[0] = 1;
-  const src = ctx.createBufferSource();
-  src.buffer = impulse;
-  const conv = ctx.createConvolver();
-  conv.normalize = false;
-  const ir = ctx.createBuffer(1, taps, sr);
-  const centre = (taps - 1) / 2;
-  ir.getChannelData(0)[centre] = 1;
-  conv.buffer = ir;
-  src.connect(conv);
-  conv.connect(ctx.destination);
-  src.start();
-  const out = (await ctx.startRendering()).getChannelData(0);
-  let peak = 0;
-  for (let i = 1; i < out.length; i++) if (Math.abs(out[i]) > Math.abs(out[peak])) peak = i;
-  const latency = Math.max(0, peak - centre);
-  VM_REF2_CONVOLVER_LATENCY.set(key, latency);
-  return latency;
+// FFT overlap-add convolution of Mid and Side with their FIRs, done in JS so
+// every engine computes the same result. (A ConvolverNode version was exact in
+// Chromium but left a ~1 % (-38 dB) error in WebKit.) Mid and Side share one
+// complex FFT per block: x = mid + j*side, split by conjugate symmetry,
+// filtered separately and recombined so the inverse FFT returns
+// (mid * hMid) + j*(side * hSide).
+const VM_REF2_BLOCK = 4096;
+
+function vmRef2FirSpectrum(fir, n) {
+  const re = new Float64Array(n), im = new Float64Array(n);
+  re.set(fir);
+  fft(re, im);
+  return { re, im };
 }
 
 // Applies the correction at `amount` (0-1). Returns a new AudioBuffer of the
-// same length; the caller runs the final limiter as for v1.
+// same length, aligned with the source (the FIR delay is removed); the caller
+// runs the final limiter as for v1.
 async function applyReferenceMatchV2(source, match, amount) {
   const sr = source.sampleRate, len = source.length, channels = source.numberOfChannels;
   const scale = c => Float64Array.from(c, v => v * amount);
   const midFir = buildReferenceMatchFirV2(match.gridHz, scale(match.midDb), sr);
   const sideFir = buildReferenceMatchFirV2(match.gridHz, scale(match.sideDb), sr);
-  const delay = (midFir.length - 1) / 2 + await vmRef2ConvolverLatency(sr, midFir.length);
+  const taps = midFir.length, delay = (taps - 1) / 2;
+  const n = nextPow2(VM_REF2_BLOCK + taps - 1);
+  const hm = vmRef2FirSpectrum(midFir, n), hs = vmRef2FirSpectrum(sideFir, n);
 
-  const ctx = new OfflineAudioContext(Math.max(2, channels), len + delay, sr);
-  const src = ctx.createBufferSource();
-  src.buffer = source;
-  const makeConvolver = fir => {
-    const conv = ctx.createConvolver();
-    conv.normalize = false;
-    const ir = ctx.createBuffer(1, fir.length, sr);
-    ir.copyToChannel(fir, 0);
-    conv.buffer = ir;
-    conv.channelCount = 1;
-    conv.channelCountMode = 'explicit';
-    return conv;
-  };
-  const merger = ctx.createChannelMerger(2);
-  if (channels === 1) {
-    const conv = makeConvolver(midFir);
-    src.connect(conv);
-    conv.connect(merger, 0, 0);
-    conv.connect(merger, 0, 1);
-  } else {
-    const split = ctx.createChannelSplitter(2);
-    src.connect(split);
-    const toMid = ctx.createGain(), toSide = ctx.createGain(), invR = ctx.createGain();
-    toMid.gain.value = 0.5; toSide.gain.value = 0.5; invR.gain.value = -1;
-    toMid.channelCount = toSide.channelCount = invR.channelCount = 1;
-    toMid.channelCountMode = toSide.channelCountMode = invR.channelCountMode = 'explicit';
-    split.connect(toMid, 0); split.connect(toMid, 1);           // M = (L + R) / 2
-    split.connect(toSide, 0); split.connect(invR, 1); invR.connect(toSide); // S = (L - R) / 2
-    const midConv = makeConvolver(midFir), sideConv = makeConvolver(sideFir);
-    toMid.connect(midConv); toSide.connect(sideConv);
-    const sideNeg = ctx.createGain();
-    sideNeg.gain.value = -1;
-    sideNeg.channelCount = 1; sideNeg.channelCountMode = 'explicit';
-    midConv.connect(merger, 0, 0); sideConv.connect(merger, 0, 0);  // L = M + S
-    midConv.connect(merger, 0, 1); sideConv.connect(sideNeg); sideNeg.connect(merger, 0, 1); // R = M - S
-  }
-  merger.connect(ctx.destination);
-  src.start();
-  const rendered = await ctx.startRendering();
-  // Drop the FIR latency so the result lines up with the source.
+  const left = source.getChannelData(0);
+  const right = channels > 1 ? source.getChannelData(1) : null;
   const out = audioCtx.createBuffer(channels, len, sr);
-  for (let ch = 0; ch < channels; ch++) {
-    out.copyToChannel(rendered.getChannelData(ch).subarray(delay, delay + len), ch);
+  const outL = out.getChannelData(0), outR = channels > 1 ? out.getChannelData(1) : null;
+  // Overlap-add tails for Mid (re) and Side (im), indexed in convolution time.
+  const tailM = new Float64Array(n), tailS = new Float64Array(n);
+  const re = new Float64Array(n), im = new Float64Array(n);
+  const zr = new Float64Array(n), zi = new Float64Array(n);
+
+  let blocks = 0;
+  for (let start = 0; start < len + delay; start += VM_REF2_BLOCK) {
+    re.fill(0); im.fill(0);
+    const end = Math.min(len, start + VM_REF2_BLOCK);
+    for (let i = start; i < end; i++) {
+      const l = left[i], r = right ? right[i] : l;
+      re[i - start] = (l + r) * 0.5;
+      im[i - start] = (l - r) * 0.5;
+    }
+    fft(re, im);
+    for (let k = 0; k < n; k++) {
+      const nk = (n - k) % n;
+      // M_k = (X_k + conj(X_-k)) / 2, S_k = (X_k - conj(X_-k)) / (2j)
+      const mr = (re[k] + re[nk]) * 0.5, mi = (im[k] - im[nk]) * 0.5;
+      const sr_ = (im[k] + im[nk]) * 0.5, si = (re[nk] - re[k]) * 0.5;
+      const ymr = mr * hm.re[k] - mi * hm.im[k], ymi = mr * hm.im[k] + mi * hm.re[k];
+      const ysr = sr_ * hs.re[k] - si * hs.im[k], ysi = sr_ * hs.im[k] + si * hs.re[k];
+      // Z = Ym + j*Ys, conjugated for the inverse transform via the forward FFT.
+      zr[k] = ymr - ysi;
+      zi[k] = -(ymi + ysr);
+    }
+    fft(zr, zi);
+    // zr/n = mid output, -zi/n = side output for convolution times start..start+n-1.
+    for (let i = 0; i < n; i++) {
+      const t = start + i;
+      const m = zr[i] / n + tailM[i], sd = -zi[i] / n + tailS[i];
+      if (i < VM_REF2_BLOCK) {
+        const o = t - delay;
+        if (o >= 0 && o < len) {
+          if (outR) { outL[o] = m + sd; outR[o] = m - sd; } else outL[o] = m;
+        }
+      } else {
+        tailM[i - VM_REF2_BLOCK] = m; tailS[i - VM_REF2_BLOCK] = sd;
+      }
+    }
+    // Shift: the part beyond one block becomes the next block's tail.
+    tailM.fill(0, n - VM_REF2_BLOCK); tailS.fill(0, n - VM_REF2_BLOCK);
+    if (++blocks % 16 === 0) await yieldToBrowser();
   }
   return out;
 }

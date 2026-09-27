@@ -36,12 +36,13 @@ async function applyReferenceCorrection(source, correction) {
   return { rendered: await offlineCtx.startRendering(), applied };
 }
 
-// Working memory for one correction pass: the rendered result plus, for v2,
-// the latency-trimmed copy. Throws before rendering when it would exceed the
+// Working memory for one correction pass: the corrected buffer plus the
+// limiter's copy (v1 renders through an OfflineAudioContext, v2 convolves in
+// JS into one output buffer). Throws before rendering when it would exceed the
 // device's export memory limit (same guard as the apply button).
 function validateReferenceCorrectionMemory(source, correction) {
   const sourceBytes = source.length * source.numberOfChannels * 4;
-  const workingBytes = sourceBytes * (correction.version === 2 ? 3 : 2);
+  const workingBytes = sourceBytes * 2;
   const limit = getWavExportMemoryLimit();
   if (workingBytes > limit) {
     throw new Error(
