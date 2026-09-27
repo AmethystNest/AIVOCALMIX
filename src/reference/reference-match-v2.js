@@ -191,9 +191,9 @@ function buildReferenceMatchFirV2(grid, curveDb, sr, taps = VM_REF2.firTaps) {
 }
 
 // Extra latency the engine's ConvolverNode adds on top of the FIR itself.
-// Chromium adds none; other engines (seen in WebKit) may process the
-// convolution with a block delay. Measured once per (sample rate, IR length)
-// by passing an impulse through a delta IR of the same length.
+// Chromium adds none; engines that split long IRs into stages may delay the
+// later stages (suspected in WebKit). Measured once per (sample rate, IR
+// length) with a delta at the IR centre, where the correction FIR's energy is.
 const VM_REF2_CONVOLVER_LATENCY = new Map();
 async function vmRef2ConvolverLatency(sr, taps) {
   const key = `${sr}|${taps}`;
@@ -206,7 +206,8 @@ async function vmRef2ConvolverLatency(sr, taps) {
   const conv = ctx.createConvolver();
   conv.normalize = false;
   const ir = ctx.createBuffer(1, taps, sr);
-  ir.getChannelData(0)[0] = 1;
+  const centre = (taps - 1) / 2;
+  ir.getChannelData(0)[centre] = 1;
   conv.buffer = ir;
   src.connect(conv);
   conv.connect(ctx.destination);
@@ -214,8 +215,9 @@ async function vmRef2ConvolverLatency(sr, taps) {
   const out = (await ctx.startRendering()).getChannelData(0);
   let peak = 0;
   for (let i = 1; i < out.length; i++) if (Math.abs(out[i]) > Math.abs(out[peak])) peak = i;
-  VM_REF2_CONVOLVER_LATENCY.set(key, peak);
-  return peak;
+  const latency = Math.max(0, peak - centre);
+  VM_REF2_CONVOLVER_LATENCY.set(key, latency);
+  return latency;
 }
 
 // Applies the correction at `amount` (0-1). Returns a new AudioBuffer of the

@@ -130,6 +130,20 @@ const baseUrl = process.env.VM_SMOKE_BASE_URL || 'http://127.0.0.1:8765/';
         for (let i = 0; i < n; i++) maxDiff = Math.max(maxDiff, Math.abs(a[i] - b[i]));
       }
       out.identityMaxDiff = maxDiff;
+      // Diagnostic: best alignment of the amount-0 output against the input
+      // (a pure delay shows up as a non-zero lag with a near-perfect match).
+      {
+        const a = current.getChannelData(0), b = same.getChannelData(0), start = sr * 5, len = sr;
+        let bestLag = 0, bestErr = Infinity;
+        for (let lag = -4096; lag <= 4096; lag++) {
+          let err = 0;
+          for (let i = 0; i < len; i += 4) { const d = a[start + i] - b[start + i + lag]; err += d * d; }
+          if (err < bestErr) { bestErr = err; bestLag = lag; }
+        }
+        let energy = 0; for (let i = 0; i < len; i += 4) energy += a[start + i] ** 2;
+        out.identityBestLag = bestLag;
+        out.identityResidualAtBestLag = +Math.sqrt(bestErr / energy).toExponential(2);
+      }
 
       // Invariant: FIR magnitude follows the curve (60 Hz-16 kHz).
       const fir = buildReferenceMatchFirV2(match.gridHz, match.midDb, sr);
