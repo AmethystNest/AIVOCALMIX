@@ -77,6 +77,8 @@ jobs:
         run: node tests/reference-match-v2-evaluation.cjs
       - name: Reference matching through the UI
         run: node tests/reference-ui-regression.cjs
+      - name: Unexpected error notice
+        run: node tests/unexpected-error-notice.cjs
       - name: End-to-end baseline (bit-exact, Chromium only)
         if: matrix.browser == 'chromium'
         run: node tests/baseline-metrics.cjs --check docs/baseline/chromium.json
