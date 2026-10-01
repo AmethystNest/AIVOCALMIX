@@ -79,6 +79,8 @@ jobs:
         run: node tests/reference-ui-regression.cjs
       - name: Unexpected error notice
         run: node tests/unexpected-error-notice.cjs
+      - name: Install prompt (Android)
+        run: node tests/install-prompt.cjs
       - name: End-to-end baseline (bit-exact, Chromium only)
         if: matrix.browser == 'chromium'
         run: node tests/baseline-metrics.cjs --check docs/baseline/chromium.json

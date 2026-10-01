@@ -9,7 +9,7 @@
     "test:logic": "node tests/mix-decision-regression.cjs && node tests/analysis-regression.cjs && node tests/export-source-regression.cjs && node tests/final-export-memory-regression.cjs && node tests/ios-save-regression.cjs && node tests/ios-wav-preflight-regression.cjs && node tests/premaster-memory-regression.cjs && node tests/upload-picker-regression.cjs && node tests/wav-integrity-regression.cjs && node tests/youtube-master-regression.cjs",
     "test": "npm run test:static && npm run test:logic",
     "serve": "http-server -p 8765 -s -c-1 .",
-    "test:browser": "node tests/smoke.cjs && node tests/source-replacement-browser.cjs && node tests/loudness-reference-regression.cjs && node tests/reference-match-v2-evaluation.cjs && node tests/reference-ui-regression.cjs && node tests/unexpected-error-notice.cjs"
+    "test:browser": "node tests/smoke.cjs && node tests/source-replacement-browser.cjs && node tests/loudness-reference-regression.cjs && node tests/reference-match-v2-evaluation.cjs && node tests/reference-ui-regression.cjs && node tests/unexpected-error-notice.cjs && node tests/install-prompt.cjs"
   },
   "devDependencies": {
     "http-server": "14.1.1",
