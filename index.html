@@ -25,7 +25,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="./styles/app.css?v=v84-d462-core-state">
+<link rel="stylesheet" href="./styles/app.css?v=v85-d463-progress-module">
 
 
 <!-- v80-D5 STATE STABILITY CONTRACT
@@ -41,13 +41,13 @@
   Rejected outer leaf/vine ornament must not be reintroduced.
   UI-only revisions must not alter DSP code paths.
 -->
-<link rel="stylesheet" href="./styles/patches-d4-d42.css?v=v84-d462-core-state">
+<link rel="stylesheet" href="./styles/patches-d4-d42.css?v=v85-d463-progress-module">
 
 
-<script src="./src/ui/hard-reset.js?v=v84-d462-core-state"></script>
+<script src="./src/ui/hard-reset.js?v=v85-d463-progress-module"></script>
 
 
-<link rel="stylesheet" href="./styles/patches-d46-d439.css?v=v84-d462-core-state">
+<link rel="stylesheet" href="./styles/patches-d46-d439.css?v=v85-d463-progress-module">
 <meta property="og:type" content="website">
 <meta property="og:title" content="AIVOCALMIX">
 <meta property="og:url" content="https://AmethystNest.github.io/AIVOCALMIX/">
@@ -818,27 +818,28 @@
 </div>
 </div>
 
-<script src="./src/navigation-guard.js?v=v84-d462-core-state"></script>
-<script src="./src/audio/wav-codec.js?v=v84-d462-core-state"></script>
-<script src="./src/audio/render-memory-preflight.js?v=v84-d462-core-state"></script>
-<script src="./src/analysis/spectrum-core.js?v=v84-d462-core-state"></script>
-<script src="./src/analysis/vocal-analysis.js?v=v84-d462-core-state"></script>
-<script src="./src/dsp/sample-dsp.js?v=v84-d462-core-state"></script>
-<script src="./src/audio/loudness.js?v=v84-d462-core-state"></script>
-<script src="./src/audio/sample-peak.js?v=v84-d462-core-state"></script>
-<script src="./src/audio/hq-resampler.js?v=v84-d462-core-state"></script>
-<script src="./src/audio/true-peak.js?v=v84-d462-core-state"></script>
-<script src="./src/dsp/cooperative-dsp.js?v=v84-d462-core-state"></script>
-<script src="./src/harmony/harmony-analysis.js?v=v84-d462-core-state"></script>
-<script src="./src/render/vocal-render.js?v=v84-d462-core-state"></script>
-<script src="./src/render/harmony-render.js?v=v84-d462-core-state"></script>
-<script src="./src/export/youtube-master.js?v=v84-d462-core-state"></script>
-<script src="./src/export/premaster.js?v=v84-d462-core-state"></script>
-<script src="./src/decision/mix-decision.js?v=v84-d462-core-state"></script>
-<script src="./src/reference/reference-match-v2.js?v=v84-d462-core-state"></script>
-<script src="./src/reference/reference-correction.js?v=v84-d462-core-state"></script>
-<script src="./src/audio/upload-decode.js?v=v84-d462-core-state"></script>
-<script src="./src/app/core-state.js?v=v84-d462-core-state"></script>
+<script src="./src/navigation-guard.js?v=v85-d463-progress-module"></script>
+<script src="./src/audio/wav-codec.js?v=v85-d463-progress-module"></script>
+<script src="./src/audio/render-memory-preflight.js?v=v85-d463-progress-module"></script>
+<script src="./src/analysis/spectrum-core.js?v=v85-d463-progress-module"></script>
+<script src="./src/analysis/vocal-analysis.js?v=v85-d463-progress-module"></script>
+<script src="./src/dsp/sample-dsp.js?v=v85-d463-progress-module"></script>
+<script src="./src/audio/loudness.js?v=v85-d463-progress-module"></script>
+<script src="./src/audio/sample-peak.js?v=v85-d463-progress-module"></script>
+<script src="./src/audio/hq-resampler.js?v=v85-d463-progress-module"></script>
+<script src="./src/audio/true-peak.js?v=v85-d463-progress-module"></script>
+<script src="./src/dsp/cooperative-dsp.js?v=v85-d463-progress-module"></script>
+<script src="./src/harmony/harmony-analysis.js?v=v85-d463-progress-module"></script>
+<script src="./src/render/vocal-render.js?v=v85-d463-progress-module"></script>
+<script src="./src/render/harmony-render.js?v=v85-d463-progress-module"></script>
+<script src="./src/export/youtube-master.js?v=v85-d463-progress-module"></script>
+<script src="./src/export/premaster.js?v=v85-d463-progress-module"></script>
+<script src="./src/decision/mix-decision.js?v=v85-d463-progress-module"></script>
+<script src="./src/reference/reference-match-v2.js?v=v85-d463-progress-module"></script>
+<script src="./src/reference/reference-correction.js?v=v85-d463-progress-module"></script>
+<script src="./src/audio/upload-decode.js?v=v85-d463-progress-module"></script>
+<script src="./src/app/core-state.js?v=v85-d463-progress-module"></script>
+<script src="./src/ui/progress.js?v=v85-d463-progress-module"></script>
 <script id="app-script">
 /* BUILD 2026-retsu-vocalmix-v80-D6-error-boundary */
 /* =========================================================
@@ -872,142 +873,6 @@
    ========================================================= */
 
 
-// 進捗バー/完了バナーの共通コントローラ。時間で見せかけるアニメーションではなく、
-// 各処理が実際にどの工程まで終わったかを段階的に%へ反映する。
-// idPrefix + 'Progress' / 'ProgressFill' / 'ProgressPct' / 'ProgressLabel' /
-// 'CompletionBanner' というid命名規則のDOM要素が対象画面にある前提。
-const VM_PROGRESS_STATE = new Map();
-
-function formatVmTime(seconds) {
-  if (!Number.isFinite(seconds) || seconds < 0) return '計算中';
-  seconds = Math.max(0, Math.round(seconds));
-  if (seconds < 60) return `${seconds}秒`;
-  const m = Math.floor(seconds / 60), s = seconds % 60;
-  return `${m}分${String(s).padStart(2, '0')}秒`;
-}
-
-function refreshTaskProgressMeta(idPrefix) {
-  const st = VM_PROGRESS_STATE.get(idPrefix);
-  if (!st) return;
-  const pct = document.getElementById(idPrefix + 'ProgressPct');
-  if (!pct) return;
-  const elapsed = Math.max(0, (performance.now() - st.startedAt) / 1000);
-  const p = Math.max(0, Math.min(100, st.percent || 0));
-
-  let etaText = '残り目安 計算中';
-  // 最初の数%は速度推定が不安定なので、5%以上進んでからETAを出す。
-  if (p >= 5 && p < 100) {
-    const totalEstimate = elapsed / (p / 100);
-    const remaining = Math.max(0, totalEstimate - elapsed);
-    etaText = `残り目安 ${formatVmTime(remaining)}`;
-  } else if (p >= 100) {
-    etaText = `経過 ${formatVmTime(elapsed)}`;
-  }
-  pct.textContent = `${Math.round(p)}% · ${etaText}`;
-}
-
-function taskProgressStart(idPrefix, label) {
-  const box = document.getElementById(idPrefix + 'Progress');
-  if (!box) return;
-  box.classList.add('active');
-  const banner = document.getElementById(idPrefix + 'CompletionBanner');
-  if (banner) banner.classList.remove('show');
-
-  const old = VM_PROGRESS_STATE.get(idPrefix);
-  if (old && old.timer) clearInterval(old.timer);
-  const st = {
-    startedAt: performance.now(),
-    percent: 0,
-    label: label || '',
-    timer: null
-  };
-  st.timer = setInterval(() => refreshTaskProgressMeta(idPrefix), 1000);
-  VM_PROGRESS_STATE.set(idPrefix, st);
-  taskProgressUpdate(idPrefix, 0, label);
-}
-
-async function taskProgressUpdate(idPrefix, percent, label) {
-  const fill = document.getElementById(idPrefix + 'ProgressFill');
-  const lbl = document.getElementById(idPrefix + 'ProgressLabel');
-  const safe = Math.max(0, Math.min(100, percent));
-  if (fill) fill.style.width = safe + '%';
-  if (lbl && label) lbl.textContent = label;
-
-  const st = VM_PROGRESS_STATE.get(idPrefix);
-  if (st) {
-    st.percent = safe;
-    if (label) st.label = label;
-  } else {
-    VM_PROGRESS_STATE.set(idPrefix, {
-      startedAt: performance.now(),
-      percent: safe,
-      label: label || '',
-      timer: null
-    });
-  }
-  refreshTaskProgressMeta(idPrefix);
-  await yieldToBrowser();
-  // D378: short event-only feedback on meaningful progress changes.
-  try {
-    const track = document.querySelector('.task-progress-track');
-    const progress = document.querySelector('.task-progress');
-    const pctEl = document.querySelector('.task-progress-pct');
-    const pctNow = pctEl ? parseInt(pctEl.textContent, 10) : NaN;
-    if (track && Number.isFinite(pctNow)) {
-      const prev = Number(track.dataset.vmLastPct || '-999');
-      if (pctNow >= 0 && Math.abs(pctNow - prev) >= 4) {
-        track.dataset.vmLastPct = String(pctNow);
-        track.classList.remove('vm-progress-step');
-        requestAnimationFrame(() => {
-          track.classList.add('vm-progress-step');
-          clearTimeout(track._vmStepTimer);
-          track._vmStepTimer = setTimeout(() => track.classList.remove('vm-progress-step'), 280);
-        });
-      }
-      if (progress && pctNow >= 100) {
-        progress.classList.remove('vm-progress-finish');
-        requestAnimationFrame(() => {
-          progress.classList.add('vm-progress-finish');
-          clearTimeout(progress._vmFinishTimer);
-          progress._vmFinishTimer = setTimeout(() => progress.classList.remove('vm-progress-finish'), 480);
-        });
-      }
-    }
-  } catch (_) {}
-
-}
-
-function stopTaskProgressTimer(idPrefix) {
-  const st = VM_PROGRESS_STATE.get(idPrefix);
-  if (st && st.timer) clearInterval(st.timer);
-  if (st) st.timer = null;
-}
-
-function taskProgressFinish(idPrefix, bannerMessage) {
-  stopTaskProgressTimer(idPrefix);
-  const st = VM_PROGRESS_STATE.get(idPrefix);
-  if (st) st.percent = 100;
-  refreshTaskProgressMeta(idPrefix);
-
-  const box = document.getElementById(idPrefix + 'Progress');
-  if (box) box.classList.remove('active');
-  const banner = document.getElementById(idPrefix + 'CompletionBanner');
-  if (banner) {
-    banner.innerHTML = `<span class="check">&#10003;</span>${bannerMessage}`;
-    banner.classList.add('show');
-    clearTimeout(banner._hideTimer);
-    banner._hideTimer = setTimeout(() => banner.classList.remove('show'), 6000);
-  }
-}
-
-function taskProgressReset(idPrefix) {
-  stopTaskProgressTimer(idPrefix);
-  VM_PROGRESS_STATE.delete(idPrefix);
-  const box = document.getElementById(idPrefix + 'Progress');
-  if (box) box.classList.remove('active');
-  const banner = document.getElementById(idPrefix + 'CompletionBanner');
-  if (banner) banner.classList.remove('show');
-}
 
 // レンダリング系ボタンの多重タップ防止。
 // 「FXタブで追加レンダリングしようとするとエラーになる」という報告への対応:
@@ -6876,23 +6741,23 @@ setInterval(() => {
 }, 1000);
 </script>
 
-<script src="./src/pwa/lifecycle.js?v=v84-d462-core-state"></script>
-<script src="./src/pwa/install-prompt.js?v=v84-d462-core-state"></script>
+<script src="./src/pwa/lifecycle.js?v=v85-d463-progress-module"></script>
+<script src="./src/pwa/install-prompt.js?v=v85-d463-progress-module"></script>
 
 
 
-<script src="./src/audio/context-lifecycle.js?v=v84-d462-core-state"></script>
+<script src="./src/audio/context-lifecycle.js?v=v85-d463-progress-module"></script>
 
 
 
-<script src="./src/ui/page-lifecycle.js?v=v84-d462-core-state"></script>
+<script src="./src/ui/page-lifecycle.js?v=v85-d463-progress-module"></script>
 
-<script src="./src/ui/viewport-keyboard.js?v=v84-d462-core-state"></script>
+<script src="./src/ui/viewport-keyboard.js?v=v85-d463-progress-module"></script>
 
-<script src="./src/pwa/mobile-resilience.js?v=v84-d462-core-state"></script>
+<script src="./src/pwa/mobile-resilience.js?v=v85-d463-progress-module"></script>
 
 
-<script src="./src/audio/export-memory-preflight.js?v=v84-d462-core-state"></script>
+<script src="./src/audio/export-memory-preflight.js?v=v85-d463-progress-module"></script>
 
 </body>
 </html>
