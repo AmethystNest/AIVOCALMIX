@@ -81,6 +81,8 @@ jobs:
         run: node tests/unexpected-error-notice.cjs
       - name: Install prompt (Android)
         run: node tests/install-prompt.cjs
+      - name: Audio session (silent switch)
+        run: node tests/audio-session.cjs
       - name: End-to-end baseline (bit-exact, Chromium only)
         if: matrix.browser == 'chromium'
         run: node tests/baseline-metrics.cjs --check docs/baseline/chromium.json
