@@ -1116,7 +1116,7 @@ function slidingWindowMinLeading(arr, window) {
   return out;
 }
 
-async function buildLimiterWindowMin(samples, ceiling, window) {
+async function buildLimiterWindowMin(samples, ceiling, window, linkedSamples) {
   const n = samples.length;
   const out = new Float32Array(n);
   if (!n) return out;
@@ -1138,7 +1138,10 @@ async function buildLimiterWindowMin(samples, ceiling, window) {
       count--;
     }
 
-    const a = Math.abs(samples[i]);
+    let a = Math.abs(samples[i]);
+    // Stereo link: the other channel's peak also drives the gain, so both channels
+    // always get the same reduction and the stereo image does not shift.
+    if (linkedSamples) { const o = Math.abs(linkedSamples[i]); if (o > a) a = o; }
     const req = a > ceiling ? ceiling / a : 1;
 
     while (count > 0) {
@@ -1161,13 +1164,37 @@ async function buildLimiterWindowMin(samples, ceiling, window) {
   return out;
 }
 
-async function applyLookaheadLimiter(samples, sr, ceilingDb, lookaheadMs, releaseMs, destination) {
+// The window minimum drops to the required gain in a single sample, a step that
+// splatters into a broadband click on tonal material. Averaging it over the
+// lookahead turns the step into a ramp that ends exactly where the peak is:
+// every value in the averaged span is <= the gain the peak needs, so the average
+// is too and the ceiling still holds. In place; values before the start use only
+// the samples that exist.
+async function smoothLimiterWindowMin(windowMin, lookahead) {
+  const n = windowMin.length;
+  if (n === 0 || lookahead <= 1) return windowMin;
+  const ring = new Float32Array(lookahead);
+  let sum = 0;
+  for (let k = 0, r = 0; k < n; k++) {
+    if (k >= lookahead) sum -= ring[r];
+    const v = windowMin[k];
+    ring[r] = v;
+    sum += v;
+    windowMin[k] = sum / (k + 1 < lookahead ? k + 1 : lookahead);
+    if (++r === lookahead) r = 0;
+    if ((k & 131071) === 0 && k > 0) await yieldToBrowser();
+  }
+  return windowMin;
+}
+
+async function applyLookaheadLimiter(samples, sr, ceilingDb, lookaheadMs, releaseMs, destination, linkedSamples) {
   const ceiling = Math.pow(10, ceilingDb / 20);
   const lookahead = Math.max(1, Math.round(sr * lookaheadMs / 1000));
   const n = samples.length;
 
   // D190: 必要ゲインの全曲配列を持たず、窓最小値だけを直接計算。
-  const windowMin = await buildLimiterWindowMin(samples, ceiling, lookahead);
+  const windowMin = await buildLimiterWindowMin(samples, ceiling, lookahead, linkedSamples);
+  await smoothLimiterWindowMin(windowMin, lookahead);
 
   // D239: gain smoothing + delayed writeをWASMへ移行。
   // 既存JSと同じdouble精度のgain stateとFloat32出力を使用する。

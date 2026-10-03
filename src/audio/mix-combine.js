@@ -320,8 +320,10 @@ async function applyFinalLookaheadLimiterToBuffer(buffer, ceilingDb, truePeakSaf
   const out = audioCtx.createBuffer(buffer.numberOfChannels, buffer.length, sr);
   for (let ch = 0; ch < buffer.numberOfChannels; ch++) {
     // D187: 最終AudioBufferのチャンネルへ直接書き込み、processed全曲配列を省く。
+    // Stereo: both channels are detected together so they get identical gain.
+    const linked = buffer.numberOfChannels === 2 ? buffer.getChannelData(1 - ch) : undefined;
     await applyLookaheadLimiter(
-      buffer.getChannelData(ch), sr, ceilingDb, 5, 60, out.getChannelData(ch)
+      buffer.getChannelData(ch), sr, ceilingDb, 5, 60, out.getChannelData(ch), linked
     );
   }
   if (truePeakSafe) {
