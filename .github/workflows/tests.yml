@@ -33,7 +33,7 @@ jobs:
           for t in mix-decision-regression analysis-regression export-source-regression \
                    final-export-memory-regression ios-save-regression ios-wav-preflight-regression \
                    premaster-memory-regression upload-picker-regression wav-integrity-regression \
-                   youtube-master-regression; do
+                   youtube-master-regression limiter-quality; do
             echo "::group::$t"; node "tests/$t.cjs"; echo "::endgroup::"
           done
 
@@ -81,6 +81,8 @@ jobs:
         run: node tests/unexpected-error-notice.cjs
       - name: Install prompt (Android)
         run: node tests/install-prompt.cjs
+      - name: Audio session (silent switch)
+        run: node tests/audio-session.cjs
       - name: End-to-end baseline (bit-exact, Chromium only)
         if: matrix.browser == 'chromium'
         run: node tests/baseline-metrics.cjs --check docs/baseline/chromium.json
