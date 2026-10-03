@@ -22,3 +22,9 @@ Against the high-precision reference in `tests/loudness-reference-regression.cjs
 
 ## Platform notes
 Playwright WebKit 26.0 (Linux) has no `navigator.audioSession`; whether iOS Safari exposes it could not be checked here (the W3C and MDN pages are blocked from this environment).
+
+## Final limiter (`applyLookaheadLimiter`, cache v91)
+The gain used to drop in one sample when a peak entered the 5 ms lookahead, and each channel was limited on its own. It now ramps over the lookahead and both channels share one gain; see `tests/limiter-quality.cjs` (far sidebands on a tone with about 5 dB of reduction: about -48 dB before, -84 dB after).
+
+## The `DynamicsCompressorNode` "limiters" in the FX and harmony renders
+`src/render/fx-render.js` and `src/render/harmony-render.js` end with a `DynamicsCompressorNode` (threshold -1 dB, ratio 4, attack 10 ms, release 150 ms, default 30 dB knee). Measured in Chromium with a 997 Hz sine at -30 ... +2 dBFS, the level change is 0 to -0.04 dB, so the node neither limits nor colours the sound; peak protection comes from the lookahead limiter applied at export. Not measured in WebKit. Left unchanged: removing it would only change code, not sound, in the cases measured.
